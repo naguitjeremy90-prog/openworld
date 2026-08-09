@@ -1,0 +1,37 @@
+Assets/Scenes/2ndPresWorld.meta
+Assets/Scenes/2ndPresWorld/LightingData.asset
+Assets/Scenes/2ndPresWorld/LightingData.asset.meta
+Assets/Scenes/2ndPresWorld/ReflectionProbe-0.exr
+Assets/Scenes/2ndPresWorld/ReflectionProbe-0.exr.meta
+Assets/Scenes/DraftWorld.unity
+Assets/Scenes/DraftWorld.unity.meta
+Assets/Scenes/IntroScene.unity
+Assets/Scenes/IntroScene.unity.meta
+Assets/Scenes/LoginPage.unity
+Assets/Scenes/LoginPage.unity.meta
+Assets/Scenes/MainMenu.unity
+Assets/Scenes/MainMenu.unity.meta
+Assets/Scenes/Makamisa.unity
+Assets/Scenes/Makamisa.unity.meta
+Assets/Scenes/NEWMAKAMISA.unity
+Assets/Scenes/NEWMAKAMISA.unity.meta
+Assets/Scenes/PresentWorld.unity
+Assets/Scenes/PresentWorld.unity.meta
+Assets/Scenes/Room Church.unity
+Assets/Scenes/Room Church.unity.meta
+Assets/Scenes/SampleScene.meta
+Assets/Scenes/SampleScene.unity
+Assets/Scenes/SampleScene.unity.meta
+Assets/Scenes/SampleScene/LightingData.asset
+Assets/Scenes/SampleScene/LightingData.asset.meta
+Assets/Scenes/SampleScene/Post process Profile.asset
+Assets/Scenes/SampleScene/Post process Profile.asset.meta
+Assets/Scenes/SampleScene/ReflectionProbe-0.exr
+Assets/Scenes/SampleScene/ReflectionProbe-0.exr.meta
+Assets/Scenes/SampleSceneLightingSettings.lighting
+Assets/Scenes/SampleSceneLightingSettings.lighting.meta
+Assets/Scenes/SampleScene_Profiles.meta
+Assets/Scenes/SampleScene_Profiles/postprocessingvolume Profile.asset
+Assets/Scenes/SampleScene_Profiles/postprocessingvolume Profile.asset.meta
+Assets/Scenes/TeleportScene.unity
+Assets/Scenes/TeleportScene.unity.meta
