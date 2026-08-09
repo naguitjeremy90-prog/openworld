@@ -1,0 +1,148 @@
+@import url("../Styles/Utility.uss");
+
+:root {
+  --color-runtime: rgb(255, 174, 0);
+}
+
+.icon-preview {
+  width: 60px;
+  height: 60px;
+  border-color: #333;
+  border-width: 1px;
+  color: #aaa;
+  font-size: 10px;
+  position: absolute;
+  right: 0;
+}
+
+.clear-button {
+  position: absolute;
+  left: -28px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+}
+
+.item-row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.property-label {
+  min-width: 120px;
+}
+
+.index-label {
+  background-color: #111;
+  position: absolute;
+  width: 20px;
+  left: -26px;
+  top: 0;
+  bottom: 0;
+  -unity-text-align: middle-center;
+}
+
+.key-label {
+  background-color: #111;
+  padding: 2px 4px;
+}
+
+.even-row {
+  background-color: #333;
+}
+.odd-row {
+  background-color: #3f3f3f;
+}
+
+.custom-box {
+  background-color: var(--unity-colors-default-background);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.custom-box .custom-box {
+  background-color: var(--unity-colors-app_toolbar-background);
+  /* background-color: var(--unity-colors-alternated_rows-background); */
+}
+
+.custom-foldout > Toggle {
+  margin-left: 0;
+}
+
+.btn-clear-item {
+  padding: 0 3px;
+  margin: 0;
+  font-size: 10px;
+}
+
+.btn-clear-item:hover {
+  color: #990000;
+  background-color: #aaa;
+}
+
+.btn-delete-item {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 0;
+  border-width: 0;
+  background-color: #111;
+  color: #ddd;
+  padding: 0 4px;
+  margin: 0;
+}
+.btn-delete-item:hover {
+  background-color: #ddd;
+  color: #111;
+}
+
+.required-field-border {
+  position: absolute;
+  top: 2px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  border-width: 1px;
+  border-color: #711;
+  border-radius: 4px;
+}
+
+.required-field-label {
+  background-color: #711;
+  color: #ffffff;
+  padding-left: 4px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.runtime-value-foldout {
+  border-width: 2px;
+  border-top-width: 8px;
+  padding: 4px;
+  border-color: var(--color-runtime);
+}
+
+.runtime-value-foldout .unity-foldout__toggle {
+  margin-left: 0;
+  /* background-color: var(--color-runtime); */
+}
+
+.runtime-value-foldout .unity-foldout__content {
+  margin-left: 0;
+}
+
+.shape-cell {
+  position: absolute;
+  border-color: #eee;
+  border-width: 1px;
+}
+
+.shape-cell.full {
+  background-color: #eee;
+}
+
+.shape-cell:hover {
+  border-color: #f60;
+  border-width: 3px;
+  scale: 1.1;
+}

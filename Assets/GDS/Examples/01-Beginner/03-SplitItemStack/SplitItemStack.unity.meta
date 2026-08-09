@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f2cdbb9a4552d7c48bc3ee7f7021ecb1
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/01-Beginner/03-SplitItemStack/SplitItemStack.unity
+  uploadId: 891172

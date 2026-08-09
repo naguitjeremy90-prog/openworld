@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1bea83312a390bd488f6fb3209d249e9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Demos/Basic/Scripts/OpenChestOnClick.cs
+  uploadId: 891172

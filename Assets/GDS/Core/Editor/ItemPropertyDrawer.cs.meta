@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: eaa18cc25e0d3d14da6f916abfb473d2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Core/Editor/ItemPropertyDrawer.cs
+  uploadId: 891172

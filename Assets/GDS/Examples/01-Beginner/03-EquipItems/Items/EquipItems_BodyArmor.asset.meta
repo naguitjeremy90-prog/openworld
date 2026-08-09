@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 40f4dc3fae54f01448a13269661f4437
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/01-Beginner/03-EquipItems/Items/EquipItems_BodyArmor.asset
+  uploadId: 891172

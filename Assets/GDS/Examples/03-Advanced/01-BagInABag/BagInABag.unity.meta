@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 01169f34420b42644904576d009e3aa8
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/03-Advanced/01-BagInABag/BagInABag.unity
+  uploadId: 891172

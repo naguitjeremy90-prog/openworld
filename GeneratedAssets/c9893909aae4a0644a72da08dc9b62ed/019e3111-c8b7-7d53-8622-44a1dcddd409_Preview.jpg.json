@@ -1,0 +1,12 @@
+{
+    "asset": "c9893909aae4a0644a72da08dc9b62ed",
+    "fileName": "019e3111-c8b7-7d53-8622-44a1dcddd409_Preview.jpg",
+    "prompt": "Generate diffuse/albedo textures for a chibi female NPC with:\n\ndark hair in a bun\ncream blouse\nbrown skirt\nsimple apron\nwarm cozy innkeeper vibe\nstylized soft shading\nlow-poly friendly\ncute Nintendo/Tomodachi Life inspired look”",
+    "negativePrompt": "",
+    "model": "hand-painted-textures-2-0",
+    "modelName": "Hand Painted Textures 2.0",
+    "customSeed": 103297794,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

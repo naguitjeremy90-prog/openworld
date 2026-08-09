@@ -1,0 +1,23 @@
+{
+    "asset": "9e4b61b66ee3a1d4f8831d1856a5b7c2",
+    "fileName": "019e38d8-078c-7352-b3e2-a6e3a8a3befe.glb",
+    "prompt": "3D character model of a Filipina woman, full body head to toe in frame, neutral T-pose, arms horizontally extended, legs straight. Features: warm olive-tan skin tone, dark wavy hair in a bun, soft Filipina facial features. Outfit based on reference: cream ruffled blouse, dark brown bodice, chocolate-brown long skirt, and a decorative floral apron. Style: Low-poly game-ready mesh, hand-painted texture aesthetic, optimized for skeletal rigging.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "553efd47fd7b07c458990f084b1de8fc",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

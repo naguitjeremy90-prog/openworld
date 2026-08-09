@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d4b121a4778bd1a459596f49134aef63
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/Common/Tags/Common_Tag_Body.asset
+  uploadId: 891172

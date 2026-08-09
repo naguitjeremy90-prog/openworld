@@ -1,0 +1,28 @@
+{
+    "asset": "c153f7ead5035b64f845260ed594cc93",
+    "fileName": "019e1f28-4acb-76f7-afb9-36fac88af186.jpg",
+    "prompt": "A 360-degree panorama of rolling mountains completely covered in extremely vibrant, saturated lime-green grass. The color is a bright, lush neon green like a freshly watered lawn in bright sunlight. No rocky textures, no snow, just endless green slopes. Clear bright blue sky above the green horizon. Just mountains.",
+    "negativePrompt": "",
+    "model": "skybox-standard",
+    "modelName": "Standard",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

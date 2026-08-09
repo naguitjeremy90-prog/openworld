@@ -1,0 +1,23 @@
+{
+    "asset": "b56d69bd8398b1c41b63142fbb4dbbe9",
+    "fileName": "019e38e5-43e5-752a-9cb9-f11fb9115783.glb",
+    "prompt": "3D character model of a Filipina woman, full body head to toe in frame. STRICT NEUTRAL T-POSE REQUIREMENT: Both arms must be perfectly horizontal (90 degrees from torso), palms facing down, legs straight and slightly apart. Features: warm olive-tan skin tone, dark wavy hair in a bun, soft Filipina facial features. Outfit: cream ruffled peasant blouse, dark brown bodice, chocolate-brown long skirt, decorative floral apron. Style: Low-poly game-ready mesh, hand-painted texture style, clean topology, optimized for skeletal rigging.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "553efd47fd7b07c458990f084b1de8fc",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

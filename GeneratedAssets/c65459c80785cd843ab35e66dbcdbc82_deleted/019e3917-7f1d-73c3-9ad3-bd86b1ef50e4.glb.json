@@ -1,0 +1,23 @@
+{
+    "asset": "c65459c80785cd843ab35e66dbcdbc82",
+    "fileName": "019e3917-7f1d-73c3-9ad3-bd86b1ef50e4.glb",
+    "prompt": "3D low poly character model for rigging. PERFECT T-POSE: Arms horizontal to the floor, legs straight and together, head forward. Clean topology, low polygon count. Character appearance: female chibi with black hair in a bun, white blouse, brown skirt and apron, matching the provided reference image but IGNORE the reference image's pose completely. MUST BE IN A T-POSE.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "553efd47fd7b07c458990f084b1de8fc",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

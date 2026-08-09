@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement class="cover place-items-center row bg-dark-gray">
+        <ui:ListView name="ListView" selection-type="None" show-border="true" style="flex-grow: 0; flex-basis: auto; background-color: rgb(51, 51, 51); width: 320px; flex-shrink: 0; height: 256px;" />
+        <GDS.Core.ListBagView name="ListBagView" items-per-row="5" style="margin-left: 10%;" />
+    </ui:VisualElement>
+    <ui:Label tabindex="-1" text="Drag or Ctrl+Click to Move Items" parse-escape-sequences="true" display-tooltip-when-elided="true" class="help-text" style="margin-top: 5%;" />
+</ui:UXML>

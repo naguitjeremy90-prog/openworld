@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Label tabindex="-1" text="[Tab] Inventory&#10;[C] Character Sheet&#10;[Esc] Close all windows&#10;&#10;[Ctrl+Click] Move Item&#10;[Shift+Click] Unstack Item&#10;&#10;[Drag outside] Discard Item&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" picking-mode="Ignore" class="bg-dark-gray" style="width: 234px; font-size: 16px; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;" />
+</ui:UXML>

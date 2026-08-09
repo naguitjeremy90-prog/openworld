@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 64800d12d450dc840b5e1b47c104c567
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/Common/Items/Common_Apple.asset
+  uploadId: 891172

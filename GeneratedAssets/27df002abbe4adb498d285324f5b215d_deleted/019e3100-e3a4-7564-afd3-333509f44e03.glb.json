@@ -1,0 +1,23 @@
+{
+    "asset": "27df002abbe4adb498d285324f5b215d",
+    "fileName": "019e3100-e3a4-7564-afd3-333509f44e03.glb",
+    "prompt": "A stylized hand-painted 3D chibi NPC of a Filipino innkeeper named Aling Sela. She wears classic provincial clothing: a cream-colored blouse (Baro't saya style), a long brown skirt (Saya), and a patterned apron. Warm brown and cream palette, soft fabric shading. Cute Tomodachi Life style with large expressive eyes. Simple clean textures, cozy PS2/Nintendo-like aesthetic. Neutral T-pose for rigging. Full body, head to toe. Match the provided reference sprite.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "dc9c3991e0e8a5a44ad12be3051f65f2",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

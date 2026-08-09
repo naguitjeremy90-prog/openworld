@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4d72e74be1e11ed4e8db3a773698ff5c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Common/Prefabs/WorldItemWrapper.prefab
+  uploadId: 891172

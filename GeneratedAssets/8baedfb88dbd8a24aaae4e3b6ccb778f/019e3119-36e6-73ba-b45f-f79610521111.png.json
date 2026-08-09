@@ -1,0 +1,38 @@
+{
+    "asset": "8baedfb88dbd8a24aaae4e3b6ccb778f",
+    "fileName": "019e3119-36e6-73ba-b45f-f79610521111.png",
+    "prompt": "A cute male chibi character, standing pose, front view, wearing historical Filipino attire (Camisa de Chino, simple trousers, and a straw hat), matching the art style, proportions, and warm color palette of the reference image. Full body from head to toe in frame.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "00c37c35869c0754687f1bfc3dc87e13",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

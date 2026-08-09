@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: df96da6a11b1fca4e83a6e38f6f96db8
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/03-Advanced/02-CraftingBench/CraftingBench.unity
+  uploadId: 891172

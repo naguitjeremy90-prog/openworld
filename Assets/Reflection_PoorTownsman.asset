@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eae54e2cbe99894984f20c22c3d567f, type: 3}
+  m_Name: Reflection_PoorTownsman
+  m_EditorClassIdentifier: Assembly-CSharp::ReflectionQuestionData
+  questionID: reflection_poor_townsman
+  title: The Poor Townsman's Clue
+  questionText: Who revealed where Anday works?
+  choices:
+  - answerText: Vendor
+    isCorrect: 0
+  - answerText: Beata
+    isCorrect: 0
+  - answerText: Poor Townsman
+    isCorrect: 1
+  - answerText: Sacristan
+    isCorrect: 0
+  correctFeedback: Correct. The Poor Townsman revealed the clue.
+  wrongFeedback: That is not correct yet. Think carefully and try again.

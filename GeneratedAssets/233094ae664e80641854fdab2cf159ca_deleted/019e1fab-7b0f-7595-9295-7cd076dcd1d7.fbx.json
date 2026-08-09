@@ -1,0 +1,23 @@
+{
+    "asset": "233094ae664e80641854fdab2cf159ca",
+    "fileName": "019e1fab-7b0f-7595-9295-7cd076dcd1d7.fbx",
+    "prompt": "Texture a chibi humanoid character. The character must have a highly detailed anime-style face with large blue eyes and black hair, exactly matching the reference image. The character wears a blue jacket with grey trim and dark pants. The face should be the central focus of the head texture.",
+    "negativePrompt": "",
+    "model": "model3d-tripo3-texturing",
+    "modelName": "Tripo 3.0 Texturing",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Texturing",
+    "promptImageReferenceGuid": "6e01508b79655b148bec5a0027a91cca",
+    "modelReferenceGuid": "233094ae664e80641854fdab2cf159ca",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

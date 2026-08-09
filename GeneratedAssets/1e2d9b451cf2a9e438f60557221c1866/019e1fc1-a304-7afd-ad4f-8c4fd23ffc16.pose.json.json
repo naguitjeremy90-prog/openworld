@@ -1,0 +1,12 @@
+{
+    "asset": "1e2d9b451cf2a9e438f60557221c1866",
+    "fileName": "019e1fc1-a304-7afd-ad4f-8c4fd23ffc16.pose.json",
+    "prompt": "A simple, looping idle animation for a humanoid character. Subtle breathing motion with small natural body movement. Arms move slightly at the sides. Head moves very slightly as if looking around or breathing. Feet stay firmly planted on the ground. The character stays in place. Clean and game-ready.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 2052683786,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

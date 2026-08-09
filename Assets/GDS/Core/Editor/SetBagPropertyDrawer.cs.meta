@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9c2104c4723460f489fb69418b6e261a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Core/Editor/SetBagPropertyDrawer.cs
+  uploadId: 891172

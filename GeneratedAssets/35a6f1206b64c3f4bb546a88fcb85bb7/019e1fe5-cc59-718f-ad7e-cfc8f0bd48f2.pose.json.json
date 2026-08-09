@@ -1,0 +1,12 @@
+{
+    "asset": "35a6f1206b64c3f4bb546a88fcb85bb7",
+    "fileName": "019e1fe5-cc59-718f-ad7e-cfc8f0bd48f2.pose.json",
+    "prompt": "Gentle looping humanoid walk cycle for a chibi character. Short natural steps, slight arm swing, subtle head and body bounce. Feet stay aligned with the ground. Calm life-sim game style.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 923834626,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

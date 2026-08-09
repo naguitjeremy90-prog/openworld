@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d7b99a0ae2b335e41971df91c1987f50
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/03-Advanced/02-CraftingBench/Readme.md
+  uploadId: 891172

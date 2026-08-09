@@ -1,0 +1,38 @@
+{
+    "asset": "2774131c67f6ad54c80cca9cea5e03ab",
+    "fileName": "019e3918-e407-7791-88c7-43e4808d454f.png",
+    "prompt": "A character concept sheet of the girl from the reference image. She must be in a strict T-pose (arms horizontal, legs straight). Show a front view, back view, and side view. Low poly, clean stylized look, matching the chibi art style of the reference image. Plain white background.",
+    "negativePrompt": "",
+    "model": "gpt-image-1",
+    "modelName": "GPT Image 1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "553efd47fd7b07c458990f084b1de8fc",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

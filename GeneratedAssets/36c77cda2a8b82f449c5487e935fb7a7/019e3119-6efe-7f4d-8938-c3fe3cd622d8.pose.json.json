@@ -1,0 +1,12 @@
+{
+    "asset": "36c77cda2a8b82f449c5487e935fb7a7",
+    "fileName": "019e3119-6efe-7f4d-8938-c3fe3cd622d8.pose.json",
+    "prompt": "Simple idle animation, slight rhythmic breathing, subtle head tilt, body remains stationary.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 491583141,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

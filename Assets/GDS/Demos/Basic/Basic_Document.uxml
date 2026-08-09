@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GDS/Demos/Basic/Basic_Styles.uss?fileID=7433441132597879392&amp;guid=50f7e83277668c04a9decb8c5ff92365&amp;type=3#Basic_Styles" />
+    <ui:VisualElement name="Root" class="cover" style="background-color: rgba(34, 34, 34, 0.45); flex-direction: row;">
+        <ui:VisualElement name="Backdrop" class="cover" />
+        <ui:VisualElement name="Left" style="flex-shrink: 1; flex-grow: 1; flex-basis: 50%; justify-content: center; align-items: center;" />
+        <ui:VisualElement name="Right" style="flex-shrink: 1; flex-grow: 1; flex-basis: 50%; justify-content: center; align-items: center;" />
+    </ui:VisualElement>
+</ui:UXML>

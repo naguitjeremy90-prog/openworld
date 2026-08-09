@@ -1,0 +1,19 @@
+.character-sheet-field {
+  justify-content: space-between;
+}
+
+.character-sheet-field > Label {
+  color: #aaa;
+  font-size: 20px;
+  margin: 4px 0;
+}
+
+.field-label {
+  min-width: 100px;
+}
+
+.character-sheet-text {
+  color: #aaa;
+  font-size: 20px;
+  margin: 4px 0;
+}

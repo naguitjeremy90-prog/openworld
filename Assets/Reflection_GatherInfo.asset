@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eae54e2cbe99894984f20c22c3d567f, type: 3}
+  m_Name: Reflection_GatherInfo
+  m_EditorClassIdentifier: Assembly-CSharp::ReflectionQuestionData
+  questionID: reflection_gather_info
+  title: Gathering Information
+  questionText: Why was it important to speak to the townspeople of Makamisa before
+    proceeding?
+  choices:
+  - answerText: To learn useful information about the town and its people
+    isCorrect: 1
+  - answerText: To buy goods from the market
+    isCorrect: 0
+  - answerText: To avoid talking to the Vendor again
+    isCorrect: 0
+  - answerText: To prepare for leaving the town
+    isCorrect: 0
+  correctFeedback: Excellent work. You understood why gathering information was important.
+  wrongFeedback: That is not correct yet. Reflect on why the player needed to talk
+    to the townspeople.

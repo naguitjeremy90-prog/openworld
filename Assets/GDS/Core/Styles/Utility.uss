@@ -1,0 +1,214 @@
+/* These are some utility classes that allow for easier layout directly in the `template` */
+/* It includes some predefined values for flex direction, positioning, margins, padding, gap, etc */
+/* The concept is inpired by `Tailwind CSS` - https://tailwindcss.com/docs/styling-with-utility-classes*/
+:root {
+}
+
+.hidden,
+.display-none {
+  display: none;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.overlay,
+.cover,
+.absolute-fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Width, Height */
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.w-half {
+  width: 50%;
+}
+.h-half {
+  height: 50%;
+}
+
+/* Flex */
+.row {
+  flex-direction: row;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.stretch {
+  align-self: stretch;
+}
+
+.flex-1 {
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 0;
+}
+
+.flex-2 {
+  flex-grow: 2;
+  flex-shrink: 0;
+  flex-basis: 0;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+/* Flex align/justify */
+.align-self-center {
+  align-self: center;
+}
+.justify-center {
+  justify-content: center;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.align-items-start {
+  align-items: flex-start;
+}
+
+.align-items-end {
+  align-items: flex-end;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.place-items-center {
+  justify-content: center;
+  align-items: center;
+}
+
+/* Margins */
+.m-50 {
+  margin: 50px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-20 {
+  margin-bottom: 10px;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mt-50 {
+  margin-top: 50px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
+
+.mr-20 {
+  margin-right: 20px;
+}
+
+.mr-50 {
+  margin-right: 50px;
+}
+
+.mr-100 {
+  margin-right: 100px;
+}
+
+/* Padding */
+.p-20 {
+  padding: 20px;
+}
+
+.p-50 {
+  padding: 50px;
+}
+
+/* Gap Horizontal */
+.gap-h-5 > * {
+  margin-right: 5px;
+}
+.gap-h-10 > * {
+  margin-right: 10px;
+}
+.gap-h-20 > * {
+  margin-right: 20px;
+}
+.gap-h-30 > * {
+  margin-right: 30px;
+}
+.gap-h-40 > * {
+  margin-right: 40px;
+}
+.gap-h-50 > * {
+  margin-right: 50px;
+}
+.gap-h-100 > * {
+  margin-right: 100px;
+}
+
+/* Gap Vertical */
+.gap-v-8 > * {
+  margin-bottom: 8px;
+}
+.gap-v-16 > * {
+  margin-bottom: 16px;
+}
+.gap-v-10 > * {
+  margin-bottom: 10px;
+}
+.gap-v-20 > * {
+  margin-bottom: 20px;
+}
+.gap-v-50 > * {
+  margin-bottom: 50px;
+}
+.gap-v-100 > * {
+  margin-bottom: 100px;
+}
+
+/* Colors */
+.bg-dark-gray {
+  background-color: #181818;
+}

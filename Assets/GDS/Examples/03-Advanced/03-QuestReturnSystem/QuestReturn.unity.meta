@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dd53962b78e3b7947886e6098eeb30b5
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/03-Advanced/03-QuestReturnSystem/QuestReturn.unity
+  uploadId: 891172

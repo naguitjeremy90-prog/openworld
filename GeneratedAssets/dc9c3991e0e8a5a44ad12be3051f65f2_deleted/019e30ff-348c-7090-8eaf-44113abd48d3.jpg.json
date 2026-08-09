@@ -1,0 +1,38 @@
+{
+    "asset": "dc9c3991e0e8a5a44ad12be3051f65f2",
+    "fileName": "019e30ff-348c-7090-8eaf-44113abd48d3.jpg",
+    "prompt": "Full body chibi Filipino innkeeper NPC, front view, neutral pose, head to toe. She wears a cream provincial blouse, brown skirt, and patterned apron. Warm brown and cream palette. Cute Tomodachi Life style eyes. Stylized hand-painted aesthetic, transparent background. Inspired by the provided reference.",
+    "negativePrompt": "",
+    "model": "flux-2-pro",
+    "modelName": "Flux 2 (Pro)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "00c37c35869c0754687f1bfc3dc87e13",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

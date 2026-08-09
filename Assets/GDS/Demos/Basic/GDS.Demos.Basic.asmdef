@@ -1,0 +1,17 @@
+{
+    "name": "GDS.Demos.Basic",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e63e70b93c9c9e54cbf88e4637951ec2",
+        "GUID:5b081e7137f713d46abc62f47ea9b454"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

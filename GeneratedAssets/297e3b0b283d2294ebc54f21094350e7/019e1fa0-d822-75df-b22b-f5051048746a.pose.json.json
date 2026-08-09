@@ -1,0 +1,12 @@
+{
+    "asset": "297e3b0b283d2294ebc54f21094350e7",
+    "fileName": "019e1fa0-d822-75df-b22b-f5051048746a.pose.json",
+    "prompt": "A standard humanoid walking animation. The character walks forward with natural arm swings and leg movements.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 748120956,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

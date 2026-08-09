@@ -1,0 +1,23 @@
+{
+    "asset": "8483aa90bcf5e034d816c5bb3ff6cb9d",
+    "fileName": "019e1f83-325f-7f60-bff6-1c428f1ecce8.glb",
+    "prompt": "A low poly 3D character model of the person in the reference image. Full body from head to toe, front-facing neutral T-pose, optimized for game use. Match the colors and clothing of the reference image.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "ba14fe583c4c23d42815d7193a117a9e",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

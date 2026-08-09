@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement class="cover place-items-center bg-dark-gray">
+        <ui:VisualElement name="Backdrop" class="cover" />
+        <GDS.Core.ListBagView Title="My list" items-per-row="5" class="custom-list-bag" style="align-items: flex-start; align-self: center;" />
+        <ui:Button text="Create Random Item" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CreateItem" style="margin-top: 16px; margin-right: 0; margin-bottom: 0;" />
+    </ui:VisualElement>
+    <ui:Label tabindex="-1" text="Drag outside to destroy Item" parse-escape-sequences="true" display-tooltip-when-elided="true" class="help-text" style="margin-top: 5%;" />
+</ui:UXML>

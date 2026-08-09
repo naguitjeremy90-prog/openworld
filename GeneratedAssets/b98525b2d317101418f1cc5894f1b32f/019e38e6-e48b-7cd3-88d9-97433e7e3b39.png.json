@@ -1,0 +1,38 @@
+{
+    "asset": "b98525b2d317101418f1cc5894f1b32f",
+    "fileName": "019e38e6-e48b-7cd3-88d9-97433e7e3b39.png",
+    "prompt": "A character concept sheet of a Filipina woman, full body head to toe, in a strict neutral T-pose, front view, arms perfectly horizontal at 90 degrees from the body, palms facing down, legs straight and slightly apart. Style and features: warm olive-tan skin, dark hair in a bun, cream ruffled blouse, dark brown bodice, chocolate-brown long skirt, decorative floral apron. Maintain the art style and character design from the reference image. Crisp white background.",
+    "negativePrompt": "",
+    "model": "gpt-image-1-5",
+    "modelName": "GPT Image 1.5",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "553efd47fd7b07c458990f084b1de8fc",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

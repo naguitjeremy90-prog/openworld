@@ -1,0 +1,12 @@
+{
+    "asset": "9cd58e0b54574af4f8b079a760280956",
+    "fileName": "019e3108-5153-7bb8-bc0b-9c26e263f5be_Preview.jpg",
+    "prompt": "Stylized hand-painted fabric material for a chibi Filipino innkeeper's provincial outfit. Features a cream-colored Baro't Saya blouse, a long warm brown skirt, and a simple patterned apron. Soft fabric shading, cozy PS2-era aesthetic, stylized and clean. Warm brown and cream palette.",
+    "negativePrompt": "",
+    "model": "hand-painted-textures-2-0",
+    "modelName": "Hand Painted Textures 2.0",
+    "customSeed": 212636269,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

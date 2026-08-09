@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 40cf4a6aec969824bbe1a83d1898babc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/Common/Items/Common_Wood.asset
+  uploadId: 891172

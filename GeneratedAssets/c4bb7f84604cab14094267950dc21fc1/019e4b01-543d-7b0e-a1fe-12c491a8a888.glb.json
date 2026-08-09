@@ -1,0 +1,23 @@
+{
+    "asset": "c4bb7f84604cab14094267950dc21fc1",
+    "fileName": "019e4b01-543d-7b0e-a1fe-12c491a8a888.glb",
+    "prompt": "A stylized low-poly gothic church pew, 3D model, matching the provided concept. Dark wood and pewter accents.",
+    "negativePrompt": "",
+    "model": "model3d-tripo3-1",
+    "modelName": "Tripo 3.1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "4dce1a51babe7e74e80e9de230ef7e1b",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

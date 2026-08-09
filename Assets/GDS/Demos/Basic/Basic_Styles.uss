@@ -1,0 +1,32 @@
+.debug-label {
+  color: #666;
+}
+
+/* Equipment */
+.slot.empty.Helmet {
+  background-image: url("Sprites/ui/helmet.png");
+}
+.slot.empty.Gloves {
+  background-image: url("Sprites/ui/gloves.png");
+}
+.slot.empty.Boots {
+  background-image: url("Sprites/ui/boots.png");
+}
+.slot.empty.Body {
+  background-image: url("Sprites/ui/body.png");
+}
+.slot.empty.Weapon {
+  background-image: url("Sprites/ui/weapon.png");
+}
+
+.slot.Weapon {
+  margin-left: 24px;
+}
+
+.window {
+  min-width: 300px;
+}
+
+.character-sheet-window .window-container {
+  padding: 24px 32px;
+}

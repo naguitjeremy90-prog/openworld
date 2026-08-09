@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GDS/Demos/Basic/Views/BasicTooltipView_Styles.uss?fileID=7433441132597879392&amp;guid=2022fd695c5b6664a890a96f00157fd7&amp;type=3#BasicTooltipView_Styles" />
+    <ui:VisualElement name="Root" class="tooltip">
+        <ui:Label tabindex="-1" text="Item Name" name="Name" enable-rich-text="false" class="tooltip-item-name" />
+        <ui:VisualElement name="WeaponGroup">
+            <ui:Label tabindex="-1" text="Attack: 99" name="Attack" enable-rich-text="false" class="tooltip-item-field" />
+            <ui:Label tabindex="-1" text="Speed: 99" name="Speed" enable-rich-text="false" class="tooltip-item-field" />
+            <ui:Label tabindex="-1" text="DPS: 99" name="Dps" enable-rich-text="false" class="tooltip-item-field" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ArmorGroup">
+            <ui:Label tabindex="-1" text="Defense: 99" name="Defense" enable-rich-text="false" class="tooltip-item-field" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Separator" class="separator" />
+        <ui:Label tabindex="-1" text="Weight: 99" name="Weight" enable-rich-text="false" class="tooltip-item-field" />
+        <ui:Label tabindex="-1" text="Cost: 99" name="Cost" enable-rich-text="false" class="tooltip-item-field" />
+    </ui:VisualElement>
+</ui:UXML>

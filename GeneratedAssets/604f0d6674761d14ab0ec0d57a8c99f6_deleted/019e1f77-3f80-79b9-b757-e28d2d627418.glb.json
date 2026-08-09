@@ -1,0 +1,23 @@
+{
+    "asset": "604f0d6674761d14ab0ec0d57a8c99f6",
+    "fileName": "019e1f77-3f80-79b9-b757-e28d2d627418.glb",
+    "prompt": "A low poly 3D model of a medieval market stall with a wooden frame and a striped red, white, and blue cloth roof. The stall features wooden crates filled with various fruits and vegetables, a small blackboard sign, and a larger wooden sign on the side. The model should match the layout, colors, and rustic style of the reference image.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "5ce9f3868de9490489d62c1d809ea577",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

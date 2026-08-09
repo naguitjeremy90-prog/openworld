@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 885d1721a261d4e4db611aa4933be939
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/02-Intermediate/03-ScriptableObjectBag/Readme.md
+  uploadId: 891172

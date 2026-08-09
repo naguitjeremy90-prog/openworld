@@ -1,0 +1,38 @@
+{
+    "asset": "dc9c3991e0e8a5a44ad12be3051f65f2",
+    "fileName": "019e314d-bc8e-732e-b7d7-12c85089b3e0.jpg",
+    "prompt": "Add soft volumetric shadows and ambient occlusion to the character to give it a more 3D appearance while keeping it a 2D sprite. Enhance the shading on the hair, clothing folds, and under the chin to create a sense of depth and volume.",
+    "negativePrompt": "",
+    "model": "seedream-4-5",
+    "modelName": "Seedream 4.5",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "dc9c3991e0e8a5a44ad12be3051f65f2",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

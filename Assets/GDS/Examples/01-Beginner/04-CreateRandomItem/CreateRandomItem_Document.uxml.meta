@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 7875ef18e7255f040b8c6de2e9125cfb
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 13804, guid: 0000000000000000e000000000000000, type: 0}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/01-Beginner/04-CreateRandomItem/CreateRandomItem_Document.uxml
+  uploadId: 891172

@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 2312a4cdfa79b9448b14e15c8857affe
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Store: {instanceID: 0}
+  - SpawnPoint: {instanceID: 0}
+  - WrapperPrefab: {fileID: 6757749344117816647, guid: 4d72e74be1e11ed4e8db3a773698ff5c,
+      type: 3}
+  - DefaultPrefab: {fileID: 6757749344117816647, guid: b6e287881227d3043b4cc7b8701d4169,
+      type: 3}
+  - DespawnVFX: {fileID: 8084280330537028269, guid: 9d2d3d2d4222ee542ae3318c55a86510,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Common/Scripts/SpawnDespawnItemPrefab.cs
+  uploadId: 891172

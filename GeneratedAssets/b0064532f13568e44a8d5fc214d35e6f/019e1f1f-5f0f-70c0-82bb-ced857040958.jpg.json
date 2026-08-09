@@ -1,0 +1,28 @@
+{
+    "asset": "b0064532f13568e44a8d5fc214d35e6f",
+    "fileName": "019e1f1f-5f0f-70c0-82bb-ced857040958.jpg",
+    "prompt": "A beautiful landscape with vast green grasses in the foreground and majestic snow-capped mountains in the distance under a clear sunny sky, realistic style, high detail.",
+    "negativePrompt": "",
+    "model": "skybox-standard",
+    "modelName": "Standard",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

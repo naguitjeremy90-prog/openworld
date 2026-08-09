@@ -1,0 +1,23 @@
+{
+    "asset": "c136d61373b246b499d380537fc22539",
+    "fileName": "019e1fcf-ca35-7b4f-9c77-d9ab44dbb716.glb",
+    "prompt": "A 3D chibi character of a young male historian. Chibi proportions with a big head and a small body. Soft, cute life-sim game style. The character has short messy black hair, a blue open jacket over a white shirt, dark pants, and black shoes. Simple, neutral facial expression. CRITICAL: The character must have clearly defined hands with simple fingers, separated from the sleeves. The character must be in a clean T-pose or A-pose, with arms clearly separated from the torso and legs clearly separated from each other. Hands should be simple and visible, feet flat on the ground. The mesh should be symmetrical, with clean low-poly stylized topology suitable for humanoid animation. Face forward, origin at feet. No background. Matching the style of the provided reference image.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "6e01508b79655b148bec5a0027a91cca",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

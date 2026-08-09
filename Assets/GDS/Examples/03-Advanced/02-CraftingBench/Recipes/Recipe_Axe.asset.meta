@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1560c2f0785d8e8408a0c3a2e0e630af
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/03-Advanced/02-CraftingBench/Recipes/Recipe_Axe.asset
+  uploadId: 891172

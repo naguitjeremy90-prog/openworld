@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement picking-mode="Ignore" style="margin-top: 5%;">
+        <ui:Label tabindex="-1" text="Drag items into the world&#10;to spawn around the spawn point" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 46px; color: rgb(0, 0, 0); width: 100%; -unity-text-align: upper-center; -unity-paragraph-spacing: -20px;" />
+        <ui:Label tabindex="-1" text="Press [Tab] to toggle UI" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(0, 0, 0); font-size: 46px; -unity-text-align: upper-center; margin-top: 24px;" />
+    </ui:VisualElement>
+</ui:UXML>

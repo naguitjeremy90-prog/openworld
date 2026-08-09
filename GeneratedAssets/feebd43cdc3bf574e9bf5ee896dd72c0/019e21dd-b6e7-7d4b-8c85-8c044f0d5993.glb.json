@@ -1,0 +1,23 @@
+{
+    "asset": "feebd43cdc3bf574e9bf5ee896dd72c0",
+    "fileName": "019e21dd-b6e7-7d4b-8c85-8c044f0d5993.glb",
+    "prompt": "Low poly 3D model of a Filipino market stall, 'Sariwang Ani', wooden structure, bamboo poles, tattered red, white, and blue striped fabric awning, baskets of fruits (watermelon, oranges, bananas), crates of vegetables (tomatoes, greens), hanging garlic and bananas, wooden sign, metal hanging scale, game-ready, low poly style. High quality textures.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "626d78a9ad3f2464c809f51999f7f3c8",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

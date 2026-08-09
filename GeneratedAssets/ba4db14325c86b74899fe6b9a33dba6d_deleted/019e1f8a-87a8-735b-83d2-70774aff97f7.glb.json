@@ -1,0 +1,23 @@
+{
+    "asset": "ba4db14325c86b74899fe6b9a33dba6d",
+    "fileName": "019e1f8a-87a8-735b-83d2-70774aff97f7.glb",
+    "prompt": "A low-poly 3D character model of the guy in the blue polo shirt (from the first reference), with the distinct art style and proportions of a Tomodachi Life character (from the second reference). Oversized head, small body, simplified rounded limbs, and stylized facial features. Wearing a blue polo shirt and dark pants. Full body from head to toe, front-facing neutral T-pose, low polygon count, clean topology, game-ready.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "ba14fe583c4c23d42815d7193a117a9e",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

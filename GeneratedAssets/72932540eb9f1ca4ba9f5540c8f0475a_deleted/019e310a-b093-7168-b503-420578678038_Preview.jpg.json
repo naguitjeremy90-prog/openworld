@@ -1,0 +1,12 @@
+{
+    "asset": "72932540eb9f1ca4ba9f5540c8f0475a",
+    "fileName": "019e310a-b093-7168-b503-420578678038_Preview.jpg",
+    "prompt": "Hand-painted stylized fabric texture for a cozy provincial outfit. Inspired by Filipino Baro't Saya, featuring a warm cream linen and deep earth-brown woven fabric. Soft brushstrokes, gentle gradients, and a cozy PS2-era Nintendo aesthetic. Seamless and clean, with a warm and inviting palette. High quality 1024x1024.",
+    "negativePrompt": "",
+    "model": "hand-painted-textures-2-0",
+    "modelName": "Hand Painted Textures 2.0",
+    "customSeed": 579848704,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

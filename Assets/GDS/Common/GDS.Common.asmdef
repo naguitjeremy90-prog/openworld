@@ -1,0 +1,17 @@
+{
+    "name": "GDS.Common",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e63e70b93c9c9e54cbf88e4637951ec2",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

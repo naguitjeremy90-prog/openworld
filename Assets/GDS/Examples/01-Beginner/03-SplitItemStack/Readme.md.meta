@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 64f0b1743f92b544c82227c73faba663
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/01-Beginner/03-SplitItemStack/Readme.md
+  uploadId: 891172

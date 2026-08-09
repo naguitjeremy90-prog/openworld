@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 29612f4c57f87bc418a1b234cc4c9f0d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Core/Manipulators/HighlightSlotManipulator.cs
+  uploadId: 891172

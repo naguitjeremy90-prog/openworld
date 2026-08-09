@@ -1,0 +1,38 @@
+{
+    "asset": "92c90bf2bc14af5469429c5d91037483",
+    "fileName": "019e220a-6403-7bcb-a085-b66c01fa3e0c.png",
+    "prompt": "A Unity game asset sprite sheet. White background. STRICT 2x2 grid (2 columns, 2 rows = 4 equal cells). The grid should fill the entire image with size 1024x1024 with no extra border or padding outside the cells. Contains the following individual game assets, one per cell left-to-right top-to-bottom, styled to exactly match the art style of the provided reference image: Large Rustic House, Small Thatched Hut, Medium Porch House.\n\nRules:\n- ONE asset per grid cell, centered with ample padding\n- Assets must be scaled to fit within their cell — do NOT overflow into grid lines\n- Grid must have exactly 2 columns and 2 rows of equal-sized cells\n- Grid lines: clean, solid black, clearly visible but not overly thick\n- All cells must be equal in size\n- White background inside every cell\n- Any remaining empty cells must be pure white with no content\n- NO text, labels, captions, names, or annotations anywhere in the image\n- Assets must look like they belong in the original scene (match style exactly)\n- Do NOT remove background on the game asset sprite sheet.",
+    "negativePrompt": "",
+    "model": "gemini-3.0-pro",
+    "modelName": "Gemini 3.0 Pro",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "dadcbd3e3e4519246960d9d841c2069a",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement class="cover row place-items-center bg-dark-gray">
+        <ui:VisualElement>
+            <ui:Label tabindex="-1" text="Crafting Bench" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" class="bag-title" />
+            <GDS.Examples.CraftingBenchView name="CraftingBenchView" />
+        </ui:VisualElement>
+        <GDS.Core.ListBagView name="InventoryView" title="Inventory" style="margin-left: 10%;" />
+    </ui:VisualElement>
+    <ui:Label tabindex="-1" text="Drag or Ctrl+Click to Move Items" parse-escape-sequences="true" display-tooltip-when-elided="true" class="help-text" style="margin-top: 5%;" />
+</ui:UXML>

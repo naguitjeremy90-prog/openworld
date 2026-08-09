@@ -1,0 +1,23 @@
+{
+    "asset": "b0125f1c57b013449869cb1ea51a8989",
+    "fileName": "019e220d-fa68-7176-9478-66f5475616f4.glb",
+    "prompt": "Low poly 3D model of a large rustic house with a brown tiled roof, wooden structural beams, and a porch, game-ready style, high quality textures.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "bb4e5bc720f314041abc748bdb70d50b",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

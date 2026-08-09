@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f8201cac1259f6546a606f7df45eae4b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/02-Intermediate/01-DiscardItem/DiscardItem_Controller.cs
+  uploadId: 891172

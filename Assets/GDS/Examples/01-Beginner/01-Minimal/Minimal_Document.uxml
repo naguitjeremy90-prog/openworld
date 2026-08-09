@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="justify-content: center; align-self: auto; align-items: auto; height: 100%; background-color: rgb(24, 24, 24);">
+        <GDS.Core.ListBagView Title="My list" title="Minimal Example" show-title="true" style="align-items: flex-start; align-self: center;" />
+    </ui:VisualElement>
+</ui:UXML>

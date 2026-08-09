@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bc02cf564c7fa54c8275008b206f3f1, type: 3}
+  m_Name: EquipItems_BodyArmor
+  m_EditorClassIdentifier: 
+  Name: Body Armor
+  Icon: {fileID: 21300000, guid: 2f1eaeeaad36ee5469eff7ff158f37ba, type: 3}
+  Stackable: 0
+  MaxStackSize: 100
+  Tags:
+  - {fileID: 11400000, guid: d4b121a4778bd1a459596f49134aef63, type: 2}

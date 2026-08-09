@@ -1,0 +1,23 @@
+{
+    "asset": "80cdfea4836b8f74c8990f7d14df2871",
+    "fileName": "019e220d-f951-78b7-96ea-dd821572b59e.glb",
+    "prompt": "Low poly 3D model of a medium-sized house with a porch, white walls, and a tiled roof, game-ready style, high quality textures.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "3c4790912aa66264cb5806faf6ed55ea",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

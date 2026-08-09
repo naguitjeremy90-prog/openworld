@@ -1,0 +1,28 @@
+{
+    "asset": "a9150e4d8ff9d6a46a295fbf04280e7c",
+    "fileName": "019e21a3-7057-7d10-b90f-59d9ed5a5736.png",
+    "prompt": "A rectangular wooden sign with the text 'POSADA' carved into it in a straight, level, rustic font. Weathered wood background, white background, standalone object.",
+    "negativePrompt": "",
+    "model": "flux-2-dev",
+    "modelName": "Flux 2 (Dev)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

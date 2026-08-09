@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement class="cover place-items-center bg-dark-gray">
+        <GDS.Core.ListBagView Title="My list" items-per-row="5" title="List bag" class="custom-list-bag" style="align-items: flex-start; align-self: center;" />
+        <GDS.Core.SetBagView title="Set bag" style="margin-top: 12px;" />
+    </ui:VisualElement>
+    <ui:Label tabindex="-1" text="Stackable items will stack up to &lt;color=orange&gt;MaxStackSize&lt;/color&gt;&#10;Shift+Click to split a stack in half or transfer 1" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" class="help-text" style="margin-top: 5%;" />
+</ui:UXML>

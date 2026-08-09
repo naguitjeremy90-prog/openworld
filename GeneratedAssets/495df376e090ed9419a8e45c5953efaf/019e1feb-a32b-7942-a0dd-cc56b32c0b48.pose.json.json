@@ -1,0 +1,12 @@
+{
+    "asset": "495df376e090ed9419a8e45c5953efaf",
+    "fileName": "019e1feb-a32b-7942-a0dd-cc56b32c0b48.pose.json",
+    "prompt": "A proud and upright humanoid idle animation. The character stands straight with good posture, looking attentive and professional. Very subtle and natural body swaying, minimal head movement looking forward. Shoulders back, chest out, feet planted. Clean looping animation for a 3D chibi historian character. Minimal fatigue, no slouching.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 146401823,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

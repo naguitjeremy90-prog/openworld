@@ -1,0 +1,12 @@
+{
+    "asset": "a0c03576f45174e40a9cf935fbba9094",
+    "fileName": "019e30fd-b25c-7d4c-a418-f78a1f5f92ac_Preview.jpg",
+    "prompt": "A stylized hand-painted texture/material for a cozy chibi Filipino innkeeper NPC inspired by classic provincial clothing. Warm brown and cream palette, soft fabric shading, cute Tomodachi Life style, simple clean textures, cozy PS2/Nintendo-like aesthetic. Hand-painted fabric texture for a cream blouse and brown skirt with subtle patterns.",
+    "negativePrompt": "",
+    "model": "hand-painted-textures-2-0",
+    "modelName": "Hand Painted Textures 2.0",
+    "customSeed": 1675958854,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

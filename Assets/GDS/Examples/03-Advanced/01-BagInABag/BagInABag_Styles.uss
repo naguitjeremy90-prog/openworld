@@ -1,0 +1,18 @@
+.container-list-bag {
+  background-color: #333;
+  min-width: 420px;
+  padding: 16px;
+  padding-bottom: 0;
+}
+
+.capacity-container {
+  background-color: #444;
+  margin-top: 8px;
+}
+
+.container-slot {
+  margin-bottom: 16px;
+  padding: 8px;
+  border-width: 1px;
+  border-color: #666;
+}

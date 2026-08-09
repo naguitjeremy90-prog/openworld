@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement class="cover" style="background-color: rgba(17, 17, 17, 0); align-items: flex-end; align-self: auto; justify-content: center;">
+        <ui:VisualElement name="Backdrop" class="cover" />
+        <GDS.Core.ListBagView style="background-color: rgb(34, 34, 34); margin-right: 25%;" />
+    </ui:VisualElement>
+</ui:UXML>

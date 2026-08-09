@@ -1,0 +1,38 @@
+{
+    "asset": "98b9ec0a7b68851458f441699a104c0e",
+    "fileName": "019e3146-f4e4-70fe-a75f-0722224cc957.mp4",
+    "prompt": "A 2D character spritesheet, side view facing right, simple idle animation. The character is a young girl with dark hair in a bun, wearing a cream blouse and a brown apron. Animation: subtle breathing with only shoulder movement and slight head bobbing. No arm or leg movement. Matching the style of the reference image.",
+    "negativePrompt": "",
+    "model": "video-kling-v3-i2v-pro",
+    "modelName": "Kling V3 I2V Pro",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Spritesheet",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 9,
+                "doodle": [],
+                "label": "First",
+                "strength": 1.0,
+                "invertStrength": false,
+                "assetReferenceGuid": "74c045b5195b3664aae30c3f53b51565",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 0,
+        "height": 0
+    },
+    "spriteSheet": true,
+    "duration": 5.0
+}

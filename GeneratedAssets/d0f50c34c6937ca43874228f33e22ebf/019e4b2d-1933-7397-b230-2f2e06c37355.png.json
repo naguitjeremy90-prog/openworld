@@ -1,0 +1,38 @@
+{
+    "asset": "d0f50c34c6937ca43874228f33e22ebf",
+    "fileName": "019e4b2d-1933-7397-b230-2f2e06c37355.png",
+    "prompt": "A single, isolated stone monument with a cross, exactly matching the art style and architecture of the provided reference image. Only show one clear perspective (isometric/side-front). The monument features a tall central pillar with a cross, a circular tiered base, and a large octagonal stone platform with decorative railings and two sets of stairs on the sides. Plain white background. No extra views or perspectives. Low poly aesthetic.",
+    "negativePrompt": "",
+    "model": "gemini-3.0-pro",
+    "modelName": "Gemini 3.0 Pro",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "9f76116503e97df49acaf7717adc17df",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e700c17aae3141f45a2f4f5b589f35db
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Common/Prefabs/ConsumeVFX.prefab
+  uploadId: 891172

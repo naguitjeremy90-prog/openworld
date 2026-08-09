@@ -1,0 +1,23 @@
+{
+    "asset": "55624b2b1804f8e4bbacb2efd2f6ad66",
+    "fileName": "019e34f2-45c7-7f33-b076-a14deb267827.glb",
+    "prompt": "Stylized female character, full body head to toe, front view, neutral standing pose. Dark hair in a bun, white blouse, rustic villager appearance. High-quality 3D mesh with PBR materials.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "cca7e325a08c52e4c93d49665c2b30d9",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

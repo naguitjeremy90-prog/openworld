@@ -1,0 +1,12 @@
+{
+    "asset": "a6af7523f57382842b116788aaa5c67a",
+    "fileName": "019e1fe0-c625-7fc9-bea2-f66c2cd8709f.pose.json",
+    "prompt": "A subtle, looping idle animation for a 3D character. Gentle breathing motion, small natural body swaying, slight arm movement at the sides, head moves very slightly. Feet stay planted on the ground. Professional life-sim game style.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 628507464,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

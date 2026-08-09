@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 0682d5b4dc58ded4f9d5a76b6934ee5d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Demos/Basic/Inventory/Basic_Store.cs
+  uploadId: 891172

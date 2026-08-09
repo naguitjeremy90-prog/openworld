@@ -1,0 +1,23 @@
+{
+    "asset": "2580d9bb1163f1d4693ce23694976fd0",
+    "fileName": "019e1fdc-5c7b-7ac4-8cd2-045b4ce5f40b.glb",
+    "prompt": "Full body 3D chibi character of a young male historian, head to toe in frame. Black short messy hair, blue open jacket, white shirt, dark pants, black shoes. Cute life-sim game style, clean low-poly stylized topology. Symmetrical T-pose, arms and legs clearly separated. Neutral face, forward-facing. Professional game asset quality.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "8da3a035311a21746998711c4c70fe19",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

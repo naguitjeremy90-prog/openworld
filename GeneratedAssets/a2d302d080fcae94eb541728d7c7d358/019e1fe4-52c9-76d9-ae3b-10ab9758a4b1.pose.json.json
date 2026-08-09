@@ -1,0 +1,12 @@
+{
+    "asset": "a2d302d080fcae94eb541728d7c7d358",
+    "fileName": "019e1fe4-52c9-76d9-ae3b-10ab9758a4b1.pose.json",
+    "prompt": "Very subtle looping idle animation. Character is in a natural, stable standing pose. The body and limbs are almost completely still. Only the head has minimal, natural movement, looking slightly left and right. Feet stay perfectly planted. Low energy, calm, life-sim style.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 95068183,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

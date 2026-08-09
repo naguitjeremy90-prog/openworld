@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GDS/Demos/Basic/Views/Resources/CharacterSheetStyles.uss?fileID=7433441132597879392&amp;guid=9ce1f068f25f4af4ca75f4d51f6bc3e8&amp;type=3#CharacterSheetStyles" />
+    <ui:VisualElement class="row character-sheet-field">
+        <ui:Label tabindex="-1" text="Attack Damage: " parse-escape-sequences="true" display-tooltip-when-elided="true" class="field-label" />
+        <ui:Label tabindex="-1" text="999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AttackDamage" />
+    </ui:VisualElement>
+    <ui:VisualElement class="row character-sheet-field">
+        <ui:Label tabindex="-1" text="Attack Speed: " parse-escape-sequences="true" display-tooltip-when-elided="true" class="field-label" />
+        <ui:Label tabindex="-1" text="999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AttackSpeed" />
+    </ui:VisualElement>
+    <ui:VisualElement class="row character-sheet-field">
+        <ui:Label tabindex="-1" text="DPS: " parse-escape-sequences="true" display-tooltip-when-elided="true" class="field-label" />
+        <ui:Label tabindex="-1" text="999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Dps" />
+    </ui:VisualElement>
+    <ui:VisualElement class="row character-sheet-field">
+        <ui:Label tabindex="-1" text="Defense: " parse-escape-sequences="true" display-tooltip-when-elided="true" class="field-label" />
+        <ui:Label tabindex="-1" text="999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Defense" />
+    </ui:VisualElement>
+    <ui:VisualElement class="row character-sheet-field">
+        <ui:Label tabindex="-1" text="Weight: " parse-escape-sequences="true" display-tooltip-when-elided="true" class="field-label" />
+        <ui:Label tabindex="-1" text="999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Weight" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,38 @@
+{
+    "asset": "0212c8a6f7621324dadb65353fe20c76",
+    "fileName": "019e311e-2451-73f6-83d9-23c02f79e47d.png",
+    "prompt": "A single cute male chibi character, full body, head to toe, front view, standing pose, wearing a Barong Tagalog-style shirt and simple trousers, matching the chibi art style and warm color palette of the reference image. Plain white background, no text or other characters.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "00c37c35869c0754687f1bfc3dc87e13",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

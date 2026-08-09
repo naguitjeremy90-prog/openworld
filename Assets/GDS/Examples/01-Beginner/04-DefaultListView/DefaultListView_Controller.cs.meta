@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 003b17052fc42e84abd6daf2cee6abc3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/01-Beginner/04-DefaultListView/DefaultListView_Controller.cs
+  uploadId: 891172

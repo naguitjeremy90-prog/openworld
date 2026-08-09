@@ -1,0 +1,23 @@
+{
+    "asset": "c73c43185131c094b9ea229164371f5e",
+    "fileName": "019e4b2b-8946-7ba6-a4c9-25fe86cebc7b.glb",
+    "prompt": "Low poly 3D model of a single stone monument. The reference image contains two perspectives of the same object; use both views to create one accurate 3D mesh. The monument has a central cross-topped pillar, a circular base, and an octagonal platform with railings and side stairs. Low poly, stylized, game-ready.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "9f76116503e97df49acaf7717adc17df",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

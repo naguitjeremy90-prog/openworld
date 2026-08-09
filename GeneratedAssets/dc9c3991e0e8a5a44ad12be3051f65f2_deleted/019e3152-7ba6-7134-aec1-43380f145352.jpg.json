@@ -1,0 +1,38 @@
+{
+    "asset": "dc9c3991e0e8a5a44ad12be3051f65f2",
+    "fileName": "019e3152-7ba6-7134-aec1-43380f145352.jpg",
+    "prompt": "Refine this character to have a hand-drawn illustration style. Add sketchy pencil textures, soft painterly strokes, and organic lines. Avoid clean vector or pixelated edges. Maintain the 3D-like shadowing and depth while making it look like a high-quality hand-drawn asset.",
+    "negativePrompt": "",
+    "model": "seedream-4-5",
+    "modelName": "Seedream 4.5",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "dc9c3991e0e8a5a44ad12be3051f65f2",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

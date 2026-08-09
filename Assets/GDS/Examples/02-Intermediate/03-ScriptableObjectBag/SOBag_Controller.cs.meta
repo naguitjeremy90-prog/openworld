@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2bd51c5d80cd878438db4164991e29a1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/02-Intermediate/03-ScriptableObjectBag/SOBag_Controller.cs
+  uploadId: 891172

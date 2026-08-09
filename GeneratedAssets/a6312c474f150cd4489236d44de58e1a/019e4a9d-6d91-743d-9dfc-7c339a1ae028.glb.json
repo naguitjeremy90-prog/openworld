@@ -1,0 +1,23 @@
+{
+    "asset": "a6312c474f150cd4489236d44de58e1a",
+    "fileName": "019e4a9d-6d91-743d-9dfc-7c339a1ae028.glb",
+    "prompt": "Low poly 3D model of a weathered gothic church with a bell tower and cross. Stone textures with moss and cracks. Low poly stylized aesthetic. Based on the reference image.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "0472de65b5c3a4d47a4fc973a2c6f8e5",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

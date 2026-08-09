@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 897772f39d0887542871251a19be02cc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/02-Intermediate/02-RightAndDoubleClick/RightAndDoubleClick_Store.cs
+  uploadId: 891172

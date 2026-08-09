@@ -1,0 +1,23 @@
+{
+    "asset": "3f6da0fe2aa4a434a80c6c2e099ccdb5",
+    "fileName": "019e391f-2ca5-7d8f-a673-b72bf9862e05.glb",
+    "prompt": "3D low poly character model of a girl in a T-pose, matching the provided image. Low poly aesthetic, clean topology. The character has dark brown hair in a bun with two loose curls, a light beige button-up shirt, a dark brown skirt, and a light tan apron with a simple floral embroidery pattern at the bottom. She is wearing dark shoes. T-pose, neutral expression.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "be98bdecfdcf0ea4a8de15c640007726",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

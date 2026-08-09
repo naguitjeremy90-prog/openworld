@@ -1,0 +1,23 @@
+{
+    "asset": "df532b1495ba78c4983a02609bc09e71",
+    "fileName": "019e311f-e891-7eae-9636-e74b79522727.glb",
+    "prompt": "3D character model of a male chibi in historical Filipino attire. High quality, game-ready, full body.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "0212c8a6f7621324dadb65353fe20c76",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

@@ -1,0 +1,12 @@
+{
+    "asset": "4e8d9acbf9d5b684fbe6af32f61420be",
+    "fileName": "019e1f93-1e3f-7942-bf65-b515938ed490.pose.json",
+    "prompt": "A simple breathing idle animation for a humanoid character. The character stands still with slight body sways and shoulder movements.",
+    "negativePrompt": "",
+    "model": "unity-text-to-motion",
+    "modelName": "Text to Motion",
+    "customSeed": 995878207,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "isTrimmed": false
+}

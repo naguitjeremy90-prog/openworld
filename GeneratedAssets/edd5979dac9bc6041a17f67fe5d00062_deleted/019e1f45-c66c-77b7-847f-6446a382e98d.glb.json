@@ -1,0 +1,23 @@
+{
+    "asset": "edd5979dac9bc6041a17f67fe5d00062",
+    "fileName": "019e1f45-c66c-77b7-847f-6446a382e98d.glb",
+    "prompt": "A low-poly 3D character model based on the man in the pixel art reference. Male character with black hair, wearing a blue shirt and white undershirt. Stylized low-poly aesthetic, front-facing T-pose, game-ready topology, flat shading.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "f76ad17c668728b4f8b35362611b1dcb",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

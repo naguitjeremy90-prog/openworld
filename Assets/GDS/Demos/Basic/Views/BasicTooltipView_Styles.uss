@@ -1,0 +1,36 @@
+.tooltip-item-name {
+  -unity-text-align: middle-center;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.tooltip-item-field {
+  -unity-text-align: middle-center;
+  font-size: 18px;
+  color: rgb(170, 170, 170);
+}
+
+.separator {
+  height: 1px;
+  background-color: #fff;
+  margin: 8px 0;
+  opacity: 0.1;
+}
+
+.Unique {
+  background-color: rgb(24, 14, 10);
+  border-color: rgb(175, 95, 28);
+}
+.Rare {
+  background-color: rgb(68, 46, 25);
+  border-color: rgb(172, 130, 34);
+}
+.Magic {
+  background-color: rgb(24, 34, 36);
+  border-color: rgb(66, 74, 103);
+}
+.Common,
+.NoRarity {
+  background-color: rgb(46, 46, 46);
+  border-color: rgb(144, 131, 128);
+}

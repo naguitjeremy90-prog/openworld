@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 1f4c055a9fdce8d4ba61d2ff97687bf2
+labels:
+- ResetOnEnterPlay
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/01-Beginner/02-MoveItems/MoveItems_Store.asset
+  uploadId: 891172

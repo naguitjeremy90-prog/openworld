@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 780a929071b713a41836253c2dee8b93
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Demos/Basic/Tags/Basic_Consumable.asset
+  uploadId: 891172

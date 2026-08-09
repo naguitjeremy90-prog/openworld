@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eae54e2cbe99894984f20c22c3d567f, type: 3}
+  m_Name: Reflection_VendorAdvice
+  m_EditorClassIdentifier: Assembly-CSharp::ReflectionQuestionData
+  questionID: reflection_vendor
+  title: The Vendor's Advice
+  questionText: What did the Vendor advise the player to do before continuing?
+  choices:
+  - answerText: Ask around town and speak to the townspeople
+    isCorrect: 1
+  - answerText: Go directly to the church without talking to anyone
+    isCorrect: 0
+  - answerText: Return home and rest
+    isCorrect: 0
+  - answerText: uy something from the market
+    isCorrect: 0
+  correctFeedback: "Excellent work. You understood the Vendor\u2019s advice correctly."
+  wrongFeedback: "That is not correct yet. Reflect on the Vendor\u2019s words and
+    try again."

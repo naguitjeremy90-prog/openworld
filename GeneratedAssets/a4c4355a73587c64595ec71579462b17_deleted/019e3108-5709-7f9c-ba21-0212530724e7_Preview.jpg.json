@@ -1,0 +1,12 @@
+{
+    "asset": "a4c4355a73587c64595ec71579462b17",
+    "fileName": "019e3108-5709-7f9c-ba21-0212530724e7_Preview.jpg",
+    "prompt": "Stylized hand-painted chibi face material for Aling Sela. Large, dark, expressive eyes in a Tomodachi Life style, soft warm skin tone, simple and clean features. PS2/Nintendo-like aesthetic. Warm and cozy palette.",
+    "negativePrompt": "",
+    "model": "hand-painted-textures-2-0",
+    "modelName": "Hand Painted Textures 2.0",
+    "customSeed": 1007433771,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

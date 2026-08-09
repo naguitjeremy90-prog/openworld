@@ -1,0 +1,12 @@
+{
+    "asset": "f5a52fb2f071b104bb467f18103be6de",
+    "fileName": "019e310a-b064-7ef4-a718-6ac816e370a0_Preview.jpg",
+    "prompt": "Hand-painted stylized skin and face texture for a chibi character. Inspired by the Tomodachi Life aesthetic with soft warm skin tones, simple rosy cheeks, and subtle hand-painted shading. Clean, cozy, and vibrant style suitable for a provincial innkeeper NPC. Warm palette. High quality 1024x1024.",
+    "negativePrompt": "",
+    "model": "hand-painted-textures-2-0",
+    "modelName": "Hand Painted Textures 2.0",
+    "customSeed": 2132769624,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

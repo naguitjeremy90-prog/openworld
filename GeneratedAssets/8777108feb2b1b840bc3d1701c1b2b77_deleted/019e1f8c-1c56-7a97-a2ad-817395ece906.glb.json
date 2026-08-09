@@ -1,0 +1,23 @@
+{
+    "asset": "8777108feb2b1b840bc3d1701c1b2b77",
+    "fileName": "019e1f8c-1c56-7a97-a2ad-817395ece906.glb",
+    "prompt": "A low-poly 3D character model of the boy in the reference image. Full body from head to toe, front-facing neutral T-pose, clean topology, game-ready. Chibi style with black hair, blue jacket, and blue eyes.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "6e01508b79655b148bec5a0027a91cca",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

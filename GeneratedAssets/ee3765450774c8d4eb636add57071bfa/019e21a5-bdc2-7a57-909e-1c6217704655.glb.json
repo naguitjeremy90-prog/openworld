@@ -1,0 +1,23 @@
+{
+    "asset": "ee3765450774c8d4eb636add57071bfa",
+    "fileName": "019e21a5-bdc2-7a57-909e-1c6217704655.glb",
+    "prompt": "A 3D mesh of a rectangular wooden sign with 'POSADA' text. Straight and level.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "a9150e4d8ff9d6a46a295fbf04280e7c",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

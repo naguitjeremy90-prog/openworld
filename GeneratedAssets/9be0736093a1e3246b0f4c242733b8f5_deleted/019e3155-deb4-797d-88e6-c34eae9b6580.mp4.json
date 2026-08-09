@@ -1,0 +1,38 @@
+{
+    "asset": "9be0736093a1e3246b0f4c242733b8f5",
+    "fileName": "019e3155-deb4-797d-88e6-c34eae9b6580.mp4",
+    "prompt": "A 2D character spritesheet, front view, simple idle animation in a hand-drawn illustration style. The character is a young girl with dark hair in a bun, wearing a cream blouse and a brown apron. Animation: subtle breathing with only shoulder movement and slight head bobbing. Sketchy pencil textures and painterly strokes matching the reference image. No arm or leg movement.",
+    "negativePrompt": "",
+    "model": "video-seedance-1-pro",
+    "modelName": "Seedance 1 Pro",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Spritesheet",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 9,
+                "doodle": [],
+                "label": "First",
+                "strength": 1.0,
+                "invertStrength": false,
+                "assetReferenceGuid": "dc9c3991e0e8a5a44ad12be3051f65f2",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 0,
+        "height": 0
+    },
+    "spriteSheet": true,
+    "duration": 5.0
+}

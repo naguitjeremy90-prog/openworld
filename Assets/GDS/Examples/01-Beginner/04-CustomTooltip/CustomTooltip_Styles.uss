@@ -1,0 +1,33 @@
+.tooltip {
+  /* Reset the default tooltip style */
+  border-width: 0;
+  padding: 0;
+}
+
+.tooltip-container {
+  background-color: rgb(36, 36, 36);
+  border-width: 4px;
+  border-color: #ddd;
+  padding: 32px;
+  overflow: hidden;
+}
+
+.tooltip-item-image {
+  position: absolute;
+  opacity: 0.2;
+  width: 164px;
+  height: 164px;
+  right: -24px;
+  top: -12px;
+}
+
+.tooltip-item-name {
+  color: rgb(255, 145, 0);
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.tooltip-item-description {
+  font-size: 24px;
+  color: #aaa;
+}

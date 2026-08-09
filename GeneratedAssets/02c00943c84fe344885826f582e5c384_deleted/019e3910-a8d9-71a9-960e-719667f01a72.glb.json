@@ -1,0 +1,23 @@
+{
+    "asset": "02c00943c84fe344885826f582e5c384",
+    "fileName": "019e3910-a8d9-71a9-960e-719667f01a72.glb",
+    "prompt": "A low poly 3D model of the character in the reference image. The character must be in a strict T-pose with arms perfectly horizontal and legs straight. Optimized for rigging, clean topology, low polygon count, chibi style matching the reference image.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "553efd47fd7b07c458990f084b1de8fc",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

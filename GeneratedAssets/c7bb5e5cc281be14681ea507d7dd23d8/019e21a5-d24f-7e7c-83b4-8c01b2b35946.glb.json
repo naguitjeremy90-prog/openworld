@@ -1,0 +1,23 @@
+{
+    "asset": "c7bb5e5cc281be14681ea507d7dd23d8",
+    "fileName": "019e21a5-d24f-7e7c-83b4-8c01b2b35946.glb",
+    "prompt": "A 3D mesh of a rustic wooden door. Create a solid 3D object with depth.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "5fa356659a43ee3408e1af8782499da3",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

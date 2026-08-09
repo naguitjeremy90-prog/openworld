@@ -1,0 +1,23 @@
+{
+    "asset": "13b98cb50fd3e4943a00047f99311b6d",
+    "fileName": "019e4a2f-db72-714d-9d7f-d771dea7f69f.glb",
+    "prompt": "Low poly 3D model of a stone monument with a cross, based on the provided reference image. The model includes the stone platform, stairs, and ornate balustrades with a weathered stone texture. Stylized low-poly look.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "760217b1c3890f44e84d367455fdada2",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

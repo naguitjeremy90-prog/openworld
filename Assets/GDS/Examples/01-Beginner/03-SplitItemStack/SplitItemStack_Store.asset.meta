@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 7996f22162a94bf41be7467a2721d71f
+labels:
+- ResetOnEnterPlay
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/01-Beginner/03-SplitItemStack/SplitItemStack_Store.asset
+  uploadId: 891172

@@ -1,0 +1,55 @@
+{
+    "version": 1,
+    "name": "ToggleUI_Actions",
+    "maps": [
+        {
+            "name": "GameUi",
+            "id": "3bea1f52-a3ae-434c-ad2b-18ae1fc586a5",
+            "actions": [
+                {
+                    "name": "ToggleUI",
+                    "type": "Button",
+                    "id": "9052ab27-fd4b-4b81-bbc0-2ea9dc61c5cb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CloseUI",
+                    "type": "Button",
+                    "id": "4133b061-a1d8-46eb-8dc3-233b75f451af",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e973e039-23a6-491b-a58b-d8b32e63cc3a",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "62287b25-c09e-446a-a569-dfbfb7dce88d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CloseUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

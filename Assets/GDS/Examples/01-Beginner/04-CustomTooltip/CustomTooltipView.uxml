@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="CustomTooltip_Styles.uss" />
+    <ui:VisualElement name="Root" class="tooltip-container">
+        <ui:VisualElement name="Image" class="tooltip-item-image" style="background-image: url(&quot;project://database/Assets/GDS/Common/Sprites/Items/apple.png?fileID=2800000&amp;guid=5d9ba4e7d0964044ea54abe409d81dfd&amp;type=3#apple&quot;);" />
+        <ui:Label tabindex="-1" text="Item name" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Name" class="tooltip-item-name" />
+        <ui:Label tabindex="-1" text="Text line 1&#10;Text line 2" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Description" class="tooltip-item-description" />
+    </ui:VisualElement>
+</ui:UXML>

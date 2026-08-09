@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa3cb7201a64f148b6f3aa4d493a8ed, type: 3}
+  m_Name: List Bag SO
+  m_EditorClassIdentifier: 
+  Value:
+    Name: 
+    Slots:
+    - rid: 7115924460020170837
+    - rid: 7115924460020170838
+    - rid: 7115924460020170839
+    - rid: 7115924460020170840
+    - rid: 7115924460020170841
+    - rid: 7115924460020170842
+    - rid: 7115924460020170843
+    - rid: 7115924460020170844
+    - rid: 7115924460020170845
+    - rid: 7115924460020170846
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3125526047195398290
+      type: {class: Item, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Base: {fileID: 11400000, guid: 64800d12d450dc840b5e1b47c104c567, type: 2}
+        Id: GkljWe
+        Name: Apple
+        StackSize: 100
+    - rid: 3125526047195398292
+      type: {class: Item, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Base: {fileID: 11400000, guid: 6a03cc77580523041b03f3541781662b, type: 2}
+        Id: zkNVq3
+        Name: Axe
+        StackSize: 100
+    - rid: 7115924460020170837
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 0
+    - rid: 7115924460020170838
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 1
+    - rid: 7115924460020170839
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: 3125526047195398290
+        Tags: []
+        Index: 2
+    - rid: 7115924460020170840
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: 3125526047195398292
+        Tags: []
+        Index: 3
+    - rid: 7115924460020170841
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 4
+    - rid: 7115924460020170842
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 5
+    - rid: 7115924460020170843
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 6
+    - rid: 7115924460020170844
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 7
+    - rid: 7115924460020170845
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 8
+    - rid: 7115924460020170846
+      type: {class: ListSlot, ns: GDS.Core, asm: GDS.Core}
+      data:
+        Item:
+          rid: -2
+        Tags: []
+        Index: 9

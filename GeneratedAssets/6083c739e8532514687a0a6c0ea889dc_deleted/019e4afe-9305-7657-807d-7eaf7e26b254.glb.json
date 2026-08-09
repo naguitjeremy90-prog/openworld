@@ -1,0 +1,23 @@
+{
+    "asset": "6083c739e8532514687a0a6c0ea889dc",
+    "fileName": "019e4afe-9305-7657-807d-7eaf7e26b254.glb",
+    "prompt": "A stylized low-poly gothic church altar, 3D model, matching the provided concept. Dark aged stone and pewter.",
+    "negativePrompt": "",
+    "model": "model3d-tripo3-1",
+    "modelName": "Tripo 3.1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "4cde60dcaf88f1d4b808f538f1e8c676",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

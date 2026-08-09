@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b2b0fc225ded47f4fb9b898f2f8cf069
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283656
+  packageName: Inventory Framework 2 FREE (UI Toolkit)
+  packageVersion: 2.1
+  assetPath: Assets/GDS/Examples/Common/Items/Common_Amulet.asset
+  uploadId: 891172

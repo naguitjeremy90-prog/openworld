@@ -1,0 +1,23 @@
+{
+    "asset": "a9b6f198d440a6340bc231f0971a47ec",
+    "fileName": "019e1f70-3c88-7d39-9c3a-d9378a145570.glb",
+    "prompt": "A low poly 3D model of a two-story medieval inn named 'POSADA', with a red tiled roof, white stone walls, and a wooden balcony. The model should match the architectural style, colors, and layout of the reference image exactly.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "6572fae7d6443bd439f316c046e30c0b",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}
