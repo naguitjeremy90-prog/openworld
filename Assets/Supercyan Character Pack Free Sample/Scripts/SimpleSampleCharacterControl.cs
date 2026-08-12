@@ -17,7 +17,7 @@ namespace Supercyan.FreeSample
             Direct
         }
 
-        [SerializeField] private float m_moveSpeed = 2;
+        [SerializeField] private float m_moveSpeed = 4;
         [SerializeField] private float m_turnSpeed = 200;
         [SerializeField] private float m_jumpForce = 4;
 
@@ -32,7 +32,7 @@ namespace Supercyan.FreeSample
         private float m_currentH = 0;
 
         private readonly float m_interpolation = 10;
-        private readonly float m_walkScale = 0.33f;
+        private readonly float m_walkScale = 0.56f;
         private readonly float m_backwardsWalkScale = 0.16f;
         private readonly float m_backwardRunScale = 0.66f;
 
@@ -179,7 +179,7 @@ namespace Supercyan.FreeSample
             if (Camera.main == null) { return; }
             Transform camera = Camera.main.transform;
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (!Input.GetKey(KeyCode.LeftShift))
             {
                 v *= m_walkScale;
                 h *= m_walkScale;
