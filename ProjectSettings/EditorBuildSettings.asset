@@ -32,6 +32,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Present Pili Church.unity
     guid: 3be80dd9c53ccc44596e1e1e9945cac8
+  - enabled: 1
+    path: Assets/Scenes/PosadaInterior.unity
+    guid: 2e602039faeae6a489ca134dd2b028e8
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: c1701eee7a347b347988f7224940b33e, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 23b9f270d9f52b049a1c907e1a862794, type: 2}

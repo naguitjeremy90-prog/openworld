@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class SceneEntrance : MonoBehaviour
 {
     [SerializeField] private string sceneName;
     [SerializeField] private GameObject interactText;
-
+    [SerializeField] private string returnSpawnPoint;
     private bool playerNear = false;
 
     private void Start()
@@ -40,7 +41,23 @@ public class SceneEntrance : MonoBehaviour
     {
         if (playerNear && Input.GetKeyDown(KeyCode.E))
         {
-            SceneManager.LoadScene(sceneName);
+            StartCoroutine(TransitionScene());
         }
     }
-}
+
+    private IEnumerator TransitionScene()
+    {
+        FadeController fadeController = FindAnyObjectByType<FadeController>();
+
+        if(fadeController != null)
+        {
+            yield return StartCoroutine(fadeController.FadeToBlack());
+        }
+
+        if (!string.IsNullOrEmpty(returnSpawnPoint))
+            {
+                SpawnData.spawnPointName = returnSpawnPoint;
+            }
+            SceneManager.LoadSceneAsync(sceneName);
+        }
+    }
