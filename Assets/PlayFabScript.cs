@@ -97,7 +97,7 @@ public class PlayFabEmailAuth : MonoBehaviour
     {
         loginStatusText.text = "Login successful!";
         Debug.Log("User logged in!");
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("SceneMenu");
     }
 
     void OnLoginError(PlayFabError error)
