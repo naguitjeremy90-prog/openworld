@@ -27,7 +27,7 @@ public class FadeController : MonoBehaviour
         fadeCanvasGroup.alpha = 1f;
     }
 
-    private IEnumerator FadeFromBlack()
+    public IEnumerator FadeFromBlack()
     {
         float time = 0f;
 

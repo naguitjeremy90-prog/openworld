@@ -732,9 +732,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 935946601}
     m_Modifications:
+    - target: {fileID: 3900108755062758274, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3900108755062758285, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
       propertyPath: m_Name
       value: ConversationManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: OptionImage
+      value: 
+      objectReference: {fileID: 21300000, guid: 2157221d5a60b7e4fa7cf9f4501281e3, type: 3}
+    - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: BackgroundImage
+      value: 
+      objectReference: {fileID: 21300000, guid: 2157221d5a60b7e4fa7cf9f4501281e3, type: 3}
+    - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: BackgroundImageSliced
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3900108755196472087, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
       propertyPath: m_Pivot.x
@@ -1015,6 +1031,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4479871433811936, guid: 7e2519f93f5650b4e809122e8671c871, type: 3}
   m_PrefabInstance: {fileID: 1928115752}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &652906941
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &693586521
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,6 +1116,9 @@ MonoBehaviour:
   sceneName: PosadaRoom
   interactText: {fileID: 46862012}
   returnSpawnPoint: PosadaStairSpawn
+  highlightRenderer: {fileID: 0}
+  highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  highlightIntensity: 1.5
 --- !u!65 &806048480
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1094,7 +1126,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 806048478}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 652906941}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1180,6 +1212,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &816915497
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1001 &924839058
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2160,9 +2205,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 4
-  json: '{"Options":[{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":100,"yPos":189},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Matutulugan
-    sana.","parentUIDs":[0],"SpeechUID":-1},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":358,"yPos":187},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Wala
-    naman.","parentUIDs":[0],"SpeechUID":-1}],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":1},{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":true,"xPos":254,"yPos":85},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Anong
+  json: '{"Options":[{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":34.963623,"yPos":215.018188},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Matutulugan
+    sana.","parentUIDs":[0],"SpeechUID":-1},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":294.709076,"yPos":213.018188},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Wala
+    naman.","parentUIDs":[0],"SpeechUID":-1}],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":1},{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":true,"xPos":188.963623,"yPos":111.018188},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Anong
     sadya mo? ","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
     Sela","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
@@ -2723,7 +2768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3178,6 +3223,9 @@ MonoBehaviour:
   sceneName: DraftWorld
   interactText: {fileID: 46862012}
   returnSpawnPoint: PosadaSpawn
+  highlightRenderer: {fileID: 0}
+  highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  highlightIntensity: 1.5
 --- !u!65 &2132145224
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3185,7 +3233,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132145222}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 816915497}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
