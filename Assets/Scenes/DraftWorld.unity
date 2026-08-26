@@ -1450,7 +1450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c386afd64e68040bedbd5b576b3b8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFocusPoint
-  focusDuration: 5
+  focusDuration: 4
   moveSpeed: 1
   returnSpeed: 1
   returnMode: 0
@@ -1464,11 +1464,11 @@ Transform:
   m_GameObject: {fileID: 241493489}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.674881, y: -2.5109787, z: 7.242609}
+  m_LocalPosition: {x: 0, y: 0.10000038, z: -17.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 810413422}
+  m_Father: {fileID: 319981188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &241896403
 PrefabInstance:
@@ -2269,7 +2269,8 @@ Transform:
   m_LocalPosition: {x: 6.674881, y: -2.610979, z: 24.802608}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 241493491}
   m_Father: {fileID: 810413422}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &343790288
@@ -5292,7 +5293,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 319981188}
-  - {fileID: 241493491}
   - {fileID: 2098592226}
   - {fileID: 951457920}
   - {fileID: 1411860941}
@@ -12479,7 +12479,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::womanconversation
   myConversation: {fileID: 366352127}
   talkText: {fileID: 561311187}
-  closeUpCamera: {fileID: 665393196}
+  focusManager: {fileID: 0}
+  focusPoint: {fileID: 0}
+  facePlayerWhenTalking: 1
+  npcTransform: {fileID: 0}
+  playerTransform: {fileID: 0}
+  turnSpeed: 5
+  returnToOriginalDirection: 1
 --- !u!1001 &1796275899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14549,8 +14555,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3bbc9a881829b14c93b4d5ea4be9048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFocusManager
-  normalCamera: {fileID: 1242855891}
-  focusCamera: {fileID: 951457919}
+  normalCinemachineCamera: {fileID: 1242855891}
+  focusCinemachineCamera: {fileID: 951457919}
+  normalCamera: {fileID: 0}
   player: {fileID: 432565506}
   playerMovementScript: {fileID: 432565503}
   playerAnimator: {fileID: 432565507}

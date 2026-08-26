@@ -5,28 +5,59 @@ using Unity.Cinemachine;
 
 public class CameraFocusManager : MonoBehaviour
 {
-    [SerializeField] private CinemachineCamera normalCamera;
-    [SerializeField] private CinemachineCamera focusCamera;
+    [Header("Cinemachine Cameras (Optional)")]
+    [SerializeField] private CinemachineCamera normalCinemachineCamera;
+    [SerializeField] private CinemachineCamera focusCinemachineCamera;
 
+    [Header("Regular Camera (Optional)")]
+    [SerializeField] private Camera normalCamera;
+
+    [Header("Player")]
     [SerializeField] private Transform player;
     [SerializeField] private MonoBehaviour playerMovementScript;
     [SerializeField] private Animator playerAnimator;
 
     private bool isFocusing = false;
+    private bool usingCinemachine = false;
 
-    public void FocusOn(CameraFocusPoint focusPoint, UnityEvent onFinished = null)
+    // True normal camera position
+    private Vector3 normalCameraPosition;
+    private Quaternion normalCameraRotation;
+
+    private Coroutine cameraCoroutine;
+
+    private void Start()
     {
-        if (!isFocusing)
+        usingCinemachine =
+            normalCinemachineCamera != null &&
+            focusCinemachineCamera != null;
+
+        // Save regular camera's REAL gameplay position ONCE
+        if (!usingCinemachine && normalCamera != null)
         {
-            StartCoroutine(FocusRoutine(focusPoint, onFinished));
+            normalCameraPosition = normalCamera.transform.position;
+            normalCameraRotation = normalCamera.transform.rotation;
         }
     }
 
-    private IEnumerator FocusRoutine(CameraFocusPoint focusPoint, UnityEvent onFinished)
+    public void FocusOn(
+        CameraFocusPoint focusPoint,
+        UnityEvent onFinished = null)
+    {
+        if (isFocusing)
+            return;
+
+        cameraCoroutine =
+            StartCoroutine(FocusRoutine(focusPoint, onFinished));
+    }
+
+    private IEnumerator FocusRoutine(
+        CameraFocusPoint focusPoint,
+        UnityEvent onFinished)
     {
         isFocusing = true;
 
-        // Lock Peter and force him to idle
+        // Lock Peter and force idle
         if (focusPoint.lockPlayer)
         {
             if (playerMovementScript != null)
@@ -36,39 +67,117 @@ public class CameraFocusManager : MonoBehaviour
                 playerAnimator.SetFloat("MoveSpeed", 0f);
         }
 
-        // Move focus camera to the focus point
-        focusCamera.transform.position = focusPoint.transform.position;
-        focusCamera.transform.rotation = focusPoint.transform.rotation;
-
-        // Switch to focus camera
-        focusCamera.Priority = 20;
-        normalCamera.Priority = 10;
-
-        // Wait at the focus point
-        if (focusPoint.returnMode == CameraFocusPoint.ReturnMode.AfterDuration)
+        // CINEMACHINE
+        if (usingCinemachine)
         {
-            yield return new WaitForSeconds(focusPoint.focusDuration);
+            focusCinemachineCamera.transform.position =
+                focusPoint.transform.position;
 
-            ReturnToNormal(focusPoint);
+            focusCinemachineCamera.transform.rotation =
+                focusPoint.transform.rotation;
 
-            // Give Cinemachine time to blend back
-            yield return new WaitForSeconds(0.5f);
+            focusCinemachineCamera.Priority = 20;
+            normalCinemachineCamera.Priority = 10;
+        }
 
-            // Run whatever was assigned after the focus
+        // REGULAR CAMERA
+        else if (normalCamera != null)
+        {
+            yield return StartCoroutine(
+                MoveRegularCamera(
+                    focusPoint.transform.position,
+                    focusPoint.transform.rotation,
+                    focusPoint.moveSpeed));
+        }
+
+        // For automatic scenery focus
+        if (focusPoint.returnMode ==
+            CameraFocusPoint.ReturnMode.AfterDuration)
+        {
+            yield return new WaitForSeconds(
+                focusPoint.focusDuration);
+
+            yield return StartCoroutine(
+                ReturnRoutine(focusPoint));
+
             onFinished?.Invoke();
         }
     }
 
     public void ReturnToNormal(CameraFocusPoint focusPoint)
     {
-        // Return to normal gameplay camera
-        focusCamera.Priority = 0;
-        normalCamera.Priority = 10;
+        if (cameraCoroutine != null)
+            StopCoroutine(cameraCoroutine);
+
+        cameraCoroutine =
+            StartCoroutine(ReturnRoutine(focusPoint));
+    }
+
+    private IEnumerator ReturnRoutine(
+        CameraFocusPoint focusPoint)
+    {
+        // CINEMACHINE
+        if (usingCinemachine)
+        {
+            focusCinemachineCamera.Priority = 0;
+            normalCinemachineCamera.Priority = 10;
+
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        // REGULAR CAMERA
+        else if (normalCamera != null)
+        {
+            yield return StartCoroutine(
+                MoveRegularCamera(
+                    normalCameraPosition,
+                    normalCameraRotation,
+                    focusPoint.returnSpeed));
+        }
 
         // Unlock Peter
-        if (focusPoint.lockPlayer && playerMovementScript != null)
+        if (focusPoint.lockPlayer &&
+            playerMovementScript != null)
+        {
             playerMovementScript.enabled = true;
+        }
 
         isFocusing = false;
+        cameraCoroutine = null;
+    }
+
+    private IEnumerator MoveRegularCamera(
+        Vector3 targetPosition,
+        Quaternion targetRotation,
+        float speed)
+    {
+        while (
+            Vector3.Distance(
+                normalCamera.transform.position,
+                targetPosition) > 0.01f ||
+            Quaternion.Angle(
+                normalCamera.transform.rotation,
+                targetRotation) > 0.1f)
+        {
+            // Move at a consistent speed
+            normalCamera.transform.position =
+                Vector3.MoveTowards(
+                    normalCamera.transform.position,
+                    targetPosition,
+                    speed * Time.deltaTime);
+
+            // Rotate smoothly
+            normalCamera.transform.rotation =
+                Quaternion.RotateTowards(
+                    normalCamera.transform.rotation,
+                    targetRotation,
+                    speed * 30f * Time.deltaTime);
+
+            yield return null;
+        }
+
+        // Guarantee exact final position
+        normalCamera.transform.position = targetPosition;
+        normalCamera.transform.rotation = targetRotation;
     }
 }

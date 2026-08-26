@@ -272,7 +272,6 @@ GameObject:
   - component: {fileID: 78635924}
   - component: {fileID: 78635927}
   - component: {fileID: 78635926}
-  - component: {fileID: 78635925}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -295,38 +294,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0.103, y: -179.271, z: -0.06}
---- !u!114 &78635925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 78635923}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
-  ShowDebugText: 0
-  ShowCameraFrustum: 1
-  IgnoreTimeScale: 0
-  WorldUpOverride: {fileID: 78635924}
-  ChannelMask: -1
-  UpdateMethod: 0
-  BlendUpdateMethod: 1
-  LensModeOverride:
-    Enabled: 0
-    DefaultMode: 2
-  DefaultBlend:
-    Style: 1
-    Time: 2
-    CustomCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  CustomBlends: {fileID: 0}
 --- !u!81 &78635926
 AudioListener:
   m_ObjectHideFlags: 0
@@ -522,6 +489,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_Name
@@ -724,6 +695,56 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 800, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &370310473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 370310474}
+  - component: {fileID: 370310475}
+  m_Layer: 0
+  m_Name: CameraFocusManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &370310474
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370310473}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.1499481, y: -1.9377499, z: 7.6403503}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1435712878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &370310475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370310473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3bbc9a881829b14c93b4d5ea4be9048, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFocusManager
+  normalCinemachineCamera: {fileID: 0}
+  focusCinemachineCamera: {fileID: 0}
+  normalCamera: {fileID: 78635927}
+  player: {fileID: 163602804}
+  playerMovementScript: {fileID: 163602801}
+  playerAnimator: {fileID: 163602800}
 --- !u!1001 &417674719
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -839,8 +860,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3900108755062758285, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 417674721}
   m_SourcePrefab: {fileID: 100100000, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+--- !u!1 &417674720 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3900108755062758285, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+  m_PrefabInstance: {fileID: 417674719}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &417674721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417674720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3b10855e36b6e4086f9c61c601bed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueMovementLock
+  playerMovementScript: {fileID: 163602801}
+  playerAnimator: {fileID: 163602800}
 --- !u!1 &500844508
 GameObject:
   m_ObjectHideFlags: 0
@@ -1798,6 +1841,7 @@ GameObject:
   - component: {fileID: 1147322064}
   - component: {fileID: 1147322063}
   - component: {fileID: 1147322061}
+  - component: {fileID: 1147322065}
   m_Layer: 0
   m_Name: ConversationEventInfo
   m_TagString: Untagged
@@ -1874,6 +1918,25 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
+--- !u!114 &1147322065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147322060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 4
   TMPFont: {fileID: 0}
   Icon: {fileID: 0}
   Audio: {fileID: 0}
@@ -2175,6 +2238,88 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1326385470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1326385471}
+  - component: {fileID: 1326385472}
+  m_Layer: 0
+  m_Name: AlingSela
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1326385471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326385470}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.99991506, z: -0, w: 0.013039043}
+  m_LocalPosition: {x: -1.85, y: -0.41, z: 1.13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1712419279}
+  m_LocalEulerAnglesHint: {x: 0, y: -178.506, z: 0}
+--- !u!114 &1326385472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326385470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5c386afd64e68040bedbd5b576b3b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFocusPoint
+  focusDuration: 0
+  moveSpeed: 15
+  returnSpeed: 15
+  returnMode: 1
+  lockPlayer: 1
+--- !u!1 &1435712877
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1435712878}
+  m_Layer: 0
+  m_Name: EVERYFOCUSSACAM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1435712878
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435712877}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 180.32512, y: 11.63098, z: 9.2458}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1712419279}
+  - {fileID: 370310474}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1489952432
 GameObject:
   m_ObjectHideFlags: 0
@@ -2204,11 +2349,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
-  CurrentIDCounter: 4
-  json: '{"Options":[{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":34.963623,"yPos":215.018188},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Matutulugan
-    sana.","parentUIDs":[0],"SpeechUID":-1},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":294.709076,"yPos":213.018188},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Wala
-    naman.","parentUIDs":[0],"SpeechUID":-1}],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":1},{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":true,"xPos":188.963623,"yPos":111.018188},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Anong
+  CurrentIDCounter: 5
+  json: '{"Options":[{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":13.1454315,"yPos":232.472733},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Matutulugan
+    sana.","parentUIDs":[0],"SpeechUID":-1},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":4}],"EditorInfo":{"isRoot":false,"xPos":272.89093,"yPos":230.472733},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Wala
+    naman.","parentUIDs":[0],"SpeechUID":-1}],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":1},{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":true,"xPos":167.145432,"yPos":128.472717},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Anong
     sadya mo? ","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+    Sela","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":141.745438,"yPos":324.799957},"ID":4,"ParamActions":[],"TMPFontGUID":null,"Text":"O
+    siya sige mag iingat ka","parentUIDs":[2],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
     Sela","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
@@ -2218,6 +2365,7 @@ MonoBehaviour:
   - {fileID: 1147322064}
   - {fileID: 1147322063}
   - {fileID: 1147322061}
+  - {fileID: 1147322065}
   ContinueFont: {fileID: 0}
   EndConversationFont: {fileID: 0}
   Event:
@@ -2504,7 +2652,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::womanconversation
   myConversation: {fileID: 1489952433}
   talkText: {fileID: 46862012}
-  closeUpCamera: {fileID: 0}
+  focusManager: {fileID: 370310475}
+  focusPoint: {fileID: 1326385472}
+  facePlayerWhenTalking: 1
+  npcTransform: {fileID: 1695712899}
+  playerTransform: {fileID: 163602804}
+  turnSpeed: 4
+  returnToOriginalDirection: 1
 --- !u!65 &1618710475
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2689,6 +2843,38 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.36679593, y: 1.0231296, z: 0.35884088}
   m_Center: {x: 0.026273431, y: 0.49927574, z: -0.050620638}
+--- !u!1 &1712419278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1712419279}
+  m_Layer: 0
+  m_Name: FocusPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1712419279
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712419278}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 7.28, y: -9.85, z: 43.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1326385471}
+  m_Father: {fileID: 1435712878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1839507203
 GameObject:
   m_ObjectHideFlags: 0
@@ -2708,7 +2894,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1839507204
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3337,3 +3523,4 @@ SceneRoots:
   - {fileID: 806048483}
   - {fileID: 508774716}
   - {fileID: 1023190256}
+  - {fileID: 1435712878}
