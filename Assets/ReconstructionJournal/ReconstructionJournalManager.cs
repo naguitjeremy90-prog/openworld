@@ -34,6 +34,13 @@ public class ReconstructionJournalManager : MonoBehaviour
     [SerializeField] private Button fragmentsTabButton;
     [SerializeField] private Button reflectionsTabButton;
 
+    // NEW: Visual movement for the journal tabs
+    [Header("Tab Visuals")]
+    [SerializeField] private JournalTabHover observationsTabVisual;
+    [SerializeField] private JournalTabHover peopleTabVisual;
+    [SerializeField] private JournalTabHover fragmentsTabVisual;
+    [SerializeField] private JournalTabHover reflectionsTabVisual;
+
     public bool IsOpen { get; private set; }
     public JournalTab CurrentTab { get; private set; } = JournalTab.Observations;
 
@@ -90,6 +97,10 @@ public class ReconstructionJournalManager : MonoBehaviour
     {
         ShowTab(JournalTab.Observations);
 
+        // NEW: Keep Observations tab raised
+        if (observationsTabVisual != null)
+            observationsTabVisual.SelectTab();
+
         if (observations != null)
             observations.RefreshList();
     }
@@ -97,6 +108,10 @@ public class ReconstructionJournalManager : MonoBehaviour
     public void OpenPeopleTab()
     {
         ShowTab(JournalTab.People);
+
+        // NEW: Keep People tab raised
+        if (peopleTabVisual != null)
+            peopleTabVisual.SelectTab();
 
         if (people != null)
             people.RefreshList();
@@ -106,6 +121,10 @@ public class ReconstructionJournalManager : MonoBehaviour
     {
         ShowTab(JournalTab.Fragments);
 
+        // NEW: Keep Fragments tab raised
+        if (fragmentsTabVisual != null)
+            fragmentsTabVisual.SelectTab();
+
         if (fragments != null)
             fragments.RefreshList();
     }
@@ -113,6 +132,10 @@ public class ReconstructionJournalManager : MonoBehaviour
     public void OpenReflectionsTab()
     {
         ShowTab(JournalTab.Reflections);
+
+        // NEW: Keep Reflections tab raised
+        if (reflectionsTabVisual != null)
+            reflectionsTabVisual.SelectTab();
 
         if (reflections != null)
             reflections.RefreshList();
@@ -176,7 +199,6 @@ public class ReconstructionJournalManager : MonoBehaviour
         if (reflectionsTabButton != null)
             reflectionsTabButton.onClick.RemoveListener(OpenReflectionsTab);
     }
-
 
     public bool UnlockObservation(string observationID)
     {
