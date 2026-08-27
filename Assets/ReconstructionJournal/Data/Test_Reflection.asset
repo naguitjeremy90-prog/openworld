@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198ae66b3d9224645b06ef07a3127935, type: 3}
+  m_Name: Test_Reflection
+  m_EditorClassIdentifier: Assembly-CSharp::ReflectionData
+  reflectionID: test_reflection
+  title: Isang Tahimik na Pagdating
+  context: 0
+  prompt: Bakit sa tingin mo ay napakatahimik ng Pili nang dumating si Peter?
+  suggestedResponses:
+  - Marahil ay gabi na at nasa loob na ng kanilang mga tahanan ang mga tao.
+  - Maaaring may dahilan kung bakit tila tahimik ang buong bayan.
+  - Hindi pa ako sigurado.
