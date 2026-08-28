@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ReconstructionReflections : MonoBehaviour
@@ -41,6 +43,9 @@ public class ReconstructionReflections : MonoBehaviour
         new List<GameObject>();
 
     private ReflectionData selectedReflection;
+    private GameObject suggestionPanel;
+    private Coroutine pendingSuggestionHide;
+    private bool suppressNextSuggestionOpen;
 
     public int UnlockedReflectionCount
     {
@@ -55,6 +60,15 @@ public class ReconstructionReflections : MonoBehaviour
         if (submitButton != null)
             submitButton.onClick.AddListener(SubmitSelectedReflectionFromButton);
 
+        if (responseInputField != null)
+        {
+            responseInputField.onSelect.AddListener(HandleResponseInputSelected);
+            responseInputField.onDeselect.AddListener(HandleResponseInputDeselected);
+        }
+
+        ResolveSuggestionPanel();
+        HideSuggestionPanel();
+
         RefreshList();
     }
 
@@ -65,6 +79,12 @@ public class ReconstructionReflections : MonoBehaviour
 
         if (submitButton != null)
             submitButton.onClick.RemoveListener(SubmitSelectedReflectionFromButton);
+
+        if (responseInputField != null)
+        {
+            responseInputField.onSelect.RemoveListener(HandleResponseInputSelected);
+            responseInputField.onDeselect.RemoveListener(HandleResponseInputDeselected);
+        }
     }
 
     public bool UnlockReflection(string reflectionID)
@@ -250,14 +270,16 @@ public class ReconstructionReflections : MonoBehaviour
 
         ClearSuggestionButtons();
 
+        HideSuggestionPanel();
+
         if (suggestionsLabel != null)
-            suggestionsLabel.gameObject.SetActive(hasSuggestions);
+            suggestionsLabel.gameObject.SetActive(false);
 
         if (suggestionsSeparatorText != null)
-            suggestionsSeparatorText.gameObject.SetActive(hasSuggestions);
+            suggestionsSeparatorText.gameObject.SetActive(false);
 
         if (ownResponseLabel != null)
-            ownResponseLabel.gameObject.SetActive(hasSuggestions);
+            ownResponseLabel.gameObject.SetActive(false);
 
         if (hasSuggestions)
         {
@@ -307,6 +329,7 @@ public class ReconstructionReflections : MonoBehaviour
                 "karanasan ni Peter.";
 
         ClearSuggestionButtons();
+        HideSuggestionPanel();
 
         if (suggestionsLabel != null)
             suggestionsLabel.gameObject.SetActive(false);
@@ -359,9 +382,37 @@ public class ReconstructionReflections : MonoBehaviour
         newButton.gameObject.SetActive(true);
         newButton.name = "Suggestion";
 
+        Image buttonBackground = newButton.GetComponent<Image>();
+        if (buttonBackground != null)
+        {
+            buttonBackground.sprite = null;
+            buttonBackground.color = Color.white;
+        }
+
+        ColorBlock thoughtColors = newButton.colors;
+        thoughtColors.normalColor = new Color(1f, 0.98f, 0.91f, 0.03f);
+        thoughtColors.highlightedColor = new Color(0.91f, 0.79f, 0.57f, 0.16f);
+        thoughtColors.pressedColor = new Color(0.84f, 0.69f, 0.45f, 0.24f);
+        thoughtColors.selectedColor = new Color(0.91f, 0.79f, 0.57f, 0.1f);
+        newButton.colors = thoughtColors;
+
+        LayoutElement layoutElement = newButton.GetComponent<LayoutElement>();
+        if (layoutElement != null)
+        {
+            layoutElement.preferredHeight = suggestion.Length > 60
+                ? 46f
+                : suggestion.Length > 35
+                    ? 40f
+                    : 34f;
+        }
+
         TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
         if (buttonText != null)
+        {
             buttonText.text = suggestion;
+            buttonText.fontSize = 20f;
+            buttonText.fontStyle = FontStyles.Italic;
+        }
 
         newButton.onClick.RemoveAllListeners();
         newButton.onClick.AddListener(() => SelectSuggestion(suggestion));
@@ -374,9 +425,12 @@ public class ReconstructionReflections : MonoBehaviour
             return;
 
         responseInputField.text = suggestion;
+        HideSuggestionPanel();
 
         if (validationText != null)
             validationText.gameObject.SetActive(false);
+
+        StartCoroutine(FocusResponseInputAfterSuggestion());
     }
 
     private void ClearSuggestionButtons()
@@ -391,5 +445,144 @@ public class ReconstructionReflections : MonoBehaviour
         }
 
         spawnedSuggestionButtons.Clear();
+    }
+
+    private void ResolveSuggestionPanel()
+    {
+        if (suggestionPanel != null || suggestionsContent == null)
+            return;
+
+        Transform viewport = suggestionsContent.parent;
+        suggestionPanel = viewport != null && viewport.parent != null
+            ? viewport.parent.gameObject
+            : suggestionsContent.gameObject;
+    }
+
+    private void HandleResponseInputSelected(string unused)
+    {
+        if (suppressNextSuggestionOpen)
+        {
+            suppressNextSuggestionOpen = false;
+            return;
+        }
+
+        ShowSuggestionPanel();
+    }
+
+    private void HandleResponseInputDeselected(string unused)
+    {
+        if (pendingSuggestionHide != null)
+            StopCoroutine(pendingSuggestionHide);
+
+        pendingSuggestionHide = StartCoroutine(HideSuggestionPanelAfterFocusChange());
+    }
+
+    private IEnumerator HideSuggestionPanelAfterFocusChange()
+    {
+        yield return null;
+        pendingSuggestionHide = null;
+
+        if (!IsPointerOrSelectionInsideSuggestionArea())
+            HideSuggestionPanel();
+    }
+
+    private IEnumerator FocusResponseInputAfterSuggestion()
+    {
+        yield return null;
+
+        if (responseInputField == null || !responseInputField.isActiveAndEnabled)
+            yield break;
+
+        suppressNextSuggestionOpen = true;
+        responseInputField.Select();
+        responseInputField.ActivateInputField();
+        responseInputField.caretPosition = responseInputField.text.Length;
+        responseInputField.MoveTextEnd(false);
+    }
+
+    private void ShowSuggestionPanel()
+    {
+        ResolveSuggestionPanel();
+
+        if (suggestionPanel == null || selectedReflection == null)
+            return;
+
+        if (GetReflectionStatus(selectedReflection.reflectionID) !=
+            ReflectionStatus.Unanswered)
+        {
+            return;
+        }
+
+        if (spawnedSuggestionButtons.Count == 0)
+            return;
+
+        suggestionPanel.SetActive(true);
+
+        RectTransform contentRect = suggestionsContent as RectTransform;
+        if (contentRect != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+    }
+
+    private void HideSuggestionPanel()
+    {
+        ResolveSuggestionPanel();
+
+        if (suggestionPanel != null)
+            suggestionPanel.SetActive(false);
+    }
+
+    private bool IsPointerOrSelectionInsideSuggestionArea()
+    {
+        EventSystem eventSystem = EventSystem.current;
+
+        if (eventSystem != null && eventSystem.currentSelectedGameObject != null)
+        {
+            Transform selected = eventSystem.currentSelectedGameObject.transform;
+
+            if (responseInputField != null &&
+                (selected == responseInputField.transform ||
+                 selected.IsChildOf(responseInputField.transform)))
+            {
+                return true;
+            }
+
+            if (suggestionPanel != null &&
+                (selected == suggestionPanel.transform ||
+                 selected.IsChildOf(suggestionPanel.transform)))
+            {
+                return true;
+            }
+        }
+
+        if (eventSystem == null || !Input.mousePresent)
+            return false;
+
+        PointerEventData pointerData = new PointerEventData(eventSystem)
+        {
+            position = Input.mousePosition
+        };
+        List<RaycastResult> results = new List<RaycastResult>();
+        eventSystem.RaycastAll(pointerData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            Transform hit = result.gameObject.transform;
+
+            if (responseInputField != null &&
+                (hit == responseInputField.transform ||
+                 hit.IsChildOf(responseInputField.transform)))
+            {
+                return true;
+            }
+
+            if (suggestionPanel != null &&
+                (hit == suggestionPanel.transform ||
+                 hit.IsChildOf(suggestionPanel.transform)))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
