@@ -55,7 +55,7 @@ public class ReconstructionJournalManager : MonoBehaviour
         Instance = this;
 
         AddButtonListeners();
-        OpenObservationsTab();
+        ShowTab(JournalTab.Observations);
         CloseJournal();
     }
 

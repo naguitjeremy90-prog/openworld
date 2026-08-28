@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,6 +8,55 @@ using UnityEngine.UI;
 
 public class ReconstructionReflections : MonoBehaviour
 {
+    // Keep this list deliberately small and easy to edit. Matching is done
+    // against whole words/tokens, so innocent words containing these letters
+    // are not rejected.
+    private static readonly string[] BlockedWords =
+    {
+        "fuck", "shit", "bitch", "asshole", "bastard", "cunt",
+        "nigger", "faggot", "slut", "whore", "dick", "cock", "pussy",
+        "putangina", "putang ina", "gago", "tanga", "ulol", "tarantado",
+        "kantot", "iyot", "jakol"
+    };
+
+    private static readonly string[] KeyboardSmashPatterns =
+    {
+        "asdfghjkl", "qwertyuiop", "zxcvbnm", "asdfasdfasdf",
+        "qwertyqwerty", "zxcvzxcv", "hjklhjkl"
+    };
+
+    // Developer-editable theme keywords. Matching is token-based, so these
+    // entries do not accidentally match inside unrelated words.
+    private static readonly string[] FearKeywords =
+    {
+        "takot", "natatakot", "natakot", "pangamba", "nangangamba",
+        "fear", "afraid", "scared"
+    };
+
+    private static readonly string[] BlameOrJudgmentKeywords =
+    {
+        "sisi", "sinisi", "sisihin", "kasalanan", "husga", "hinusgahan",
+        "blame", "blamed", "fault", "judge", "judged"
+    };
+
+    private static readonly string[] AuthorityKeywords =
+    {
+        "awtoridad", "kapangyarihan", "pari", "padre", "authority", "power"
+    };
+
+    private static readonly string[] ConformityOrPressureKeywords =
+    {
+        "napilitan", "pinilit", "sumusunod", "sumunod", "pressure", "pressured",
+        "forced", "obey", "obeyed"
+    };
+
+    private static readonly string[] UncertaintyKeywords =
+    {
+        "hindi sigurado", "di sigurado", "di sure", "hindi sure", "baka",
+        "marahil", "siguro", "sigurado", "maaaring", "unsure", "not sure",
+        "maybe", "perhaps"
+    };
+
     [Header("Available Reflections")]
     [SerializeField] private List<ReflectionData> allReflections =
         new List<ReflectionData>();
@@ -30,6 +80,8 @@ public class ReconstructionReflections : MonoBehaviour
     [SerializeField] private TMP_Text validationText;
     [SerializeField] private TMP_Text completedLabelText;
     [SerializeField] private TMP_Text completedResponseText;
+    [SerializeField] private TMP_Text followUpLabelText;
+    [SerializeField] private TMP_Text followUpText;
 
     [Header("Temporary Testing")]
     [SerializeField] private Button testUnlockButton;
@@ -37,6 +89,8 @@ public class ReconstructionReflections : MonoBehaviour
 
     private readonly HashSet<string> unlockedReflectionIDs = new HashSet<string>();
     private readonly Dictionary<string, string> submittedResponses =
+        new Dictionary<string, string>();
+    private readonly Dictionary<string, string> selectedFollowUps =
         new Dictionary<string, string>();
     private readonly List<GameObject> spawnedListButtons = new List<GameObject>();
     private readonly List<GameObject> spawnedSuggestionButtons =
@@ -123,11 +177,12 @@ public class ReconstructionReflections : MonoBehaviour
 
         string response = responseInputField != null ? responseInputField.text : "";
 
-        if (string.IsNullOrWhiteSpace(response))
+        string validationMessage;
+        if (!ValidateReflectionResponse(response, out validationMessage))
         {
             if (validationText != null)
             {
-                validationText.text = "Magsulat muna bago magnilay.";
+                validationText.text = validationMessage;
                 validationText.gameObject.SetActive(true);
             }
 
@@ -136,6 +191,11 @@ public class ReconstructionReflections : MonoBehaviour
             return false;
         }
 
+        if (validationText != null)
+            validationText.gameObject.SetActive(false);
+
+        selectedFollowUps[selectedReflection.reflectionID] =
+            GetBestThemeFollowUp(selectedReflection, response);
         submittedResponses[selectedReflection.reflectionID] = response;
         ShowReflection(selectedReflection);
 
@@ -144,6 +204,304 @@ public class ReconstructionReflections : MonoBehaviour
             selectedReflection.reflectionID +
             "'.");
         return true;
+    }
+
+    private bool ValidateReflectionResponse(
+        string response,
+        out string validationMessage)
+    {
+        validationMessage = "";
+
+        if (string.IsNullOrWhiteSpace(response))
+        {
+            validationMessage = "Magsulat muna bago magnilay.";
+            return false;
+        }
+
+        if (!ContainsUsableCharacters(response))
+        {
+            validationMessage = "Subukang magsulat ng malinaw na sagot.";
+            return false;
+        }
+
+        if (ContainsBlockedLanguage(response))
+        {
+            validationMessage =
+                "Gumamit ng angkop na pananalita sa iyong pagninilay.";
+            return false;
+        }
+
+        if (HasExcessiveRepeatedCharacters(response) ||
+            LooksLikeKeyboardSmash(response))
+        {
+            validationMessage = "Subukang magsulat ng malinaw na sagot.";
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool HasExcessiveRepeatedCharacters(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return false;
+
+        char previous = text[0];
+        int repeatCount = 1;
+
+        for (int i = 1; i < text.Length; i++)
+        {
+            if (text[i] == previous)
+            {
+                repeatCount++;
+                if (repeatCount >= 6)
+                    return true;
+            }
+            else
+            {
+                previous = text[i];
+                repeatCount = 1;
+            }
+        }
+
+        return false;
+    }
+
+    private bool LooksLikeKeyboardSmash(string text)
+    {
+        string normalized = NormalizeForPatternChecks(text);
+
+        foreach (string pattern in KeyboardSmashPatterns)
+        {
+            if (normalized == pattern)
+                return true;
+        }
+
+        if (HasRepeatedCharacterSequence(normalized))
+            return true;
+
+        if (IsRepetitivePatternDominant(normalized))
+            return true;
+
+        // Catch a clearly repeated key sequence without trying to judge
+        // whether the response is grammatically correct or in a dictionary.
+        for (int sequenceLength = 2; sequenceLength <= 5; sequenceLength++)
+        {
+            if (normalized.Length < sequenceLength * 3)
+                continue;
+
+            string sequence = normalized.Substring(0, sequenceLength);
+            bool repeats = true;
+            for (int i = sequenceLength; i < normalized.Length; i += sequenceLength)
+            {
+                int remaining = normalized.Length - i;
+                if (remaining < sequenceLength ||
+                    normalized.Substring(i, sequenceLength) != sequence)
+                {
+                    repeats = false;
+                    break;
+                }
+            }
+
+            if (repeats && normalized.Length % sequenceLength == 0)
+                return true;
+        }
+
+        // A long, vowel-free run with several different keys is also a
+        // conservative signal of keyboard smashing (e.g. "xjsklqwe").
+        if (normalized.Length >= 8)
+        {
+            bool hasVowel = false;
+            int uniqueCharacters = 0;
+            HashSet<char> seen = new HashSet<char>();
+
+            foreach (char character in normalized)
+            {
+                if ("aeiou".IndexOf(character) >= 0)
+                    hasVowel = true;
+                if (seen.Add(character))
+                    uniqueCharacters++;
+            }
+
+            if (!hasVowel && uniqueCharacters >= 5)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool HasRepeatedCharacterSequence(string text)
+    {
+        if (string.IsNullOrEmpty(text) || text.Length < 4)
+            return false;
+
+        // Two- and three-character sequences repeated across the whole input
+        // catch short filler such as "qwqw" and "qweqwe". A two-character
+        // sequence with vowels is allowed twice so words such as "haha" are
+        // not rejected, but three or more repetitions are still considered
+        // obvious filler.
+        for (int sequenceLength = 2; sequenceLength <= 3; sequenceLength++)
+        {
+            if (text.Length % sequenceLength != 0)
+                continue;
+
+            int repetitions = text.Length / sequenceLength;
+            if (repetitions < 2)
+                continue;
+
+            string sequence = text.Substring(0, sequenceLength);
+            bool repeats = true;
+            for (int i = sequenceLength; i < text.Length; i += sequenceLength)
+            {
+                if (text.Substring(i, sequenceLength) != sequence)
+                {
+                    repeats = false;
+                    break;
+                }
+            }
+
+            if (!repeats)
+                continue;
+
+            bool sequenceHasVowel = false;
+            foreach (char character in sequence)
+            {
+                if ("aeiou".IndexOf(character) >= 0)
+                {
+                    sequenceHasVowel = true;
+                    break;
+                }
+            }
+
+            if (sequenceLength == 2 && sequenceHasVowel && repetitions < 3)
+                continue;
+
+            return true;
+        }
+
+        // Also catch an alternating two-character filler with a partial final
+        // sequence, such as "abababa".
+        if (text.Length >= 6 && text[0] != text[1])
+        {
+            for (int i = 2; i < text.Length; i++)
+            {
+                if (text[i] != text[i % 2])
+                    return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool IsRepetitivePatternDominant(string text)
+    {
+        // Keep short genuine expressions such as "haha" and "hahaha"
+        // acceptable. This check only applies when the cleaned response is
+        // long enough for repetition to clearly dominate the whole input.
+        if (string.IsNullOrEmpty(text) || text.Length < 8)
+            return false;
+
+        // Allow one small imperfection in an otherwise repeating 2- or
+        // 3-character rhythm (for example, "hahhahahahaha").
+        int mismatchLimit = Mathf.Max(1, text.Length / 5);
+        for (int sequenceLength = 2; sequenceLength <= 3; sequenceLength++)
+        {
+            int mismatches = 0;
+
+            for (int i = sequenceLength; i < text.Length; i++)
+            {
+                if (text[i] != text[i % sequenceLength])
+                {
+                    mismatches++;
+                    if (mismatches > mismatchLimit)
+                        break;
+                }
+            }
+
+            if (mismatches <= mismatchLimit)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool ContainsBlockedLanguage(string text)
+    {
+        List<string> tokens = Tokenize(text);
+
+        foreach (string blockedWord in BlockedWords)
+        {
+            string[] blockedTokens = Tokenize(blockedWord).ToArray();
+            if (blockedTokens.Length == 0 || blockedTokens.Length > tokens.Count)
+                continue;
+
+            for (int start = 0; start <= tokens.Count - blockedTokens.Length; start++)
+            {
+                bool matches = true;
+                for (int offset = 0; offset < blockedTokens.Length; offset++)
+                {
+                    if (tokens[start + offset] != blockedTokens[offset])
+                    {
+                        matches = false;
+                        break;
+                    }
+                }
+
+                if (matches)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool ContainsUsableCharacters(string text)
+    {
+        foreach (char character in text)
+        {
+            if (char.IsLetterOrDigit(character))
+                return true;
+        }
+
+        return false;
+    }
+
+    private string NormalizeForPatternChecks(string text)
+    {
+        StringBuilder builder = new StringBuilder();
+        foreach (char character in text.ToLowerInvariant())
+        {
+            if (char.IsLetterOrDigit(character))
+                builder.Append(character);
+        }
+
+        return builder.ToString();
+    }
+
+    private List<string> Tokenize(string text)
+    {
+        List<string> tokens = new List<string>();
+        StringBuilder current = new StringBuilder();
+
+        foreach (char character in text.ToLowerInvariant())
+        {
+            if (char.IsLetterOrDigit(character))
+            {
+                current.Append(character);
+            }
+            else if (current.Length > 0)
+            {
+                tokens.Add(current.ToString());
+                current.Clear();
+            }
+        }
+
+        if (current.Length > 0)
+            tokens.Add(current.ToString());
+
+        return tokens;
     }
 
     private void SubmitSelectedReflectionFromButton()
@@ -224,6 +582,127 @@ public class ReconstructionReflections : MonoBehaviour
                 reflection.reflectionID == reflectionID);
     }
 
+    private List<ReflectionTheme> DetectThemes(string response)
+    {
+        List<ReflectionTheme> themes = new List<ReflectionTheme>();
+        List<string> tokens = Tokenize(response);
+
+        AddThemeIfMatched(
+            themes,
+            tokens,
+            ReflectionTheme.Fear,
+            FearKeywords);
+        AddThemeIfMatched(
+            themes,
+            tokens,
+            ReflectionTheme.BlameOrJudgment,
+            BlameOrJudgmentKeywords);
+        AddThemeIfMatched(
+            themes,
+            tokens,
+            ReflectionTheme.Authority,
+            AuthorityKeywords);
+        AddThemeIfMatched(
+            themes,
+            tokens,
+            ReflectionTheme.ConformityOrPressure,
+            ConformityOrPressureKeywords);
+        AddThemeIfMatched(
+            themes,
+            tokens,
+            ReflectionTheme.Uncertainty,
+            UncertaintyKeywords);
+
+        return themes;
+    }
+
+    private void AddThemeIfMatched(
+        List<ReflectionTheme> themes,
+        List<string> responseTokens,
+        ReflectionTheme theme,
+        string[] keywords)
+    {
+        foreach (string keyword in keywords)
+        {
+            if (ContainsTokenSequence(responseTokens, Tokenize(keyword)))
+            {
+                themes.Add(theme);
+                return;
+            }
+        }
+    }
+
+    private bool ContainsTokenSequence(
+        List<string> sourceTokens,
+        List<string> searchTokens)
+    {
+        if (searchTokens.Count == 0 || searchTokens.Count > sourceTokens.Count)
+            return false;
+
+        for (int start = 0; start <= sourceTokens.Count - searchTokens.Count; start++)
+        {
+            bool matches = true;
+            for (int offset = 0; offset < searchTokens.Count; offset++)
+            {
+                if (sourceTokens[start + offset] != searchTokens[offset])
+                {
+                    matches = false;
+                    break;
+                }
+            }
+
+            if (matches)
+                return true;
+        }
+
+        return false;
+    }
+
+    private string GetBestThemeFollowUp(
+        ReflectionData reflection,
+        string response)
+    {
+        if (reflection == null || reflection.themeResponses == null)
+            return "";
+
+        List<ReflectionTheme> detectedThemes = DetectThemes(response);
+        ReflectionThemeResponse bestResponse = null;
+
+        foreach (ReflectionThemeResponse candidate in reflection.themeResponses)
+        {
+            if (candidate == null ||
+                string.IsNullOrWhiteSpace(candidate.journalFollowUp) ||
+                !detectedThemes.Contains(candidate.theme))
+            {
+                continue;
+            }
+
+            if (bestResponse == null || candidate.priority > bestResponse.priority)
+                bestResponse = candidate;
+        }
+
+        return bestResponse != null ? bestResponse.journalFollowUp : "";
+    }
+
+    private void ShowReflectionFollowUp(string followUp)
+    {
+        bool show = !string.IsNullOrWhiteSpace(followUp);
+
+        if (followUpLabelText != null)
+            followUpLabelText.gameObject.SetActive(show);
+
+        if (followUpText != null)
+        {
+            followUpText.text = show ? followUp : "";
+            followUpText.gameObject.SetActive(show);
+        }
+    }
+
+    private void HideReflectionFollowUp()
+    {
+        ShowReflectionFollowUp("");
+    }
+
     private void CreateListButton(ReflectionData reflection)
     {
         if (listContent == null || listButtonPrefab == null)
@@ -262,6 +741,17 @@ public class ReconstructionReflections : MonoBehaviour
         bool isCompleted = submittedResponses.TryGetValue(
             reflection.reflectionID,
             out submittedResponse);
+
+        string storedFollowUp;
+        if (isCompleted &&
+            selectedFollowUps.TryGetValue(reflection.reflectionID, out storedFollowUp))
+        {
+            ShowReflectionFollowUp(storedFollowUp);
+        }
+        else
+        {
+            HideReflectionFollowUp();
+        }
 
         bool hasSuggestions =
             !isCompleted &&
@@ -357,6 +847,8 @@ public class ReconstructionReflections : MonoBehaviour
 
         if (completedResponseText != null)
             completedResponseText.gameObject.SetActive(false);
+
+        HideReflectionFollowUp();
     }
 
     private void ClearSpawnedButtons()

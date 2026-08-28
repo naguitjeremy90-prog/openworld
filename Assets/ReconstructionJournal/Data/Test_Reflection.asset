@@ -20,3 +20,13 @@ MonoBehaviour:
   - Marahil ay gabi na at nasa loob na ng kanilang mga tahanan ang mga tao.
   - Maaaring may dahilan kung bakit tila tahimik ang buong bayan.
   - Hindi pa ako sigurado.
+  themeResponses:
+  - theme: 0
+    journalFollowUp: Kung takot ang dahilan ng pananahimik, kailangan kong alamin kung ano ang kinatatakutan ng mga tao rito.
+    priority: 3
+  - theme: 3
+    journalFollowUp: Kung may dahilan kung bakit pinipili ng mga tao na manahimik, baka may makapagsabi sa akin kung ano ang pumipigil sa kanila.
+    priority: 2
+  - theme: 4
+    journalFollowUp: Marami pa akong hindi alam tungkol sa bayang ito. Kailangan ko munang magmasid bago ako makabuo ng konklusyon.
+    priority: 1

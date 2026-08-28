@@ -1,6 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ReflectionTheme
+{
+    Fear,
+    BlameOrJudgment,
+    Authority,
+    ConformityOrPressure,
+    Uncertainty
+}
+
+[System.Serializable]
+public class ReflectionThemeResponse
+{
+    public ReflectionTheme theme;
+
+    [TextArea(2, 5)]
+    public string journalFollowUp;
+
+    public int priority;
+}
+
 [CreateAssetMenu(
     fileName = "New Reflection",
     menuName = "Reconstruction Journal/Reflection")]
@@ -15,6 +35,9 @@ public class ReflectionData : ScriptableObject
 
     [TextArea(2, 5)]
     public List<string> suggestedResponses = new List<string>();
+
+    public List<ReflectionThemeResponse> themeResponses =
+        new List<ReflectionThemeResponse>();
 
     public string GetContextLabel()
     {
