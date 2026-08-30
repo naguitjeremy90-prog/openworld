@@ -12,6 +12,9 @@ public class NPCConversationTrigger : MonoBehaviour
     [SerializeField] private NPCConversation repeatConversation;
     [SerializeField] private GameObject talkText;
 
+    [Header("Story State (Optional)")]
+    [SerializeField] private string firstConversationCompletedFlagId;
+
     [Header("Camera Focus (Optional)")]
     [SerializeField] private CameraFocusManager focusManager;
     [SerializeField] private CameraFocusPoint focusPoint;
@@ -103,7 +106,7 @@ public class NPCConversationTrigger : MonoBehaviour
             focusManager.FocusOn(focusPoint);
 
         NPCConversation conversation =
-            hasCompletedFirstConversation && repeatConversation != null
+            HasCompletedFirstConversation() && repeatConversation != null
                 ? repeatConversation
                 : firstConversation;
 
@@ -160,9 +163,18 @@ public class NPCConversationTrigger : MonoBehaviour
 
         isTalking = false;
 
-        bool finishedFirstConversation = !hasCompletedFirstConversation;
+        bool finishedFirstConversation = !HasCompletedFirstConversation();
         if (finishedFirstConversation)
+        {
             hasCompletedFirstConversation = true;
+
+            if (!string.IsNullOrEmpty(firstConversationCompletedFlagId))
+            {
+                SessionStoryState.SetFlag(
+                    firstConversationCompletedFlagId,
+                    true);
+            }
+        }
 
         OnConversationFinished?.Invoke();
 
@@ -187,5 +199,16 @@ public class NPCConversationTrigger : MonoBehaviour
 
         if (playerNear && talkText != null)
             talkText.SetActive(true);
+    }
+
+    private bool HasCompletedFirstConversation()
+    {
+        if (!string.IsNullOrEmpty(firstConversationCompletedFlagId))
+        {
+            return SessionStoryState.GetFlag(
+                firstConversationCompletedFlagId);
+        }
+
+        return hasCompletedFirstConversation;
     }
 }
