@@ -1,11 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 using DialogueEditor;
 
 public class NPCConversationTrigger : MonoBehaviour
 {
     [Header("Dialogue")]
-    [SerializeField] private NPCConversation myConversation;
+    [FormerlySerializedAs("myConversation")]
+    [SerializeField] private NPCConversation firstConversation;
+    [SerializeField] private NPCConversation repeatConversation;
     [SerializeField] private GameObject talkText;
 
     [Header("Camera Focus (Optional)")]
@@ -19,8 +23,13 @@ public class NPCConversationTrigger : MonoBehaviour
     [SerializeField] private float turnSpeed = 5f;
     [SerializeField] private bool returnToOriginalDirection = true;
 
+    [Header("After Conversation")]
+    public UnityEvent OnConversationFinished;
+    public UnityEvent OnFirstConversationFinished;
+
     private bool playerNear = false;
     private bool isTalking = false;
+    private bool hasCompletedFirstConversation = false;
 
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
@@ -93,7 +102,12 @@ public class NPCConversationTrigger : MonoBehaviour
         if (focusManager != null && focusPoint != null)
             focusManager.FocusOn(focusPoint);
 
-        ConversationManager.Instance.StartConversation(myConversation);
+        NPCConversation conversation =
+            hasCompletedFirstConversation && repeatConversation != null
+                ? repeatConversation
+                : firstConversation;
+
+        ConversationManager.Instance.StartConversation(conversation);
     }
 
     private IEnumerator TurnTowardPlayer()
@@ -145,6 +159,15 @@ public class NPCConversationTrigger : MonoBehaviour
             return;
 
         isTalking = false;
+
+        bool finishedFirstConversation = !hasCompletedFirstConversation;
+        if (finishedFirstConversation)
+            hasCompletedFirstConversation = true;
+
+        OnConversationFinished?.Invoke();
+
+        if (finishedFirstConversation)
+            OnFirstConversationFinished?.Invoke();
 
         // Return camera
         if (focusManager != null && focusPoint != null)
