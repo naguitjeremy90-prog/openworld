@@ -11416,6 +11416,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1708914641}
   m_CullTransparentMesh: 1
+<<<<<<< Updated upstream
 --- !u!1 &1710570876
 GameObject:
   m_ObjectHideFlags: 0
@@ -12257,6 +12258,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1864151475}
   m_CullTransparentMesh: 1
+=======
+--- !u!1001 &1820003446
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 492
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 47
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.974329
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.22512878
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -26.021
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_Name
+      value: maestroben@Breathing Idle
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 527f26779950c9549b14e1c509132472, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: eb6507156e60dce4d8e73d984106b2bf, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 527f26779950c9549b14e1c509132472, type: 3}
+>>>>>>> Stashed changes
 --- !u!1 &1884455639 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4028456399711218789, guid: 446e35344a225cc4a9720ef247cd0432, type: 3}
@@ -13491,5 +13555,9 @@ SceneRoots:
   - {fileID: 714144083}
   - {fileID: 1705579858}
   - {fileID: 132999385}
+<<<<<<< Updated upstream
   - {fileID: 1122497021}
   - {fileID: 1160934513}
+=======
+  - {fileID: 1820003446}
+>>>>>>> Stashed changes
