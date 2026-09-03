@@ -341,6 +341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   fadeCanvasGroup: {fileID: 576925115}
   fadeDuration: 0.5
+  fadeInOnStart: 1
 --- !u!225 &576925115
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1229,6 +1230,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364479624}
   m_CullTransparentMesh: 1
+--- !u!1001 &1632378575
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 354.47833
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -15.980244
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 64.18484
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.96370304
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.2669765
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 30.969
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_Name
+      value: Idle
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 71a10add4f9b756479366fa013dc8310, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1d487077f05b3d54890928f039a984c7, type: 3}
 --- !u!1 &1678792778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,6 +1490,9 @@ MonoBehaviour:
   sceneName: DraftWorld
   interactText: {fileID: 1353895595}
   returnSpawnPoint: RandomSpawn
+  highlightRenderer: {fileID: 0}
+  highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  highlightIntensity: 1.5
 --- !u!65 &1765083547
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2098,3 +2167,4 @@ SceneRoots:
   - {fileID: 2142347871}
   - {fileID: 1765083550}
   - {fileID: 1913487172}
+  - {fileID: 1632378575}
