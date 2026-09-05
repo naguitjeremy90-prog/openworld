@@ -3,7 +3,7 @@ using UnityEngine;
 public enum ItemCategory
 {
     General,
-    Story,
+    Quest,
     Key,
     Document
 }

@@ -37,6 +37,14 @@ public class NPCConversationTrigger : MonoBehaviour
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
 
+    public void SetConversations(
+        NPCConversation nextFirstConversation,
+        NPCConversation nextRepeatConversation)
+    {
+        firstConversation = nextFirstConversation;
+        repeatConversation = nextRepeatConversation;
+    }
+
     private void Start()
     {
         if (npcTransform != null)

@@ -6,6 +6,14 @@ using UnityEngine.UI;
 
 public sealed class InventoryUI : MonoBehaviour
 {
+    private enum InventoryFilter
+    {
+        All,
+        Quest,
+        Key,
+        Document
+    }
+
     [Header("Window")]
     [Tooltip("The visual overlay/panel. Keep this separate from the GameObject holding InventoryUI so the I key still works while hidden.")]
     [SerializeField] private GameObject inventoryRoot;
@@ -18,6 +26,19 @@ public sealed class InventoryUI : MonoBehaviour
     [SerializeField] private InventorySlotUI slotPrefab;
     [SerializeField, Min(0)] private int visibleSlotCount = 8;
 
+    [Header("Filters")]
+    [SerializeField] private Button allTabButton;
+    [SerializeField] private Button questItemsTabButton;
+    [SerializeField] private Button keyItemsTabButton;
+    [SerializeField] private Button documentsTabButton;
+    [SerializeField] private Graphic allTabGraphic;
+    [SerializeField] private Graphic questItemsTabGraphic;
+    [SerializeField] private Graphic keyItemsTabGraphic;
+    [SerializeField] private Graphic documentsTabGraphic;
+    [SerializeField] private Color activeTabColor = Color.white;
+    [SerializeField] private Color inactiveTabColor =
+        new Color(0.82f, 0.74f, 0.62f, 1f);
+
     [Header("Selected Item Details")]
     [SerializeField] private Image detailIcon;
     [SerializeField] private TMP_Text detailName;
@@ -28,6 +49,7 @@ public sealed class InventoryUI : MonoBehaviour
     [SerializeField] private MonoBehaviour[] gameplayBehavioursToDisable = new MonoBehaviour[0];
 
     private readonly List<InventorySlotUI> spawnedSlots = new List<InventorySlotUI>();
+    private readonly List<InventoryItemData> filteredItems = new List<InventoryItemData>();
 
     private InventoryManager boundManager;
     private InventoryItemData selectedItem;
@@ -36,6 +58,7 @@ public sealed class InventoryUI : MonoBehaviour
     private CursorLockMode previousCursorLockMode;
     private bool previousCursorVisible;
     private bool inputIsBlocked;
+    private InventoryFilter currentFilter = InventoryFilter.All;
 
     public bool IsOpen { get; private set; }
 
@@ -49,6 +72,9 @@ public sealed class InventoryUI : MonoBehaviour
 
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseInventory);
+
+        AddFilterListeners();
+        UpdateTabVisuals();
 
         SetVisibleImmediately(false);
         ClearDetails();
@@ -80,6 +106,8 @@ public sealed class InventoryUI : MonoBehaviour
     {
         if (closeButton != null)
             closeButton.onClick.RemoveListener(CloseInventory);
+
+        RemoveFilterListeners();
     }
 
     private void Update()
@@ -129,18 +157,51 @@ public sealed class InventoryUI : MonoBehaviour
             return;
 
         IReadOnlyList<InventoryItemData> ownedItems = boundManager.GetOwnedItems();
-        int displayedSlotCount = Mathf.Max(visibleSlotCount, ownedItems.Count);
+        filteredItems.Clear();
+
+        for (int i = 0; i < ownedItems.Count; i++)
+        {
+            InventoryItemData item = ownedItems[i];
+            if (item != null && MatchesCurrentFilter(item))
+                filteredItems.Add(item);
+        }
+
+        int displayedSlotCount = Mathf.Max(visibleSlotCount, filteredItems.Count);
 
         for (int i = 0; i < displayedSlotCount; i++)
         {
-            InventoryItemData item = i < ownedItems.Count ? ownedItems[i] : null;
+            InventoryItemData item = i < filteredItems.Count ? filteredItems[i] : null;
             InventorySlotUI slot = Instantiate(slotPrefab, slotContainer);
             slot.Setup(item, SelectItem);
             spawnedSlots.Add(slot);
         }
 
-        if (selectedItem != null && !boundManager.HasItem(selectedItem.ItemID))
+        if (selectedItem != null &&
+            (!boundManager.HasItem(selectedItem.ItemID) ||
+             !MatchesCurrentFilter(selectedItem)))
+        {
             ClearDetails();
+        }
+    }
+
+    public void ShowAllItems()
+    {
+        SetFilter(InventoryFilter.All);
+    }
+
+    public void ShowQuestItems()
+    {
+        SetFilter(InventoryFilter.Quest);
+    }
+
+    public void ShowKeyItems()
+    {
+        SetFilter(InventoryFilter.Key);
+    }
+
+    public void ShowDocuments()
+    {
+        SetFilter(InventoryFilter.Document);
     }
 
     public void SelectItem(InventoryItemData item)
@@ -206,6 +267,60 @@ public sealed class InventoryUI : MonoBehaviour
     {
         selectedItem = null;
         SelectItem(null);
+    }
+
+    private void SetFilter(InventoryFilter filter)
+    {
+        currentFilter = filter;
+        UpdateTabVisuals();
+
+        if (IsOpen)
+            Refresh();
+    }
+
+    private bool MatchesCurrentFilter(InventoryItemData item)
+    {
+        switch (currentFilter)
+        {
+            case InventoryFilter.Quest:
+                return item.Category == ItemCategory.Quest;
+            case InventoryFilter.Key:
+                return item.Category == ItemCategory.Key;
+            case InventoryFilter.Document:
+                return item.Category == ItemCategory.Document;
+            default:
+                return true;
+        }
+    }
+
+    private void AddFilterListeners()
+    {
+        allTabButton?.onClick.AddListener(ShowAllItems);
+        questItemsTabButton?.onClick.AddListener(ShowQuestItems);
+        keyItemsTabButton?.onClick.AddListener(ShowKeyItems);
+        documentsTabButton?.onClick.AddListener(ShowDocuments);
+    }
+
+    private void RemoveFilterListeners()
+    {
+        allTabButton?.onClick.RemoveListener(ShowAllItems);
+        questItemsTabButton?.onClick.RemoveListener(ShowQuestItems);
+        keyItemsTabButton?.onClick.RemoveListener(ShowKeyItems);
+        documentsTabButton?.onClick.RemoveListener(ShowDocuments);
+    }
+
+    private void UpdateTabVisuals()
+    {
+        SetTabColor(allTabGraphic, currentFilter == InventoryFilter.All);
+        SetTabColor(questItemsTabGraphic, currentFilter == InventoryFilter.Quest);
+        SetTabColor(keyItemsTabGraphic, currentFilter == InventoryFilter.Key);
+        SetTabColor(documentsTabGraphic, currentFilter == InventoryFilter.Document);
+    }
+
+    private void SetTabColor(Graphic graphic, bool isActive)
+    {
+        if (graphic != null)
+            graphic.color = isActive ? activeTabColor : inactiveTabColor;
     }
 
     private void FadeTo(float targetAlpha, bool deactivateAfterFade)

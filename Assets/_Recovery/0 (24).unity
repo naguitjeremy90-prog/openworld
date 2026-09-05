@@ -2236,6 +2236,16 @@ MonoBehaviour:
   slotContainer: {fileID: 1324010381}
   slotPrefab: {fileID: 7175129634486602556, guid: 54e74b9b13c877a43b58eb5393a4ff14, type: 3}
   visibleSlotCount: 6
+  allTabButton: {fileID: 0}
+  questItemsTabButton: {fileID: 0}
+  keyItemsTabButton: {fileID: 0}
+  documentsTabButton: {fileID: 0}
+  allTabGraphic: {fileID: 0}
+  questItemsTabGraphic: {fileID: 0}
+  keyItemsTabGraphic: {fileID: 0}
+  documentsTabGraphic: {fileID: 0}
+  activeTabColor: {r: 1, g: 1, b: 1, a: 1}
+  inactiveTabColor: {r: 0.82, g: 0.74, b: 0.62, a: 1}
   detailIcon: {fileID: 1091002022}
   detailName: {fileID: 1544591408}
   detailDescription: {fileID: 1174249923}
@@ -12375,8 +12385,8 @@ MonoBehaviour:
   focusManager: {fileID: 0}
   focusPoint: {fileID: 0}
   facePlayerWhenTalking: 1
-  npcTransform: {fileID: 91391106}
-  playerTransform: {fileID: 432565506}
+  npcTransform: {fileID: 0}
+  playerTransform: {fileID: 0}
   turnSpeed: 5
   returnToOriginalDirection: 1
   OnConversationFinished:
@@ -14846,7 +14856,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -103}
+  m_AnchoredPosition: {x: 0, y: -155.6}
   m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &928605630
@@ -23185,7 +23195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1449975869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24189,7 +24199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.07, g: 0.055, b: 0.04, a: 0.8745098}
+  m_Color: {r: 0.07, g: 0.055, b: 0.04, a: 0.78}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25029,8 +25039,8 @@ MonoBehaviour:
   focusManager: {fileID: 0}
   focusPoint: {fileID: 0}
   facePlayerWhenTalking: 1
-  npcTransform: {fileID: 180499890}
-  playerTransform: {fileID: 432565506}
+  npcTransform: {fileID: 0}
+  playerTransform: {fileID: 0}
   turnSpeed: 5
   returnToOriginalDirection: 1
   OnConversationFinished:
