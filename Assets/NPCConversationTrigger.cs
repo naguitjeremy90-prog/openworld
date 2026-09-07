@@ -6,6 +6,7 @@ using DialogueEditor;
 
 public class NPCConversationTrigger : MonoBehaviour
 {
+    public event System.Action ConversationFinished;
     [Header("Dialogue")]
     [FormerlySerializedAs("myConversation")]
     [SerializeField] private NPCConversation firstConversation;
@@ -26,13 +27,17 @@ public class NPCConversationTrigger : MonoBehaviour
     [SerializeField] private float turnSpeed = 5f;
     [SerializeField] private bool returnToOriginalDirection = true;
 
+    [Header("Walking NPC (Optional)")]
+    [SerializeField] private NPCPatrol linkedPatrol;
+
     [Header("After Conversation")]
-    public UnityEvent OnConversationFinished;
-    public UnityEvent OnFirstConversationFinished;
+    public UnityEvent OnConversationFinished = new UnityEvent();
+    public UnityEvent OnFirstConversationFinished = new UnityEvent();
 
     private bool playerNear = false;
     private bool isTalking = false;
     private bool hasCompletedFirstConversation = false;
+    private bool pausedLinkedPatrol = false;
 
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
@@ -43,6 +48,16 @@ public class NPCConversationTrigger : MonoBehaviour
     {
         firstConversation = nextFirstConversation;
         repeatConversation = nextRepeatConversation;
+    }
+
+    public bool OwnsCameraFocus(
+        CameraFocusManager manager,
+        CameraFocusPoint point)
+    {
+        return focusManager != null &&
+               focusPoint != null &&
+               focusManager == manager &&
+               focusPoint == point;
     }
 
     private void Start()
@@ -59,6 +74,23 @@ public class NPCConversationTrigger : MonoBehaviour
     private void OnDisable()
     {
         ConversationManager.OnConversationEnded -= OnConversationEnded;
+
+        if (turnCoroutine != null)
+        {
+            StopCoroutine(turnCoroutine);
+            turnCoroutine = null;
+        }
+
+        if (pausedLinkedPatrol && linkedPatrol != null)
+            linkedPatrol.SetPatrolPaused(false);
+
+        pausedLinkedPatrol = false;
+        isTalking = false;
+
+        if (playerNear && talkText != null)
+            talkText.SetActive(false);
+
+        playerNear = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -119,6 +151,12 @@ public class NPCConversationTrigger : MonoBehaviour
                 : firstConversation;
 
         ConversationManager.Instance.StartConversation(conversation);
+
+        if (linkedPatrol != null)
+        {
+            linkedPatrol.SetPatrolPaused(true);
+            pausedLinkedPatrol = true;
+        }
     }
 
     private IEnumerator TurnTowardPlayer()
@@ -171,6 +209,11 @@ public class NPCConversationTrigger : MonoBehaviour
 
         isTalking = false;
 
+        if (pausedLinkedPatrol && linkedPatrol != null)
+            linkedPatrol.SetPatrolPaused(false);
+
+        pausedLinkedPatrol = false;
+
         bool finishedFirstConversation = !HasCompletedFirstConversation();
         if (finishedFirstConversation)
         {
@@ -184,6 +227,7 @@ public class NPCConversationTrigger : MonoBehaviour
             }
         }
 
+        ConversationFinished?.Invoke();
         OnConversationFinished?.Invoke();
 
         if (finishedFirstConversation)

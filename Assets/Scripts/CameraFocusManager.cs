@@ -19,6 +19,10 @@ public class CameraFocusManager : MonoBehaviour
 
     private bool isFocusing = false;
     private bool usingCinemachine = false;
+    private bool isReturning = false;
+
+    private CameraFocusPoint activeFocusPoint;
+    private UnityEvent focusFinishedCallback;
 
     // True normal camera position
     private Vector3 normalCameraPosition;
@@ -44,19 +48,28 @@ public class CameraFocusManager : MonoBehaviour
         CameraFocusPoint focusPoint,
         UnityEvent onFinished = null)
     {
-        if (isFocusing)
-            return;
-
-        cameraCoroutine =
-            StartCoroutine(FocusRoutine(focusPoint, onFinished));
+        TryFocusOn(focusPoint, onFinished);
     }
 
-    private IEnumerator FocusRoutine(
+    internal bool TryFocusOn(
         CameraFocusPoint focusPoint,
-        UnityEvent onFinished)
+        UnityEvent onFinished = null)
     {
-        isFocusing = true;
+        if (isFocusing || focusPoint == null)
+            return false;
 
+        isFocusing = true;
+        isReturning = false;
+        activeFocusPoint = focusPoint;
+        focusFinishedCallback = onFinished;
+
+        cameraCoroutine =
+            StartCoroutine(FocusRoutine(focusPoint));
+        return true;
+    }
+
+    private IEnumerator FocusRoutine(CameraFocusPoint focusPoint)
+    {
         // Lock Peter and force idle
         if (focusPoint.lockPlayer)
         {
@@ -97,20 +110,32 @@ public class CameraFocusManager : MonoBehaviour
             yield return new WaitForSeconds(
                 focusPoint.focusDuration);
 
+            isReturning = true;
             yield return StartCoroutine(
                 ReturnRoutine(focusPoint));
-
-            onFinished?.Invoke();
         }
     }
 
     public void ReturnToNormal(CameraFocusPoint focusPoint)
     {
+        TryReturnToNormal(focusPoint);
+    }
+
+    internal bool TryReturnToNormal(CameraFocusPoint focusPoint)
+    {
+        if (!isFocusing || isReturning || focusPoint == null ||
+            focusPoint != activeFocusPoint)
+        {
+            return false;
+        }
+
         if (cameraCoroutine != null)
             StopCoroutine(cameraCoroutine);
 
+        isReturning = true;
         cameraCoroutine =
             StartCoroutine(ReturnRoutine(focusPoint));
+        return true;
     }
 
     private IEnumerator ReturnRoutine(
@@ -142,8 +167,15 @@ public class CameraFocusManager : MonoBehaviour
             playerMovementScript.enabled = true;
         }
 
+        UnityEvent finishedCallback = focusFinishedCallback;
+
         isFocusing = false;
+        isReturning = false;
+        activeFocusPoint = null;
+        focusFinishedCallback = null;
         cameraCoroutine = null;
+
+        finishedCallback?.Invoke();
     }
 
     private IEnumerator MoveRegularCamera(

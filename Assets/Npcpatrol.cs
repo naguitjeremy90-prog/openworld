@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class NPCPatrol : MonoBehaviour
 {
+    private const string IsWalkingParameterName = "IsWalking";
+    private const int GroundHitBufferSize = 16;
+    private static readonly int IsWalkingParameterHash = Animator.StringToHash(IsWalkingParameterName);
+
     [Header("Patrol Points (add as many as you want, in order)")]
     public Transform[] patrolPoints;
 
@@ -21,26 +25,31 @@ public class NPCPatrol : MonoBehaviour
     private int currentPointIndex = 0;
     private bool isWaiting = false;
     private float waitTimer = 0f;
+    private bool canSetIsWalking = false;
+    private bool invalidPatrolWarningLogged = false;
+    private bool isPatrolPaused = false;
+    private readonly RaycastHit[] groundHits = new RaycastHit[GroundHitBufferSize];
 
     void Start()
     {
-        if (patrolPoints.Length == 0)
-        {
-            Debug.LogWarning(gameObject.name + ": No patrol points assigned!");
-            enabled = false;
-        }
+        CacheIsWalkingParameter();
+        TryGetCurrentTarget(out _);
     }
 
     void Update()
     {
-        if (patrolPoints.Length == 0) return;
+        if (isPatrolPaused)
+        {
+            SetWalkingAnimation(false);
+            return;
+        }
 
-        Transform target = patrolPoints[currentPointIndex];
+        if (!TryGetCurrentTarget(out Transform target)) return;
 
         if (isWaiting)
         {
             waitTimer -= Time.deltaTime;
-            if (animator != null) animator.SetBool("IsWalking", false);
+            SetWalkingAnimation(false);
 
             if (waitTimer <= 0f)
             {
@@ -64,7 +73,7 @@ public class NPCPatrol : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
 
-            if (animator != null) animator.SetBool("IsWalking", true);
+            SetWalkingAnimation(true);
 
             // Check X/Z distance only (ignore height difference)
             Vector3 flatPos = new Vector3(transform.position.x, 0, transform.position.z);
@@ -79,15 +88,124 @@ public class NPCPatrol : MonoBehaviour
         SnapToGround();
     }
 
+    public void SetPatrolPaused(bool paused)
+    {
+        if (isPatrolPaused == paused) return;
+
+        isPatrolPaused = paused;
+        SetWalkingAnimation(!isPatrolPaused && enabled && !isWaiting);
+    }
+
     void SnapToGround()
     {
         Vector3 rayStart = transform.position + Vector3.up * raycastHeight;
-        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
+        int hitCount = Physics.RaycastNonAlloc(
+            rayStart,
+            Vector3.down,
+            groundHits,
+            raycastDistance,
+            groundLayer,
+            QueryTriggerInteraction.Ignore);
+
+        bool foundGround = false;
+        float closestDistance = float.PositiveInfinity;
+        Vector3 closestPoint = default;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            Collider hitCollider = groundHits[i].collider;
+            if (hitCollider == null) continue;
+
+            Transform hitTransform = hitCollider.transform;
+            if (hitTransform == transform || hitTransform.IsChildOf(transform)) continue;
+
+            if (groundHits[i].distance < closestDistance)
+            {
+                foundGround = true;
+                closestDistance = groundHits[i].distance;
+                closestPoint = groundHits[i].point;
+            }
+        }
+
+        if (foundGround)
         {
             Vector3 pos = transform.position;
-            pos.y = hit.point.y + footOffset;
+            pos.y = closestPoint.y + footOffset;
             transform.position = pos;
         }
+    }
+
+    private void CacheIsWalkingParameter()
+    {
+        canSetIsWalking = false;
+        if (animator == null || animator.runtimeAnimatorController == null) return;
+
+        AnimatorControllerParameter[] parameters = animator.parameters;
+        for (int i = 0; i < parameters.Length; i++)
+        {
+            if (parameters[i].type == AnimatorControllerParameterType.Bool &&
+                parameters[i].nameHash == IsWalkingParameterHash)
+            {
+                canSetIsWalking = true;
+                return;
+            }
+        }
+    }
+
+    private void SetWalkingAnimation(bool isWalking)
+    {
+        if (canSetIsWalking)
+        {
+            animator.SetBool(IsWalkingParameterHash, isWalking);
+        }
+    }
+
+    private bool TryGetCurrentTarget(out Transform target)
+    {
+        target = null;
+
+        if (patrolPoints == null || patrolPoints.Length == 0)
+        {
+            WarnInvalidPatrolOnce(gameObject.name + ": No patrol points assigned!");
+            enabled = false;
+            return false;
+        }
+
+        if (currentPointIndex < 0 || currentPointIndex >= patrolPoints.Length)
+        {
+            currentPointIndex = 0;
+        }
+
+        int missingIndex = currentPointIndex;
+        for (int offset = 0; offset < patrolPoints.Length; offset++)
+        {
+            int candidateIndex = (currentPointIndex + offset) % patrolPoints.Length;
+            Transform candidate = patrolPoints[candidateIndex];
+            if (candidate == null) continue;
+
+            if (offset > 0)
+            {
+                WarnInvalidPatrolOnce(
+                    gameObject.name + ": Patrol point at index " + missingIndex +
+                    " is missing. Skipping to the next valid point.");
+            }
+
+            currentPointIndex = candidateIndex;
+            target = candidate;
+            return true;
+        }
+
+        WarnInvalidPatrolOnce(gameObject.name + ": All assigned patrol points are missing. Patrol stopped.");
+        enabled = false;
+        return false;
+    }
+
+    private void WarnInvalidPatrolOnce(string message)
+    {
+        if (invalidPatrolWarningLogged) return;
+
+        invalidPatrolWarningLogged = true;
+        Debug.LogWarning(message, this);
     }
 
     // Draws lines between patrol points in the Scene view so you can see the route while editing

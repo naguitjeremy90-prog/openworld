@@ -1,10 +1,25 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using Supercyan.FreeSample;
+
 public class SleepInteraction : MonoBehaviour
 {
     [SerializeField] private GameObject interactText;
     [SerializeField] private TMP_Text sleepText;
+
+    [Header("Dream")]
+    [SerializeField] private DreamWhisperController dreamWhisperController;
+
+    [Header("Player Control")]
+    [SerializeField] private SimpleSampleCharacterControl playerMovement;
+    [SerializeField] private Animator playerAnimator;
+
+    [Header("Wake Reaction")]
+    [SerializeField] private CharacterReactionController wakeReaction;
+
+    [Header("Wake Dialogue")]
+    [SerializeField] private SelfDialogueTrigger wakeSelfDialogue;
 
     private bool playerNear = false;  
     private bool hasSlept = false;
@@ -43,10 +58,13 @@ public class SleepInteraction : MonoBehaviour
     private IEnumerator Sleep()
     {
         hasSlept = true;
+        bool shouldPlayDream = !GameFlags.isMorning;
+        bool movementWasEnabled = playerMovement != null && playerMovement.enabled;
+
+        SetPlayerMovementLocked(true);
+
         if (interactText != null)
             interactText.SetActive(false);
-
-        GameFlags.isMorning = true;
 
         sleepText.gameObject.SetActive(false);
 
@@ -74,12 +92,56 @@ public class SleepInteraction : MonoBehaviour
 
             sleepText.gameObject.SetActive(false);
 
-            
-
-            if(fadeController != null)
-            {
-                yield return StartCoroutine(fadeController.FadeFromBlack());
-            }
+            if (shouldPlayDream && dreamWhisperController != null)
+                yield return dreamWhisperController.PlaySequence();
         }
+
+        GameFlags.isMorning = true;
+
+        if (fadeController != null)
+            yield return StartCoroutine(fadeController.FadeFromBlack());
+
+        if (wakeReaction != null)
+            yield return wakeReaction.PlayReaction();
+
+        if (wakeSelfDialogue != null)
+            yield return PlayWakeDialogue();
+
+        RestorePlayerMovement(movementWasEnabled);
+    }
+
+    private IEnumerator PlayWakeDialogue()
+    {
+        bool conversationFinished = false;
+        System.Action onConversationFinished = () => conversationFinished = true;
+
+        wakeSelfDialogue.ConversationFinished += onConversationFinished;
+
+        try
+        {
+            wakeSelfDialogue.StartSelfDialogue();
+
+            while (!conversationFinished)
+                yield return null;
+        }
+        finally
+        {
+            wakeSelfDialogue.ConversationFinished -= onConversationFinished;
+        }
+    }
+
+    private void SetPlayerMovementLocked(bool locked)
+    {
+        if (playerMovement != null)
+            playerMovement.enabled = !locked;
+
+        if (locked && playerAnimator != null)
+            playerAnimator.SetFloat("MoveSpeed", 0f);
+    }
+
+    private void RestorePlayerMovement(bool movementWasEnabled)
+    {
+        if (playerMovement != null)
+            playerMovement.enabled = movementWasEnabled;
     }
 }

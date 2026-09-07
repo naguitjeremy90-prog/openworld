@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.Events;
 using DialogueEditor;
 
 public class SelfDialogueTrigger : MonoBehaviour
 {
+    public event System.Action ConversationFinished;
     [Header("Conversation")]
     [SerializeField] private NPCConversation myConversation;
 
@@ -11,6 +13,21 @@ public class SelfDialogueTrigger : MonoBehaviour
     [SerializeField] private bool autoStartOnEnter = true;
 
     private bool hasTriggered = false;
+    private bool conversationStarted = false;
+
+    [Header("Callbacks")]
+    public UnityEvent OnConversationFinished = new UnityEvent();
+
+    private void OnEnable()
+    {
+        ConversationManager.OnConversationEnded += HandleConversationEnded;
+    }
+
+    private void OnDisable()
+    {
+        ConversationManager.OnConversationEnded -= HandleConversationEnded;
+        conversationStarted = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -31,8 +48,18 @@ public class SelfDialogueTrigger : MonoBehaviour
         if (myConversation == null)
             return;
 
+        conversationStarted = true;
         hasTriggered = true;
-
         ConversationManager.Instance.StartConversation(myConversation);
+    }
+
+    private void HandleConversationEnded()
+    {
+        if (!conversationStarted)
+            return;
+
+        conversationStarted = false;
+        ConversationFinished?.Invoke();
+        OnConversationFinished?.Invoke();
     }
 }
