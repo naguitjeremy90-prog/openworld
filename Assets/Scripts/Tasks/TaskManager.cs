@@ -8,12 +8,12 @@ public sealed class TaskManager : MonoBehaviour
     private const string ActiveFlagPrefix = "task_active:";
     private const string CompletedFlagPrefix = "task_completed:";
     private const string ProgressFlagPrefix = "task_progress:";
+    private const string StageValuePrefix = "task_stage:";
 
     public static TaskManager Instance { get; private set; }
 
     [SerializeField] private TaskData[] taskDefinitions = Array.Empty<TaskData>();
-    [SerializeField] private TaskNotificationUI notificationUI;
-    [SerializeField] private TaskTrackerUI[] trackerUIs = Array.Empty<TaskTrackerUI>();
+    private TaskNotificationUI notificationUI;
 
     private readonly Dictionary<string, TaskData> definitionsById =
         new Dictionary<string, TaskData>(StringComparer.Ordinal);
@@ -36,7 +36,9 @@ public sealed class TaskManager : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
         BuildDefinitionLookup();
+        RestoreRuntimeState();
         RefreshTrackers();
     }
 
@@ -57,6 +59,9 @@ public sealed class TaskManager : MonoBehaviour
         SessionStoryState.SetFlag(GetActiveFlag(taskId), true);
         TaskStage firstStage = task.Stages?.FirstOrDefault(s => s != null);
         currentStageByTaskId[taskId] = firstStage?.StageId?.Trim();
+        SessionStoryState.SetString(
+            GetStageValue(taskId),
+            currentStageByTaskId[taskId]);
         objectivesById[taskId] = firstStage == null
             ? task.StartingObjective
             : FormatStageObjective(taskId, firstStage);
@@ -261,6 +266,18 @@ public sealed class TaskManager : MonoBehaviour
         return objectivesById.TryGetValue(taskId, out objective);
     }
 
+    public void RegisterNotificationUI(TaskNotificationUI ui)
+    {
+        if (ui != null)
+            notificationUI = ui;
+    }
+
+    public void UnregisterNotificationUI(TaskNotificationUI ui)
+    {
+        if (notificationUI == ui)
+            notificationUI = null;
+    }
+
     private void BuildDefinitionLookup()
     {
         definitionsById.Clear();
@@ -325,6 +342,11 @@ public sealed class TaskManager : MonoBehaviour
     private static string GetProgressFlag(string taskId, string stageId, string progressId)
     {
         return ProgressFlagPrefix + taskId + ":" + stageId + ":" + progressId;
+    }
+
+    private static string GetStageValue(string taskId)
+    {
+        return StageValuePrefix + taskId;
     }
 
     private static int GetStoredProgress(string storageKey)
@@ -397,6 +419,49 @@ public sealed class TaskManager : MonoBehaviour
     private void SetStage(string taskId, TaskStage stage)
     {
         currentStageByTaskId[taskId] = stage.StageId?.Trim();
+        SessionStoryState.SetString(
+            GetStageValue(taskId),
+            currentStageByTaskId[taskId]);
         objectivesById[taskId] = FormatStageObjective(taskId, stage);
+    }
+
+    private void RestoreRuntimeState()
+    {
+        foreach (TaskData task in taskDefinitions)
+        {
+            if (task == null || string.IsNullOrWhiteSpace(task.TaskId) ||
+                GetTaskState(task.TaskId) != TaskState.Active)
+            {
+                continue;
+            }
+
+            string taskId = task.TaskId.Trim();
+            string storedStageId = SessionStoryState.GetString(
+                GetStageValue(taskId));
+            TaskStage stage = task.Stages?.FirstOrDefault(candidate =>
+                candidate != null &&
+                string.Equals(
+                    candidate.StageId?.Trim(),
+                    storedStageId,
+                    StringComparison.Ordinal));
+
+            if (stage == null)
+                stage = task.Stages?.FirstOrDefault(candidate => candidate != null);
+
+            if (stage != null)
+            {
+                currentStageByTaskId[taskId] = stage.StageId?.Trim();
+                SessionStoryState.SetString(
+                    GetStageValue(taskId),
+                    currentStageByTaskId[taskId]);
+                objectivesById[taskId] = FormatStageObjective(taskId, stage);
+            }
+            else
+            {
+                objectivesById[taskId] = task.StartingObjective;
+            }
+
+            currentTaskId = taskId;
+        }
     }
 }

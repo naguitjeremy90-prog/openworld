@@ -8,6 +8,7 @@ public sealed class MainInvestigationTaskController : MonoBehaviour
     private const string TaskId = "main_investigate_pili";
     private const string StartedFlag = "main_investigate_pili_started";
     private const string MaestroLeadFlag = "maestro_ben_lead_received";
+    private const string MaestroBenCompletedFlag = "maestro_ben_completed";
     private const string AlingIkaCompletedFlag = "aling_ika_completed";
 
     [Header("Testing (Development Only)")]
@@ -75,6 +76,9 @@ public sealed class MainInvestigationTaskController : MonoBehaviour
 
     private void AdvanceToMaestroLead()
     {
+        if (SessionStoryState.GetFlag(MaestroBenCompletedFlag))
+            return;
+
         if (!SessionStoryState.GetFlag(MaestroLeadFlag))
         {
             SessionStoryState.SetFlag(MaestroLeadFlag, true);

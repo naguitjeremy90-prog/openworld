@@ -38,9 +38,15 @@ public class NPCConversationTrigger : MonoBehaviour
     private bool isTalking = false;
     private bool hasCompletedFirstConversation = false;
     private bool pausedLinkedPatrol = false;
+    private StoryConversationSelector storyConversationSelector;
 
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
+
+    private void Awake()
+    {
+        storyConversationSelector = GetComponent<StoryConversationSelector>();
+    }
 
     public void SetConversations(
         NPCConversation nextFirstConversation,
@@ -146,9 +152,17 @@ public class NPCConversationTrigger : MonoBehaviour
             focusManager.FocusOn(focusPoint);
 
         NPCConversation conversation =
-            HasCompletedFirstConversation() && repeatConversation != null
-                ? repeatConversation
-                : firstConversation;
+            storyConversationSelector != null
+                ? storyConversationSelector.GetCurrentConversation()
+                : null;
+
+        if (conversation == null)
+        {
+            conversation =
+                HasCompletedFirstConversation() && repeatConversation != null
+                    ? repeatConversation
+                    : firstConversation;
+        }
 
         ConversationManager.Instance.StartConversation(conversation);
 

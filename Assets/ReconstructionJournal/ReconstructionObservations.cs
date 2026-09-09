@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ReconstructionObservations : MonoBehaviour
 {
+    private const string UnlockFlagPrefix = "journal_observation_unlocked:";
+
     [Header("Available Observations")]
     [SerializeField] private List<ObservationData> allObservations = new List<ObservationData>();
 
@@ -34,6 +36,8 @@ public class ReconstructionObservations : MonoBehaviour
 
     private void Awake()
     {
+        RestoreSessionState();
+
         if (testUnlockButton != null)
             testUnlockButton.onClick.AddListener(UnlockTestObservation);
 
@@ -62,6 +66,7 @@ public class ReconstructionObservations : MonoBehaviour
         if (!unlockedObservationIDs.Add(observationID))
             return false;
 
+        SessionStoryState.SetFlag(UnlockFlagPrefix + observationID, true);
         RefreshList();
         Debug.Log("Reconstruction Journal: Unlocked observation '" + observationID + "'.");
         return true;
@@ -111,6 +116,21 @@ public class ReconstructionObservations : MonoBehaviour
             observation =>
                 observation != null &&
                 observation.observationID == observationID);
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedObservationIDs.Clear();
+
+        foreach (ObservationData observation in allObservations)
+        {
+            if (observation != null &&
+                SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + observation.observationID))
+            {
+                unlockedObservationIDs.Add(observation.observationID);
+            }
+        }
     }
 
     private void CreateListButton(ObservationData observation)

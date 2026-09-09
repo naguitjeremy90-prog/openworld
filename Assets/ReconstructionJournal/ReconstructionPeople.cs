@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class ReconstructionPeople : MonoBehaviour
 {
+    private const string UnlockFlagPrefix = "journal_person_unlocked:";
+    private const string StageValuePrefix = "journal_person_stage:";
+
     [Header("Available People")]
     [SerializeField] private List<PersonData> allPeople = new List<PersonData>();
 
@@ -38,6 +41,8 @@ public class ReconstructionPeople : MonoBehaviour
 
     private void Awake()
     {
+        RestoreSessionState();
+
         if (testUnlockButton != null)
             testUnlockButton.onClick.AddListener(UnlockTestPerson);
 
@@ -71,6 +76,8 @@ public class ReconstructionPeople : MonoBehaviour
             return false;
 
         currentStages[personID] = 0;
+        SessionStoryState.SetFlag(UnlockFlagPrefix + personID, true);
+        SessionStoryState.SetInt(StageValuePrefix + personID, 0);
         RefreshList();
         Debug.Log("Reconstruction Journal: Unlocked person '" + personID + "'.");
         return true;
@@ -104,6 +111,7 @@ public class ReconstructionPeople : MonoBehaviour
         }
 
         currentStages[personID] = stageIndex;
+        SessionStoryState.SetInt(StageValuePrefix + personID, stageIndex);
 
         if (selectedPerson == person)
             ShowPerson(person);
@@ -161,6 +169,29 @@ public class ReconstructionPeople : MonoBehaviour
 
         return allPeople.Find(
             person => person != null && person.personID == personID);
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedPersonIDs.Clear();
+        currentStages.Clear();
+
+        foreach (PersonData person in allPeople)
+        {
+            if (person == null ||
+                !SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + person.personID))
+            {
+                continue;
+            }
+
+            unlockedPersonIDs.Add(person.personID);
+            int maximumStage = Mathf.Max(0, person.descriptionStages.Count - 1);
+            currentStages[person.personID] = Mathf.Clamp(
+                SessionStoryState.GetInt(StageValuePrefix + person.personID),
+                0,
+                maximumStage);
+        }
     }
 
     private void CreateListButton(PersonData person)

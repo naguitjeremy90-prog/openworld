@@ -8,6 +8,8 @@ public static class SessionStoryState
         new HashSet<string>(StringComparer.Ordinal);
     private static readonly Dictionary<string, int> integerValues =
         new Dictionary<string, int>(StringComparer.Ordinal);
+    private static readonly Dictionary<string, string> stringValues =
+        new Dictionary<string, string>(StringComparer.Ordinal);
 
     public static bool GetFlag(string flagId)
     {
@@ -45,10 +47,32 @@ public static class SessionStoryState
             integerValues.Remove(valueId);
     }
 
+    public static string GetString(string valueId, string defaultValue = "")
+    {
+        if (string.IsNullOrEmpty(valueId))
+            return defaultValue;
+
+        return stringValues.TryGetValue(valueId, out string value)
+            ? value
+            : defaultValue;
+    }
+
+    public static void SetString(string valueId, string value)
+    {
+        if (string.IsNullOrEmpty(valueId))
+            return;
+
+        if (!string.IsNullOrEmpty(value))
+            stringValues[valueId] = value;
+        else
+            stringValues.Remove(valueId);
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetSession()
     {
         completedFlags.Clear();
         integerValues.Clear();
+        stringValues.Clear();
     }
 }

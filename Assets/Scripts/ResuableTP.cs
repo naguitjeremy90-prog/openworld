@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using System.Collections;
 
 public class SceneEntrance : MonoBehaviour
@@ -7,6 +8,9 @@ public class SceneEntrance : MonoBehaviour
     [SerializeField] private string sceneName;
     [SerializeField] private GameObject interactText;
     [SerializeField] private string returnSpawnPoint;
+    [Header("Story Requirement (Optional)")]
+    [SerializeField] private string requiredStoryFlagId;
+    [SerializeField] private UnityEvent onRequirementFailed = new UnityEvent();
     [Header("Interaction Highlight")]
     [SerializeField] private Renderer highlightRenderer;
     [SerializeField] private Color highlightColor = Color.white;
@@ -16,6 +20,8 @@ public class SceneEntrance : MonoBehaviour
     private Material[] highlightMaterials;
     private Color[] originalBaseColors;
     private Color[] originalEmissionColors;
+
+    public UnityEvent OnRequirementFailed => onRequirementFailed;
 
     private void Start()
     {
@@ -131,8 +137,20 @@ public class SceneEntrance : MonoBehaviour
     {
         if (playerNear && Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(TransitionScene());
+            TryEnter();
         }
+    }
+
+    private void TryEnter()
+    {
+        if (!string.IsNullOrEmpty(requiredStoryFlagId) &&
+            !SessionStoryState.GetFlag(requiredStoryFlagId))
+        {
+            onRequirementFailed?.Invoke();
+            return;
+        }
+
+        StartCoroutine(TransitionScene());
     }
 
     private IEnumerator TransitionScene()

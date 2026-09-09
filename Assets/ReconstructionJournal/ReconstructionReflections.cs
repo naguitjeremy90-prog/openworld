@@ -8,6 +8,10 @@ using UnityEngine.UI;
 
 public class ReconstructionReflections : MonoBehaviour
 {
+    private const string UnlockFlagPrefix = "journal_reflection_unlocked:";
+    private const string ResponseValuePrefix = "journal_reflection_response:";
+    private const string FollowUpValuePrefix = "journal_reflection_follow_up:";
+
     // Keep this list deliberately small and easy to edit. Matching is done
     // against whole words/tokens, so innocent words containing these letters
     // are not rejected.
@@ -108,6 +112,8 @@ public class ReconstructionReflections : MonoBehaviour
 
     private void Awake()
     {
+        RestoreSessionState();
+
         if (testUnlockButton != null)
             testUnlockButton.onClick.AddListener(UnlockTestReflection);
 
@@ -157,6 +163,7 @@ public class ReconstructionReflections : MonoBehaviour
         if (!unlockedReflectionIDs.Add(reflectionID))
             return false;
 
+        SessionStoryState.SetFlag(UnlockFlagPrefix + reflectionID, true);
         RefreshList();
         Debug.Log(
             "Reconstruction Journal: Unlocked reflection '" + reflectionID + "'.");
@@ -197,6 +204,12 @@ public class ReconstructionReflections : MonoBehaviour
         selectedFollowUps[selectedReflection.reflectionID] =
             GetBestThemeFollowUp(selectedReflection, response);
         submittedResponses[selectedReflection.reflectionID] = response;
+        SessionStoryState.SetString(
+            ResponseValuePrefix + selectedReflection.reflectionID,
+            response);
+        SessionStoryState.SetString(
+            FollowUpValuePrefix + selectedReflection.reflectionID,
+            selectedFollowUps[selectedReflection.reflectionID]);
         ShowReflection(selectedReflection);
 
         Debug.Log(
@@ -239,6 +252,35 @@ public class ReconstructionReflections : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedReflectionIDs.Clear();
+        submittedResponses.Clear();
+        selectedFollowUps.Clear();
+
+        foreach (ReflectionData reflection in allReflections)
+        {
+            if (reflection == null ||
+                !SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + reflection.reflectionID))
+            {
+                continue;
+            }
+
+            string reflectionID = reflection.reflectionID;
+            unlockedReflectionIDs.Add(reflectionID);
+
+            string response = SessionStoryState.GetString(
+                ResponseValuePrefix + reflectionID);
+            if (string.IsNullOrEmpty(response))
+                continue;
+
+            submittedResponses[reflectionID] = response;
+            selectedFollowUps[reflectionID] = SessionStoryState.GetString(
+                FollowUpValuePrefix + reflectionID);
+        }
     }
 
     private bool HasExcessiveRepeatedCharacters(string text)

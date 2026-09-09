@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class ReconstructionFragments : MonoBehaviour
 {
+    private const string UnlockFlagPrefix = "journal_fragment_unlocked:";
+    private const string StageValuePrefix = "journal_fragment_stage:";
+
     [Header("Available Fragments")]
     [SerializeField] private List<FragmentData> allFragments = new List<FragmentData>();
 
@@ -39,6 +42,8 @@ public class ReconstructionFragments : MonoBehaviour
 
     private void Awake()
     {
+        RestoreSessionState();
+
         if (testUnlockButton != null)
             testUnlockButton.onClick.AddListener(UnlockTestFragment);
 
@@ -72,6 +77,8 @@ public class ReconstructionFragments : MonoBehaviour
             return false;
 
         currentStages[fragmentID] = 0;
+        SessionStoryState.SetFlag(UnlockFlagPrefix + fragmentID, true);
+        SessionStoryState.SetInt(StageValuePrefix + fragmentID, 0);
         RefreshList();
         Debug.Log("Reconstruction Journal: Unlocked fragment '" + fragmentID + "'.");
         return true;
@@ -105,6 +112,7 @@ public class ReconstructionFragments : MonoBehaviour
         }
 
         currentStages[fragmentID] = stageIndex;
+        SessionStoryState.SetInt(StageValuePrefix + fragmentID, stageIndex);
 
         if (selectedFragment == fragment)
             ShowFragment(fragment);
@@ -165,6 +173,29 @@ public class ReconstructionFragments : MonoBehaviour
 
         return allFragments.Find(
             fragment => fragment != null && fragment.fragmentID == fragmentID);
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedFragmentIDs.Clear();
+        currentStages.Clear();
+
+        foreach (FragmentData fragment in allFragments)
+        {
+            if (fragment == null ||
+                !SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + fragment.fragmentID))
+            {
+                continue;
+            }
+
+            unlockedFragmentIDs.Add(fragment.fragmentID);
+            int maximumStage = Mathf.Max(0, fragment.interpretationStages.Count - 1);
+            currentStages[fragment.fragmentID] = Mathf.Clamp(
+                SessionStoryState.GetInt(StageValuePrefix + fragment.fragmentID),
+                0,
+                maximumStage);
+        }
     }
 
     private void CreateListButton(FragmentData fragment)

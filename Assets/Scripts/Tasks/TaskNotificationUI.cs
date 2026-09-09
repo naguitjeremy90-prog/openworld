@@ -21,6 +21,26 @@ public sealed class TaskNotificationUI : MonoBehaviour
         canvasGroup.blocksRaycasts = false;
     }
 
+    private void OnEnable()
+    {
+        BindToManager();
+    }
+
+    private void Start()
+    {
+        BindToManager();
+    }
+
+    private void OnDisable()
+    {
+        TaskManager.Instance?.UnregisterNotificationUI(this);
+    }
+
+    private void BindToManager()
+    {
+        TaskManager.Instance?.RegisterNotificationUI(this);
+    }
+
     public void ShowTaskStarted(string objective, Action onFinished = null)
     {
         ShowNotification("BAGONG GAWAIN", objective, onFinished);

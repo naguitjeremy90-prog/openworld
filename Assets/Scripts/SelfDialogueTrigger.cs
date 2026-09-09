@@ -42,6 +42,9 @@ public class SelfDialogueTrigger : MonoBehaviour
 
     public void StartSelfDialogue()
     {
+        if (conversationStarted)
+            return;
+
         if (triggerOnce && hasTriggered)
             return;
 
