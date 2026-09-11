@@ -80,6 +80,67 @@ public class ClarityTarget : MonoBehaviour
         SetOverlaysVisible(true);
     }
 
+    public bool TryGetScreenRect(Camera camera, out Rect screenRect)
+    {
+        screenRect = default;
+
+        if (camera == null)
+            return false;
+
+        if (targetRenderers == null || targetRenderers.Length == 0)
+            targetRenderers = GetSupportedRenderersInChildren();
+
+        bool foundPoint = false;
+        Vector2 minimum = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+        Vector2 maximum = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+
+        foreach (Renderer targetRenderer in targetRenderers)
+        {
+            if (targetRenderer == null ||
+                !targetRenderer.enabled ||
+                !targetRenderer.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            Bounds bounds = targetRenderer.bounds;
+            Vector3 center = bounds.center;
+            Vector3 extents = bounds.extents;
+
+            for (int x = -1; x <= 1; x += 2)
+            {
+                for (int y = -1; y <= 1; y += 2)
+                {
+                    for (int z = -1; z <= 1; z += 2)
+                    {
+                        Vector3 corner = center + Vector3.Scale(
+                            extents,
+                            new Vector3(x, y, z));
+                        Vector3 screenPoint = camera.WorldToScreenPoint(corner);
+
+                        if (screenPoint.z <= 0f)
+                            continue;
+
+                        Vector2 point = screenPoint;
+                        minimum = Vector2.Min(minimum, point);
+                        maximum = Vector2.Max(maximum, point);
+                        foundPoint = true;
+                    }
+                }
+            }
+        }
+
+        if (!foundPoint)
+            return false;
+
+        screenRect = Rect.MinMaxRect(
+            minimum.x,
+            minimum.y,
+            maximum.x,
+            maximum.y);
+        return true;
+    }
+
     private void CreateOverlayResources()
     {
         overlayResourcesCreated = true;
@@ -87,10 +148,19 @@ public class ClarityTarget : MonoBehaviour
         if (targetRenderers == null || targetRenderers.Length == 0)
             targetRenderers = GetSupportedRenderersInChildren();
 
-        if (overlayShader == null)
-            overlayShader = Resources.Load<Shader>(OverlayShaderResourcePath);
+        if (!IsCompatibleOverlayShader(overlayShader))
+        {
+            if (overlayShader != null)
+            {
+                Debug.LogWarning(
+                    "ClarityTarget overlay shader is incompatible; using the built-in Clarity overlay instead.",
+                    this);
+            }
 
-        if (overlayShader == null)
+            overlayShader = Resources.Load<Shader>(OverlayShaderResourcePath);
+        }
+
+        if (!IsCompatibleOverlayShader(overlayShader))
         {
             Debug.LogWarning(
                 "ClarityTarget could not load the Clarity overlay shader.",
@@ -133,6 +203,13 @@ public class ClarityTarget : MonoBehaviour
                 overlay = overlayRenderer
             });
         }
+    }
+
+    private static bool IsCompatibleOverlayShader(Shader shader)
+    {
+        return shader != null &&
+               shader.FindPropertyIndex("_HighlightColor") >= 0 &&
+               shader.FindPropertyIndex("_Strength") >= 0;
     }
 
     private Renderer CreateOverlayRenderer(Renderer sourceRenderer)

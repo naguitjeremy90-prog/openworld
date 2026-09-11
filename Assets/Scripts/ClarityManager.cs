@@ -20,6 +20,9 @@ public class ClarityManager : MonoBehaviour
     [SerializeField] private Camera targetCamera;
     [SerializeField] private Shader vignetteShader;
 
+    [Header("Magnifying Lens")]
+    [SerializeField] private ClarityLensUI lensUI;
+
     private static readonly HashSet<ClarityTarget> targets =
         new HashSet<ClarityTarget>();
 
@@ -30,6 +33,7 @@ public class ClarityManager : MonoBehaviour
     private float currentStrength;
 
     public bool IsClarityActive { get; private set; }
+    public bool IsDocumentMode { get; private set; }
 
     private void Awake()
     {
@@ -47,6 +51,7 @@ public class ClarityManager : MonoBehaviour
 
     private void Start()
     {
+        SetupLens();
         SetupVignette();
         ApplyVisualStrength(0f);
     }
@@ -70,7 +75,10 @@ public class ClarityManager : MonoBehaviour
                 Time.deltaTime / transitionDuration);
         }
 
-        if (Mathf.Approximately(nextStrength, currentStrength))
+        bool strengthChanged =
+            !Mathf.Approximately(nextStrength, currentStrength);
+
+        if (!strengthChanged && !IsClarityActive)
             return;
 
         currentStrength = nextStrength;
@@ -83,6 +91,7 @@ public class ClarityManager : MonoBehaviour
             return;
 
         IsClarityActive = false;
+        IsDocumentMode = false;
         currentStrength = 0f;
         ApplyVisualStrength(0f);
     }
@@ -109,8 +118,11 @@ public class ClarityManager : MonoBehaviour
 
         if (instance != null)
         {
+            float targetStrength = instance.IsDocumentMode
+                ? 0f
+                : instance.GetTargetStrength(target, instance.currentStrength);
             target.SetClarityVisual(
-                instance.currentStrength,
+                targetStrength,
                 instance.targetHighlightColor,
                 instance.targetHighlightIntensity);
         }
@@ -120,6 +132,24 @@ public class ClarityManager : MonoBehaviour
     {
         if (target != null)
             targets.Remove(target);
+    }
+
+    public void EnterDocumentMode()
+    {
+        if (IsDocumentMode)
+            return;
+
+        IsDocumentMode = true;
+        ApplyVisualStrength(currentStrength);
+    }
+
+    public void ExitDocumentMode()
+    {
+        if (!IsDocumentMode)
+            return;
+
+        IsDocumentMode = false;
+        ApplyVisualStrength(currentStrength);
     }
 
     private void SetupVignette()
@@ -163,14 +193,21 @@ public class ClarityManager : MonoBehaviour
         vignetteEffect.SetVignette(0f, vignetteSoftness);
     }
 
+    private void SetupLens()
+    {
+        if (lensUI == null)
+            lensUI = FindAnyObjectByType<ClarityLensUI>();
+    }
+
     private void ApplyVisualStrength(float strength)
     {
         targets.RemoveWhere(target => target == null);
 
         foreach (ClarityTarget target in targets)
         {
+            float targetStrength = GetTargetStrength(target, strength);
             target.SetClarityVisual(
-                strength,
+                targetStrength,
                 targetHighlightColor,
                 targetHighlightIntensity);
         }
@@ -181,6 +218,39 @@ public class ClarityManager : MonoBehaviour
                 vignetteIntensity * strength,
                 vignetteSoftness);
         }
+    }
+
+    private float GetTargetStrength(
+        ClarityTarget target,
+        float globalStrength)
+    {
+        if (IsDocumentMode ||
+            globalStrength <= 0.0001f ||
+            target == null)
+        {
+            return 0f;
+        }
+
+        // Preserve the original global behavior in scenes that have not yet
+        // been given a lens presentation.
+        if (lensUI == null)
+            return globalStrength;
+
+        if (targetCamera == null ||
+            !target.TryGetScreenRect(targetCamera, out Rect targetRect))
+        {
+            return 0f;
+        }
+
+        Vector2 lensCenter = lensUI.LensCenterScreenPosition;
+        Vector2 closestPoint = new Vector2(
+            Mathf.Clamp(lensCenter.x, targetRect.xMin, targetRect.xMax),
+            Mathf.Clamp(lensCenter.y, targetRect.yMin, targetRect.yMax));
+        float distance = Vector2.Distance(lensCenter, closestPoint);
+
+        return distance <= lensUI.DetectionRadiusScreenPixels
+            ? globalStrength
+            : 0f;
     }
 }
 

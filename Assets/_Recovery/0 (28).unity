@@ -970,7 +970,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 302479773457680155, guid: 68620c857ced7134c811bd988c9046c0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.16
+      value: 16.71
       objectReference: {fileID: 0}
     - target: {fileID: 302479773457680155, guid: 68620c857ced7134c811bd988c9046c0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1791,57 +1791,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 119920359}
   m_CullTransparentMesh: 1
---- !u!1 &125125136
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 125125138}
-  - component: {fileID: 125125137}
-  m_Layer: 0
-  m_Name: IrisTransition
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &125125137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 125125136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e77ec969ad62444aa93744b558f6224, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IrisTransitionController
-  closeDuration: 1
-  openDuration: 1
-  irisCenter: {x: 0.5, y: 0.5}
-  coveredHoldDuration: 0
-  useUnscaledTime: 1
-  overlayCanvas: {fileID: 0}
-  overlayImage: {fileID: 0}
---- !u!4 &125125138
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 125125136}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &149150824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1854,7 +1803,6 @@ GameObject:
   - component: {fileID: 149150826}
   - component: {fileID: 149150825}
   - component: {fileID: 149150828}
-  - component: {fileID: 149150829}
   m_Layer: 0
   m_Name: CM_SideViewCamera
   m_TagString: Untagged
@@ -1953,21 +1901,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineConfiner3D
   BoundingVolume: {fileID: 2000482645}
   SlowingDistance: 5
---- !u!114 &149150829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 149150824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44d70cc20219cd84593f67d248eafe36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCameraOffset
-  Offset: {x: 0, y: 0, z: 0}
-  ApplyAfter: 3
-  PreserveComposition: 0
 --- !u!1 &174438352
 GameObject:
   m_ObjectHideFlags: 0
@@ -8542,8 +8475,8 @@ GameObject:
   m_Component:
   - component: {fileID: 863746351}
   - component: {fileID: 863746350}
+  - component: {fileID: 863746349}
   - component: {fileID: 863746348}
-  - component: {fileID: 863746352}
   m_Layer: 0
   m_Name: ManuscriptTransportSequence
   m_TagString: Untagged
@@ -8563,8 +8496,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8d8e894ef55a04fab2aaef1d279eca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraShakeController
-  cameraOffset: {fileID: 149150829}
-  shakeFrequency: 24
+  cameraTransform: {fileID: 1208982882}
+--- !u!114 &863746349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863746347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e77ec969ad62444aa93744b558f6224, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IrisTransitionController
+  closeDuration: 0.75
+  openDuration: 0.75
+  irisCenter: {x: 0.5, y: 0.5}
+  coveredHoldDuration: 0
+  useUnscaledTime: 1
+  overlayCanvas: {fileID: 0}
+  overlayImage: {fileID: 0}
 --- !u!114 &863746350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8586,16 +8537,15 @@ MonoBehaviour:
   - {fileID: 1764786153}
   - {fileID: 95769822}
   - {fileID: 1814698886}
-  - {fileID: 299518048}
   cameraShake: {fileID: 863746348}
-  preReactionFade: {fileID: 863746352}
-  irisTransition: {fileID: 125125137}
+  irisTransition: {fileID: 863746349}
+  preFirstReactionDelay: 0.5
   betweenReactionDelay: 1
-  afterSecondReactionDelay: 1.5
-  firstShakeDuration: 0.5
-  firstShakeStrength: 0.12
-  secondShakeDuration: 1
-  secondShakeStrength: 0.32
+  afterSecondReactionDelay: 1
+  firstShakeDuration: 0.4
+  firstShakeStrength: 0.035
+  secondShakeDuration: 0.65
+  secondShakeStrength: 0.085
 --- !u!4 &863746351
 Transform:
   m_ObjectHideFlags: 0
@@ -8613,22 +8563,6 @@ Transform:
   - {fileID: 1803904091}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &863746352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863746347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d9fe72386d4b945951594f5f0cc49e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ScreenFadeController
-  fadeToBlackDuration: 0.5
-  blackHoldDuration: 1
-  fadeFromBlackDuration: 0.5
-  sortingOrder: 31900
 --- !u!1 &865268647
 GameObject:
   m_ObjectHideFlags: 0
@@ -16554,10 +16488,6 @@ PrefabInstance:
       value: ClarityDocumentViewer_LumangSulatin
       objectReference: {fileID: 0}
     - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: closeKey
-      value: 101
-      objectReference: {fileID: 0}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
       propertyPath: clarityLensUI
       value: 
       objectReference: {fileID: 2114232264}
@@ -16565,34 +16495,6 @@ PrefabInstance:
       propertyPath: clarityManager
       value: 
       objectReference: {fileID: 299518048}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: baseDocumentTint.a
-      value: 0.8862745
-      objectReference: {fileID: 0}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: baseDocumentTint.b
-      value: 0.3056603
-      objectReference: {fileID: 0}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: baseDocumentTint.g
-      value: 0.3056603
-      objectReference: {fileID: 0}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: baseDocumentTint.r
-      value: 0.3056603
-      objectReference: {fileID: 0}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: clearDocumentTint.b
-      value: 0.6396227
-      objectReference: {fileID: 0}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: clearDocumentTint.g
-      value: 0.90121096
-      objectReference: {fileID: 0}
-    - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
-      propertyPath: clearDocumentTint.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6245111475813899840, guid: d1396a0b3182493458655eb58ec18440, type: 3}
       propertyPath: gameplayBehavioursToDisable.Array.size
       value: 4
@@ -18388,7 +18290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
   json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Anong
-    nangyayari...?","parentUIDs":[],"AdvanceDialogueAutomatically":true,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":2.5,"Volume":0}]}'
+    nangyayari...?","parentUIDs":[],"AdvanceDialogueAutomatically":true,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: Miguel
   DefaultSprite: {fileID: 0}
@@ -18719,7 +18621,7 @@ Transform:
   m_GameObject: {fileID: 1814698880}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.286, y: 0.242, z: 0.485}
+  m_LocalPosition: {x: -0.007880761, y: -0.09379672, z: 0.48474804}
   m_LocalScale: {x: 1.8360528, y: 1.8360523, z: 1.8360523}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18874,7 +18776,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClarityDocumentSource
   documentId: lumang_sulatin
   documentSprite: {fileID: 21300000, guid: f578a3e595501ac4c857c90a223f4703, type: 3}
-  obscuredDocumentSprite: {fileID: 21300000, guid: f8ec273e17e85164e9745070aebfd295, type: 3}
   regionLayoutPrefab: {fileID: 6191421984543398581, guid: 2a6d635d39cac1442b7e518e598e8abe, type: 3}
   documentViewer: {fileID: 1681046599}
 --- !u!4 &1826551033 stripped
@@ -20822,7 +20723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"???...","parentUIDs":[],"AdvanceDialogueAutomatically":true,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":1.5,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"???...","parentUIDs":[],"AdvanceDialogueAutomatically":true,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: Miguel
   DefaultSprite: {fileID: 0}
@@ -21413,24 +21314,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4286837433351040265, guid: 94328ab0a59c4b444a49c80c219c53b9, type: 3}
       propertyPath: lensUISize
-      value: 180
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 4286837433351040265, guid: 94328ab0a59c4b444a49c80c219c53b9, type: 3}
       propertyPath: clarityManager
       value: 
       objectReference: {fileID: 299518048}
-    - target: {fileID: 4286837433351040265, guid: 94328ab0a59c4b444a49c80c219c53b9, type: 3}
-      propertyPath: visualOffset.x
-      value: 26.44
-      objectReference: {fileID: 0}
-    - target: {fileID: 4286837433351040265, guid: 94328ab0a59c4b444a49c80c219c53b9, type: 3}
-      propertyPath: visualOffset.y
-      value: -27
-      objectReference: {fileID: 0}
-    - target: {fileID: 4286837433351040265, guid: 94328ab0a59c4b444a49c80c219c53b9, type: 3}
-      propertyPath: detectionRadius
-      value: 43
-      objectReference: {fileID: 0}
     - target: {fileID: 5998611058573624100, guid: 94328ab0a59c4b444a49c80c219c53b9, type: 3}
       propertyPath: m_Name
       value: ClarityLensUI
@@ -21819,4 +21708,3 @@ SceneRoots:
   - {fileID: 56969151}
   - {fileID: 1043762345}
   - {fileID: 863746351}
-  - {fileID: 125125138}
