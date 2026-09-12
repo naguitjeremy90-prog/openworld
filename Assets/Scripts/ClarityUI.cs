@@ -47,6 +47,11 @@ public class ClarityUI : MonoBehaviour
         if (canvasGroup != null)
             canvasGroup.alpha = currentAlpha;
 
+        GameplayHUDTarget target = GetComponent<GameplayHUDTarget>();
+        if (target == null)
+            target = gameObject.AddComponent<GameplayHUDTarget>();
+        target.Configure(canvasGroup, hudTransform != null ? hudTransform.gameObject : gameObject);
+
         if (hudTransform != null)
             hudTransform.localScale = Vector3.one * currentScale;
     }

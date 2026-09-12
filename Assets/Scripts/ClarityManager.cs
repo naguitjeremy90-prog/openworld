@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,6 +24,10 @@ public class ClarityManager : MonoBehaviour
     [Header("Magnifying Lens")]
     [SerializeField] private ClarityLensUI lensUI;
 
+    [Header("Locked HUD Presentation")]
+    [SerializeField] private CanvasGroup clarityIconCanvasGroup;
+    [SerializeField, Range(0f, 1f)] private float lockedIconAlpha = 0.5f;
+
     private static readonly HashSet<ClarityTarget> targets =
         new HashSet<ClarityTarget>();
 
@@ -31,9 +36,13 @@ public class ClarityManager : MonoBehaviour
     private ClarityVignetteEffect vignetteEffect;
     private bool createdVignetteEffect;
     private float currentStrength;
+    private bool clarityUnlocked;
+    private float originalClarityIconAlpha = 1f;
+    private bool capturedClarityIconAlpha;
 
     public bool IsClarityActive { get; private set; }
     public bool IsDocumentMode { get; private set; }
+    public static event Action<bool> Activated;
 
     private void Awake()
     {
@@ -47,18 +56,56 @@ public class ClarityManager : MonoBehaviour
         }
 
         instance = this;
+        clarityUnlocked = GameplaySystemState.IsUnlocked(
+            GameplaySystemId.Clarity);
+        ResolveClarityIconCanvasGroup();
+        ApplyClarityIconAlpha(clarityUnlocked);
+    }
+
+    private void OnEnable()
+    {
+        if (instance != this)
+            return;
+
+        GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
+        clarityUnlocked = GameplaySystemState.IsUnlocked(
+            GameplaySystemId.Clarity);
+        ResolveClarityIconCanvasGroup();
+        ApplyClarityIconAlpha(clarityUnlocked);
     }
 
     private void Start()
     {
+        SubscribeToSystemUnlockChanges();
         SetupLens();
         SetupVignette();
         ApplyVisualStrength(0f);
     }
 
+    private void SubscribeToSystemUnlockChanges()
+    {
+        if (!enabled)
+            return;
+
+        GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
+        GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
+        clarityUnlocked = GameplaySystemState.IsUnlocked(
+            GameplaySystemId.Clarity);
+        ResolveClarityIconCanvasGroup();
+        ApplyClarityIconAlpha(clarityUnlocked);
+    }
+
     private void Update()
     {
-        IsClarityActive = Input.GetKey(clarityKey);
+        bool wasActive = IsClarityActive;
+        if (StorySequenceCoordinator.IsStorySequenceActive ||
+            !clarityUnlocked)
+            IsClarityActive = false;
+        else
+            IsClarityActive = Input.GetKey(clarityKey);
+
+        if (IsClarityActive && !wasActive)
+            Activated?.Invoke(IsDocumentMode);
 
         float targetStrength = IsClarityActive ? 1f : 0f;
         float nextStrength;
@@ -87,6 +134,8 @@ public class ClarityManager : MonoBehaviour
 
     private void OnDisable()
     {
+        GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
+
         if (instance != this)
             return;
 
@@ -98,6 +147,8 @@ public class ClarityManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
+
         if (instance != this)
             return;
 
@@ -107,6 +158,59 @@ public class ClarityManager : MonoBehaviour
             Destroy(vignetteEffect);
 
         instance = null;
+    }
+
+    private void HandleSystemUnlockChanged(
+        GameplaySystemId system,
+        bool unlocked)
+    {
+        if (system != GameplaySystemId.Clarity)
+            return;
+
+        clarityUnlocked = unlocked;
+        ApplyClarityIconAlpha(unlocked);
+        if (unlocked)
+            return;
+
+        IsClarityActive = false;
+        currentStrength = 0f;
+        ApplyVisualStrength(0f);
+    }
+
+    private void ResolveClarityIconCanvasGroup()
+    {
+        if (clarityIconCanvasGroup == null)
+        {
+            CanvasGroup[] groups = FindObjectsByType<CanvasGroup>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (int i = 0; i < groups.Length; i++)
+            {
+                CanvasGroup group = groups[i];
+                if (group != null && group.gameObject.name == "ClarityIcon")
+                {
+                    clarityIconCanvasGroup = group;
+                    break;
+                }
+            }
+        }
+
+        if (clarityIconCanvasGroup == null || capturedClarityIconAlpha)
+            return;
+
+        originalClarityIconAlpha = clarityIconCanvasGroup.alpha;
+        capturedClarityIconAlpha = true;
+    }
+
+    private void ApplyClarityIconAlpha(bool unlocked)
+    {
+        ResolveClarityIconCanvasGroup();
+        if (clarityIconCanvasGroup == null)
+            return;
+
+        clarityIconCanvasGroup.alpha = unlocked
+            ? originalClarityIconAlpha
+            : lockedIconAlpha;
     }
 
     public static void RegisterTarget(ClarityTarget target)

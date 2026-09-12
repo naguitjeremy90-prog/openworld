@@ -54,6 +54,9 @@ public sealed class InventoryUI : MonoBehaviour
     private InventoryManager boundManager;
     private InventoryItemData selectedItem;
     private Coroutine fadeRoutine;
+    private Coroutine inventoryRevealRoutine;
+    private GameplayHUDUnlockReveal inventoryReveal;
+    private bool inventoryRevealScheduled;
     private bool[] previousBehaviourStates;
     private CursorLockMode previousCursorLockMode;
     private bool previousCursorVisible;
@@ -61,6 +64,28 @@ public sealed class InventoryUI : MonoBehaviour
     private InventoryFilter currentFilter = InventoryFilter.All;
 
     public bool IsOpen { get; private set; }
+
+    public bool TryGetItemSlot(string itemID, out RectTransform slotRect)
+    {
+        slotRect = null;
+        if (string.IsNullOrEmpty(itemID))
+            return false;
+
+        for (int i = 0; i < spawnedSlots.Count; i++)
+        {
+            InventorySlotUI slot = spawnedSlots[i];
+            if (slot == null || slot.Item == null || slot.RectTransform == null)
+                continue;
+
+            if (string.Equals(slot.Item.ItemID, itemID, System.StringComparison.OrdinalIgnoreCase))
+            {
+                slotRect = slot.RectTransform;
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private void Awake()
     {
@@ -78,16 +103,52 @@ public sealed class InventoryUI : MonoBehaviour
 
         SetVisibleImmediately(false);
         ClearDetails();
+
+        GameplayHUDTarget target = GetComponent<GameplayHUDTarget>();
+        if (target == null)
+            target = gameObject.AddComponent<GameplayHUDTarget>();
+        target.Configure(canvasGroup, inventoryRoot);
+
+        GameObject icon = GameObject.Find("InventoryButton");
+        if (icon != null && icon != gameObject)
+        {
+            GameplayHUDTarget iconTarget = icon.GetComponent<GameplayHUDTarget>();
+            if (iconTarget == null)
+                iconTarget = icon.AddComponent<GameplayHUDTarget>();
+            CanvasGroup iconGroup = icon.GetComponent<CanvasGroup>();
+            if (iconGroup == null)
+                iconGroup = icon.AddComponent<CanvasGroup>();
+            iconTarget.Configure(iconGroup, icon);
+
+            inventoryReveal = icon.GetComponent<GameplayHUDUnlockReveal>();
+            if (inventoryReveal == null)
+                inventoryReveal = icon.AddComponent<GameplayHUDUnlockReveal>();
+            inventoryReveal.Configure(iconGroup);
+            GameplaySystemTutorialAnchor.AttachTo(icon, GameplaySystemId.Inventory);
+        }
     }
 
     private void OnEnable()
     {
+        GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
+        if (inventoryReveal != null)
+            inventoryReveal.RevealCompleted += HandleInventoryRevealCompleted;
         BindToManager();
     }
 
     private void OnDisable()
     {
+        GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
         UnbindFromManager();
+
+        if (inventoryReveal != null)
+            inventoryReveal.RevealCompleted -= HandleInventoryRevealCompleted;
+
+        if (inventoryRevealRoutine != null)
+        {
+            StopCoroutine(inventoryRevealRoutine);
+            inventoryRevealRoutine = null;
+        }
 
         if (fadeRoutine != null)
         {
@@ -112,6 +173,13 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void Update()
     {
+        if (StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            if (IsOpen)
+                CloseInventory();
+            return;
+        }
+
         if (boundManager == null)
             BindToManager();
 
@@ -121,6 +189,9 @@ public sealed class InventoryUI : MonoBehaviour
 
     public void ToggleInventory()
     {
+        if (!GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory))
+            return;
+
         if (IsOpen)
             CloseInventory();
         else
@@ -129,7 +200,8 @@ public sealed class InventoryUI : MonoBehaviour
 
     public void OpenInventory()
     {
-        if (IsOpen)
+        if (IsOpen ||
+            !GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory))
             return;
 
         IsOpen = true;
@@ -137,6 +209,8 @@ public sealed class InventoryUI : MonoBehaviour
         Refresh();
         SetGameplayInputBlocked(true);
         FadeTo(1f, false);
+        if (GameplaySystemTutorialManager.HasInstance)
+            GameplaySystemTutorialManager.Instance.NotifySystemOpened(GameplaySystemId.Inventory);
     }
 
     public void CloseInventory()
@@ -147,6 +221,56 @@ public sealed class InventoryUI : MonoBehaviour
         IsOpen = false;
         SetGameplayInputBlocked(false);
         FadeTo(0f, true);
+        if (GameplaySystemTutorialManager.HasInstance)
+            GameplaySystemTutorialManager.Instance.NotifySystemClosed(GameplaySystemId.Inventory);
+    }
+
+    private void HandleSystemUnlockChanged(
+        GameplaySystemId system,
+        bool unlocked)
+    {
+        if (system == GameplaySystemId.Inventory && !unlocked && IsOpen)
+            CloseInventory();
+
+        if (system == GameplaySystemId.Inventory && unlocked)
+            BeginInventoryReveal();
+    }
+
+    private void BeginInventoryReveal()
+    {
+        if (inventoryRevealScheduled)
+            return;
+
+        inventoryRevealScheduled = true;
+        if (StorySequenceCoordinator.IsStorySequenceActive)
+            inventoryRevealRoutine = StartCoroutine(PlayInventoryRevealWhenSequenceEnds());
+        else
+            PlayInventoryReveal();
+    }
+
+    private IEnumerator PlayInventoryRevealWhenSequenceEnds()
+    {
+        while (StorySequenceCoordinator.IsStorySequenceActive)
+            yield return null;
+
+        inventoryRevealRoutine = null;
+        PlayInventoryReveal();
+    }
+
+    private void PlayInventoryReveal()
+    {
+        if (inventoryReveal != null && inventoryReveal.PlayReveal())
+            return;
+
+        Debug.LogWarning(
+            "Inventory unlock reveal could not start because the Inventory HUD icon is unavailable.",
+            this);
+    }
+
+    private void HandleInventoryRevealCompleted()
+    {
+        GameplaySystemTutorialManager.Instance.NotifySystemRevealCompleted(
+            GameplaySystemId.Inventory);
     }
 
     public void Refresh()

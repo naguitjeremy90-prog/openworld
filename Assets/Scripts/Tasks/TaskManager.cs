@@ -72,14 +72,14 @@ public sealed class TaskManager : MonoBehaviour
             taskId,
             task.StartingObjective,
             onFinished => notificationUI.ShowTaskStarted(
-                task.StartingObjective,
+                task.Type,
                 onFinished));
         return true;
     }
 
     public bool UpdateTask(string taskId, string objective)
     {
-        if (!TryGetDefinition(taskId, out _) ||
+        if (!TryGetDefinition(taskId, out TaskData task) ||
             GetTaskState(taskId) != TaskState.Active ||
             string.IsNullOrWhiteSpace(objective))
         {
@@ -101,7 +101,7 @@ public sealed class TaskManager : MonoBehaviour
             taskId,
             normalizedObjective,
             onFinished => notificationUI.ShowTaskUpdated(
-                normalizedObjective,
+                task.Type,
                 onFinished));
         return true;
     }
@@ -120,7 +120,7 @@ public sealed class TaskManager : MonoBehaviour
         SessionStoryState.SetFlag(GetCompletedFlag(taskId), true);
         objectivesById.Remove(taskId);
 
-        notificationUI?.ShowTaskCompleted(task.Title);
+        notificationUI?.ShowTaskCompleted(task.Type);
 
         if (string.Equals(currentTaskId, taskId, StringComparison.Ordinal))
         {
@@ -166,12 +166,24 @@ public sealed class TaskManager : MonoBehaviour
         SessionStoryState.SetInt(storageKey, updatedAmount);
         SessionStoryState.SetFlag(storageKey, true);
 
+        string previousStageId = currentStageByTaskId.TryGetValue(
+            normalizedTaskId,
+            out string currentStageId)
+            ? currentStageId
+            : normalizedStageId;
+        bool stageChanged = false;
         int stageProgress = GetCurrentStageProgress(normalizedTaskId, stage);
         if (stage.RequiredCount > 0 && stageProgress >= stage.RequiredCount)
         {
             TaskStage next = GetNextStage(task, stage);
             if (next != null)
+            {
+                stageChanged = !string.Equals(
+                    previousStageId,
+                    next.StageId?.Trim(),
+                    StringComparison.Ordinal);
                 SetStage(normalizedTaskId, next);
+            }
             else
                 objectivesById[normalizedTaskId] = FormatStageObjective(normalizedTaskId, stage);
         }
@@ -180,7 +192,19 @@ public sealed class TaskManager : MonoBehaviour
             objectivesById[normalizedTaskId] = FormatStageObjective(normalizedTaskId, stage);
         }
 
+        currentTaskId = normalizedTaskId;
         TaskChanged?.Invoke();
+
+        if (stageChanged)
+        {
+            string updatedObjective = objectivesById[normalizedTaskId];
+            ShowNotificationThenTracker(
+                normalizedTaskId,
+                updatedObjective,
+                onFinished => notificationUI.ShowTaskUpdated(
+                    task.Type,
+                    onFinished));
+        }
         return true;
     }
 
@@ -196,8 +220,25 @@ public sealed class TaskManager : MonoBehaviour
         if (stage == null)
             return false;
 
-        SetStage(taskId.Trim(), stage);
+        string normalizedTaskId = taskId.Trim();
+        string normalizedStageId = stage.StageId?.Trim();
+        if (currentStageByTaskId.TryGetValue(normalizedTaskId, out string currentStageId) &&
+            string.Equals(currentStageId, normalizedStageId, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        SetStage(normalizedTaskId, stage);
+        currentTaskId = normalizedTaskId;
         TaskChanged?.Invoke();
+
+        string updatedObjective = objectivesById[normalizedTaskId];
+        ShowNotificationThenTracker(
+            normalizedTaskId,
+            updatedObjective,
+            onFinished => notificationUI.ShowTaskUpdated(
+                task.Type,
+                onFinished));
         return true;
     }
 
@@ -264,6 +305,15 @@ public sealed class TaskManager : MonoBehaviour
     public bool TryGetCurrentObjective(string taskId, out string objective)
     {
         return objectivesById.TryGetValue(taskId, out objective);
+    }
+
+    public bool IsCurrentStage(string taskId, string stageId)
+    {
+        if (string.IsNullOrWhiteSpace(taskId) || string.IsNullOrWhiteSpace(stageId))
+            return false;
+
+        return currentStageByTaskId.TryGetValue(taskId.Trim(), out string currentStageId) &&
+            string.Equals(currentStageId, stageId.Trim(), StringComparison.Ordinal);
     }
 
     public void RegisterNotificationUI(TaskNotificationUI ui)

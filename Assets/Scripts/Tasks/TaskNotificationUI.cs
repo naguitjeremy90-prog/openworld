@@ -33,6 +33,14 @@ public sealed class TaskNotificationUI : MonoBehaviour
 
     private void OnDisable()
     {
+        if (notificationRoutine != null)
+        {
+            StopCoroutine(notificationRoutine);
+            notificationRoutine = null;
+        }
+
+        notificationVersion++;
+        SetVisibleAmount(0f);
         TaskManager.Instance?.UnregisterNotificationUI(this);
     }
 
@@ -41,24 +49,23 @@ public sealed class TaskNotificationUI : MonoBehaviour
         TaskManager.Instance?.RegisterNotificationUI(this);
     }
 
-    public void ShowTaskStarted(string objective, Action onFinished = null)
+    public void ShowTaskStarted(TaskType taskType, Action onFinished = null)
     {
-        ShowNotification("BAGONG GAWAIN", objective, onFinished);
+        ShowNotification(GetHeading(taskType, "OBTAINED"), onFinished);
     }
 
-    public void ShowTaskUpdated(string objective, Action onFinished = null)
+    public void ShowTaskUpdated(TaskType taskType, Action onFinished = null)
     {
-        ShowNotification("NA-UPDATE ANG GAWAIN", objective, onFinished);
+        ShowNotification(GetHeading(taskType, "UPDATED"), onFinished);
     }
 
-    public void ShowTaskCompleted(string title, Action onFinished = null)
+    public void ShowTaskCompleted(TaskType taskType, Action onFinished = null)
     {
-        ShowNotification("NATAPOS ANG GAWAIN", title, onFinished);
+        ShowNotification(GetHeading(taskType, "COMPLETED"), onFinished);
     }
 
     private void ShowNotification(
         string heading,
-        string detail,
         Action onFinished)
     {
         int version = ++notificationVersion;
@@ -67,9 +74,15 @@ public sealed class TaskNotificationUI : MonoBehaviour
             StopCoroutine(notificationRoutine);
 
         headingText.text = heading;
-        detailText.text = detail;
+        detailText.text = string.Empty;
         notificationRoutine = StartCoroutine(
             ShowRoutine(version, onFinished));
+    }
+
+    private static string GetHeading(TaskType taskType, string status)
+    {
+        string typeLabel = taskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK";
+        return typeLabel + " " + status;
     }
 
     private IEnumerator ShowRoutine(int version, Action onFinished)

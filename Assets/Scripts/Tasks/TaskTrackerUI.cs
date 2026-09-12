@@ -11,6 +11,11 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
     private void Awake()
     {
+        GameplayHUDTarget target = GetComponent<GameplayHUDTarget>();
+        if (target == null)
+            target = gameObject.AddComponent<GameplayHUDTarget>();
+        target.Configure(canvasGroup);
+
         if (canvasGroup != null)
         {
             canvasGroup.interactable = false;

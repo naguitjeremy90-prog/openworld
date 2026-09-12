@@ -23,6 +23,13 @@ public class SleepInteraction : MonoBehaviour
 
     private bool playerNear = false;  
     private bool hasSlept = false;
+    private bool sleepSequenceRunning;
+    private StorySequenceToken storySequenceToken;
+
+    private void Awake()
+    {
+        GameplayHUDTarget.AttachTo(interactText);
+    }
 
     private void Start()
     {
@@ -49,65 +56,80 @@ public class SleepInteraction : MonoBehaviour
     }
     private void Update()
     {
-        if (playerNear && Input.GetKeyDown(KeyCode.E) && !hasSlept)
+        if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            playerNear && Input.GetKeyDown(KeyCode.E) && !hasSlept &&
+            !sleepSequenceRunning)
         {
-            
+            sleepSequenceRunning = true;
             StartCoroutine(Sleep());
         }
     }
     private IEnumerator Sleep()
     {
-        hasSlept = true;
-        bool shouldPlayDream = !GameFlags.isMorning;
-        bool movementWasEnabled = playerMovement != null && playerMovement.enabled;
+        AcquireStorySequence();
 
-        SetPlayerMovementLocked(true);
-
-        if (interactText != null)
-            interactText.SetActive(false);
-
-        sleepText.gameObject.SetActive(false);
-
-        FadeController fadeController = FindAnyObjectByType<FadeController>();
-
-        if(fadeController != null)
+        try
         {
-            yield return StartCoroutine(fadeController.FadeToBlack());
+            hasSlept = true;
+            bool shouldPlayDream = !GameFlags.isMorning;
+            bool movementWasEnabled = playerMovement != null && playerMovement.enabled;
 
-            yield return new WaitForSeconds(0.7f);
+            SetPlayerMovementLocked(true);
 
-            sleepText.gameObject.SetActive(true);
-
-            sleepText.text = "z";
-            yield return new
-            WaitForSeconds(1f);
-
-            sleepText.text = "zZ";
-            yield return new
-            WaitForSeconds(1f);
-
-            sleepText.text = "zZz";
-            yield return new
-            WaitForSeconds(2f);
+            if (interactText != null)
+                interactText.SetActive(false);
 
             sleepText.gameObject.SetActive(false);
 
-            if (shouldPlayDream && dreamWhisperController != null)
-                yield return dreamWhisperController.PlaySequence();
+            FadeController fadeController = FindAnyObjectByType<FadeController>();
+
+            if(fadeController != null)
+            {
+                yield return StartCoroutine(fadeController.FadeToBlack());
+
+                yield return new WaitForSeconds(0.7f);
+
+                sleepText.gameObject.SetActive(true);
+
+                sleepText.text = "z";
+                yield return new
+                WaitForSeconds(1f);
+
+                sleepText.text = "zZ";
+                yield return new
+                WaitForSeconds(1f);
+
+                sleepText.text = "zZz";
+                yield return new
+                WaitForSeconds(2f);
+
+                sleepText.gameObject.SetActive(false);
+
+                if (shouldPlayDream && dreamWhisperController != null)
+                    yield return dreamWhisperController.PlaySequence();
+            }
+
+            GameFlags.isMorning = true;
+
+            if (fadeController != null)
+                yield return StartCoroutine(fadeController.FadeFromBlack());
+
+            if (wakeReaction != null)
+                yield return wakeReaction.PlayReaction();
+
+            if (wakeSelfDialogue != null)
+                yield return PlayWakeDialogue();
+
+            RestorePlayerMovement(movementWasEnabled);
+
+            if (ReconstructionJournalManager.Instance != null)
+                ReconstructionJournalManager.Instance.UnlockJournalForFirstDream();
         }
-
-        GameFlags.isMorning = true;
-
-        if (fadeController != null)
-            yield return StartCoroutine(fadeController.FadeFromBlack());
-
-        if (wakeReaction != null)
-            yield return wakeReaction.PlayReaction();
-
-        if (wakeSelfDialogue != null)
-            yield return PlayWakeDialogue();
-
-        RestorePlayerMovement(movementWasEnabled);
+        finally
+        {
+            sleepSequenceRunning = false;
+            ReleaseStorySequence();
+        }
     }
 
     private IEnumerator PlayWakeDialogue()
@@ -123,6 +145,12 @@ public class SleepInteraction : MonoBehaviour
 
             while (!conversationFinished)
                 yield return null;
+
+            while (DialogueEditor.ConversationManager.Instance != null &&
+                   DialogueEditor.ConversationManager.Instance.IsConversationActive)
+            {
+                yield return null;
+            }
         }
         finally
         {
@@ -143,5 +171,30 @@ public class SleepInteraction : MonoBehaviour
     {
         if (playerMovement != null)
             playerMovement.enabled = movementWasEnabled;
+    }
+
+    private void AcquireStorySequence()
+    {
+        if (storySequenceToken == null || !storySequenceToken.IsValid)
+            storySequenceToken = StorySequenceCoordinator.Acquire(this);
+    }
+
+    private void ReleaseStorySequence()
+    {
+        if (storySequenceToken == null)
+            return;
+
+        storySequenceToken.Release();
+        storySequenceToken = null;
+    }
+
+    private void OnDisable()
+    {
+        ReleaseStorySequence();
+    }
+
+    private void OnDestroy()
+    {
+        ReleaseStorySequence();
     }
 }

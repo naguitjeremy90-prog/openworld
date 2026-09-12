@@ -15,6 +15,9 @@ public sealed class InventorySlotUI : MonoBehaviour
     private Action<InventoryItemData> onSelected;
     private UnityAction clickAction;
 
+    public InventoryItemData Item => item;
+    public RectTransform RectTransform => transform as RectTransform;
+
     private void Reset()
     {
         button = GetComponent<Button>();

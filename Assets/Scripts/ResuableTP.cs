@@ -21,6 +21,11 @@ public class SceneEntrance : MonoBehaviour
     private Color[] originalBaseColors;
     private Color[] originalEmissionColors;
 
+    private void Awake()
+    {
+        GameplayHUDTarget.AttachTo(interactText);
+    }
+
     public UnityEvent OnRequirementFailed => onRequirementFailed;
 
     private void Start()
@@ -135,7 +140,8 @@ public class SceneEntrance : MonoBehaviour
 
     private void Update()
     {
-        if (playerNear && Input.GetKeyDown(KeyCode.E))
+        if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            playerNear && Input.GetKeyDown(KeyCode.E))
         {
             TryEnter();
         }

@@ -112,6 +112,7 @@ public sealed class AlingIkaQuestController : MonoBehaviour
         if (inventory.HasItem(PaymentItemId) || inventory.AddItem(paymentItem))
         {
             SessionStoryState.SetFlag(PaymentReceivedFlag, true);
+            GameplaySystemState.SetUnlocked(GameplaySystemId.Inventory, true);
             RefreshConversationSelection();
             UpdateTaskFeedback();
         }
@@ -124,7 +125,11 @@ public sealed class AlingIkaQuestController : MonoBehaviour
             return;
 
         if (inventory.RemoveItem(PaymentItemId))
+        {
             SessionStoryState.SetFlag(CompletedFlag, true);
+            if (GameplaySystemTutorialManager.HasInstance)
+                GameplaySystemTutorialManager.Instance.NotifyInventoryPaymentReturned();
+        }
     }
 
     private void RefreshConversationSelection()

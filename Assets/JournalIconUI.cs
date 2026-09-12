@@ -9,6 +9,10 @@ public class JournalIconUI : MonoBehaviour
 
     private void Awake()
     {
+        GameplayHUDTarget target = GetComponent<GameplayHUDTarget>();
+        if (target == null)
+            target = gameObject.AddComponent<GameplayHUDTarget>();
+
         if (button == null)
             button = GetComponent<Button>();
 
@@ -25,6 +29,9 @@ public class JournalIconUI : MonoBehaviour
 
     private void OnClickJournalIcon()
     {
+        if (StorySequenceCoordinator.IsStorySequenceActive)
+            return;
+
         if (journalManager != null)
         {
             journalManager.ToggleJournal();

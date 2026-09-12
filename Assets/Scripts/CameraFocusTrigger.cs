@@ -11,6 +11,9 @@ public class CameraFocusTrigger : MonoBehaviour
     [SerializeField] private NPCConversationTrigger npcConversationTrigger;
     [SerializeField] private SelfDialogueTrigger selfDialogueTrigger;
 
+    [Header("Presentation (Optional)")]
+    [SerializeField] private bool treatAsStorySequence;
+
     [Header("Story Event")]
     [Tooltip("Optional runtime ID that keeps this event completed across scene reloads.")]
     [SerializeField] private string eventId;
@@ -23,6 +26,8 @@ public class CameraFocusTrigger : MonoBehaviour
     private bool focusLifecycleActive = false;
     private bool subscribedToNpcConversation = false;
     private bool subscribedToSelfDialogue = false;
+    private StorySequenceToken storySequenceToken;
+    private readonly UnityEvent storyFocusFinishedEvent = new UnityEvent();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetCompletedEventIds()
@@ -42,14 +47,17 @@ public class CameraFocusTrigger : MonoBehaviour
 
     private void OnEnable()
     {
+        storyFocusFinishedEvent.AddListener(HandleFocusFinished);
         AutoFindConversationSources();
         SubscribeToConversationSources();
     }
 
     private void OnDisable()
     {
+        storyFocusFinishedEvent.RemoveListener(HandleFocusFinished);
         UnsubscribeFromConversationSources();
         focusLifecycleActive = false;
+        ReleaseStorySequence();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,15 +73,21 @@ public class CameraFocusTrigger : MonoBehaviour
 
         hasTriggered = true;
 
+        if (treatAsStorySequence)
+            storySequenceToken = StorySequenceCoordinator.Acquire(this);
+
         if (!string.IsNullOrEmpty(eventId))
             completedEventIds.Add(eventId);
 
         bool focusStarted = focusManager != null &&
             focusPoint != null &&
-            focusManager.TryFocusOn(focusPoint, OnFocusFinished);
+            focusManager.TryFocusOn(focusPoint, storyFocusFinishedEvent);
 
         focusLifecycleActive = focusStarted &&
             focusPoint.returnMode == CameraFocusPoint.ReturnMode.AfterConversation;
+
+        if (!focusStarted)
+            ReleaseStorySequence();
     }
 
     private void AutoFindConversationSources()
@@ -132,6 +146,21 @@ public class CameraFocusTrigger : MonoBehaviour
 
         focusLifecycleActive = false;
         UnsubscribeFromConversationSources();
+    }
+
+    private void HandleFocusFinished()
+    {
+        OnFocusFinished?.Invoke();
+        ReleaseStorySequence();
+    }
+
+    private void ReleaseStorySequence()
+    {
+        if (storySequenceToken == null)
+            return;
+
+        storySequenceToken.Release();
+        storySequenceToken = null;
     }
 
     private bool IsEventCompleted()

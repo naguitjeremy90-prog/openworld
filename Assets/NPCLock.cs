@@ -15,7 +15,8 @@ public class NPCDialogueGate : MonoBehaviour
 
     void Update()
     {
-        if (playerInside && Input.GetKeyDown(KeyCode.E))
+        if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            playerInside && Input.GetKeyDown(KeyCode.E))
         {
             if (isUnlockingNPC)
             {

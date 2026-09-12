@@ -18,6 +18,7 @@ public sealed class IrisTransitionController : MonoBehaviour
     private Material runtimeMaterial;
     private Coroutine transitionRoutine;
     private bool isCovered;
+    private StorySequenceToken handoffToken;
 
     public bool IsCovered => isCovered;
 
@@ -38,9 +39,17 @@ public sealed class IrisTransitionController : MonoBehaviour
 
     public Coroutine TransitionToScene(string sceneName)
     {
+        return TransitionToScene(sceneName, null);
+    }
+
+    public Coroutine TransitionToScene(
+        string sceneName,
+        StorySequenceToken sequenceToken)
+    {
         if (string.IsNullOrWhiteSpace(sceneName) || transitionRoutine != null)
             return null;
 
+        handoffToken = sequenceToken;
         transitionRoutine = StartCoroutine(TransitionRoutine(sceneName.Trim()));
         return transitionRoutine;
     }
@@ -74,6 +83,9 @@ public sealed class IrisTransitionController : MonoBehaviour
         yield return AnimateRadius(0f, 1.5f, openDuration);
         isCovered = false;
         SetOverlayVisible(false);
+        if (handoffToken != null)
+            handoffToken.Release();
+        handoffToken = null;
         transitionRoutine = null;
     }
 
@@ -163,6 +175,12 @@ public sealed class IrisTransitionController : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (handoffToken != null)
+        {
+            handoffToken.Release();
+            handoffToken = null;
+        }
+
         if (Instance == this)
             Instance = null;
 

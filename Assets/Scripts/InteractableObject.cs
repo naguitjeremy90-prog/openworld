@@ -9,6 +9,11 @@ public class InteractableObject : MonoBehaviour
 
     private bool playerNear = false;
 
+    private void Awake()
+    {
+        GameplayHUDTarget.AttachTo(interactText);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -35,7 +40,8 @@ public class InteractableObject : MonoBehaviour
 
     private void Update()
     {
-        if (playerNear && Input.GetKeyDown(KeyCode.E))
+        if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            playerNear && Input.GetKeyDown(KeyCode.E))
         {
             if (interactText != null)
                 interactText.SetActive(false);

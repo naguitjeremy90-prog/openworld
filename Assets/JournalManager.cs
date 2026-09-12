@@ -93,6 +93,13 @@ public class JournalManager : MonoBehaviour
 
     private void Update()
     {
+        if (StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            if (journalOpen)
+                CloseJournal();
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.J))
         {
             ToggleJournal();

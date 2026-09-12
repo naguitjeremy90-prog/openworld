@@ -20,6 +20,9 @@ public class NPCConversationTrigger : MonoBehaviour
     [SerializeField] private CameraFocusManager focusManager;
     [SerializeField] private CameraFocusPoint focusPoint;
 
+    [Header("Presentation (Optional)")]
+    [SerializeField] private bool treatAsStorySequence;
+
     [Header("Face Player (Optional)")]
     [SerializeField] private bool facePlayerWhenTalking = true;
     [SerializeField] private Transform npcTransform;
@@ -42,10 +45,14 @@ public class NPCConversationTrigger : MonoBehaviour
 
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
+    private StorySequenceToken storySequenceToken;
+    private readonly UnityEvent storyFocusFinishedEvent = new UnityEvent();
 
     private void Awake()
     {
         storyConversationSelector = GetComponent<StoryConversationSelector>();
+        storyFocusFinishedEvent.AddListener(HandleStoryFocusFinished);
+        GameplayHUDTarget.AttachTo(talkText);
     }
 
     public void SetConversations(
@@ -92,6 +99,7 @@ public class NPCConversationTrigger : MonoBehaviour
 
         pausedLinkedPatrol = false;
         isTalking = false;
+        ReleaseStorySequence();
 
         if (playerNear && talkText != null)
             talkText.SetActive(false);
@@ -105,7 +113,8 @@ public class NPCConversationTrigger : MonoBehaviour
         {
             playerNear = true;
 
-            if (!isTalking && talkText != null)
+            if (!StorySequenceCoordinator.IsStorySequenceActive &&
+                !isTalking && talkText != null)
                 talkText.SetActive(true);
         }
     }
@@ -123,7 +132,8 @@ public class NPCConversationTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (playerNear && !isTalking && Input.GetKeyDown(KeyCode.E))
+        if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            playerNear && !isTalking && Input.GetKeyDown(KeyCode.E))
         {
             StartConversation();
         }
@@ -132,6 +142,9 @@ public class NPCConversationTrigger : MonoBehaviour
     private void StartConversation()
     {
         isTalking = true;
+
+        if (treatAsStorySequence)
+            storySequenceToken = StorySequenceCoordinator.Acquire(this);
 
         if (talkText != null)
             talkText.SetActive(false);
@@ -149,7 +162,7 @@ public class NPCConversationTrigger : MonoBehaviour
 
         // Optional camera focus
         if (focusManager != null && focusPoint != null)
-            focusManager.FocusOn(focusPoint);
+            focusManager.FocusOn(focusPoint, storyFocusFinishedEvent);
 
         NPCConversation conversation =
             storyConversationSelector != null
@@ -249,7 +262,12 @@ public class NPCConversationTrigger : MonoBehaviour
 
         // Return camera
         if (focusManager != null && focusPoint != null)
-            focusManager.ReturnToNormal(focusPoint);
+        {
+            if (!focusManager.TryReturnToNormal(focusPoint))
+                ReleaseStorySequence();
+        }
+        else
+            ReleaseStorySequence();
 
         // Turn NPC back
         if (facePlayerWhenTalking &&
@@ -265,6 +283,20 @@ public class NPCConversationTrigger : MonoBehaviour
 
         if (playerNear && talkText != null)
             talkText.SetActive(true);
+    }
+
+    private void HandleStoryFocusFinished()
+    {
+        ReleaseStorySequence();
+    }
+
+    private void ReleaseStorySequence()
+    {
+        if (storySequenceToken == null)
+            return;
+
+        storySequenceToken.Release();
+        storySequenceToken = null;
     }
 
     private bool HasCompletedFirstConversation()

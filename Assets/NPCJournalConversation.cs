@@ -11,7 +11,8 @@ public class NPCJournalConversation : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            Input.GetKeyDown(KeyCode.E))
         {
             // Check ConversationManager
             if (ConversationManager.Instance == null)

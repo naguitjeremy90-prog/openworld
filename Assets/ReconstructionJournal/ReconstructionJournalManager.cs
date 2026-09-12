@@ -1,8 +1,11 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ReconstructionJournalManager : MonoBehaviour
 {
+    private const string FirstDreamObservationId = "ang_panaginip";
+
     public static ReconstructionJournalManager Instance { get; private set; }
 
     [Header("Journal Window")]
@@ -44,6 +47,9 @@ public class ReconstructionJournalManager : MonoBehaviour
     public bool IsOpen { get; private set; }
     public JournalTab CurrentTab { get; private set; } = JournalTab.Observations;
 
+    private GameplayHUDUnlockReveal unlockReveal;
+    private GameplaySystemTutorialAnchor tutorialAnchor;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -54,6 +60,31 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         Instance = this;
 
+        if (openButton != null)
+        {
+            GameplayHUDTarget.AttachTo(openButton.gameObject);
+
+            CanvasGroup group = openButton.GetComponent<CanvasGroup>();
+            unlockReveal = openButton.GetComponent<GameplayHUDUnlockReveal>();
+            if (unlockReveal == null)
+                unlockReveal = openButton.gameObject.AddComponent<GameplayHUDUnlockReveal>();
+            unlockReveal.Configure(group);
+            unlockReveal.RevealCompleted += HandleUnlockRevealCompleted;
+
+            tutorialAnchor = GameplaySystemTutorialAnchor.AttachTo(
+                openButton.gameObject,
+                GameplaySystemId.Journal);
+        }
+
+        GameplaySystemTutorialManager.Instance.ConfigureJournal(
+            journalWindow != null ? journalWindow.transform as RectTransform : null,
+            observationsTabButton,
+            peopleTabButton,
+            fragmentsTabButton,
+            reflectionsTabButton);
+
+        GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
+
         AddButtonListeners();
         ShowTab(JournalTab.Observations);
         CloseJournal();
@@ -61,28 +92,47 @@ public class ReconstructionJournalManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (unlockReveal != null)
+            unlockReveal.RevealCompleted -= HandleUnlockRevealCompleted;
+
+        GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
         RemoveButtonListeners();
 
         if (Instance == this)
             Instance = null;
     }
 
+    private void Update()
+    {
+        if (StorySequenceCoordinator.IsStorySequenceActive && IsOpen)
+            CloseJournal();
+    }
+
     public void OpenJournal()
     {
+        if (!GameplaySystemState.IsUnlocked(GameplaySystemId.Journal) ||
+            StorySequenceCoordinator.IsStorySequenceActive)
+            return;
+
         IsOpen = true;
 
         if (journalWindow != null)
             journalWindow.SetActive(true);
 
         OpenObservationsTab();
+        GameplaySystemTutorialManager.Instance.NotifyJournalOpened();
     }
 
     public void CloseJournal()
     {
+        bool wasOpen = IsOpen;
         IsOpen = false;
 
         if (journalWindow != null)
             journalWindow.SetActive(false);
+
+        if (wasOpen && GameplaySystemTutorialManager.HasInstance)
+            GameplaySystemTutorialManager.Instance.NotifyJournalClosed();
     }
 
     public void ToggleJournal()
@@ -91,6 +141,59 @@ public class ReconstructionJournalManager : MonoBehaviour
             CloseJournal();
         else
             OpenJournal();
+    }
+
+    public bool UnlockJournalForFirstDream()
+    {
+        if (GameplaySystemState.IsUnlocked(GameplaySystemId.Journal))
+        {
+            return false;
+        }
+
+        GameplaySystemState.SetUnlocked(GameplaySystemId.Journal, true);
+        UnlockObservation(FirstDreamObservationId);
+
+        if (StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            StartCoroutine(CompleteFirstUnlockWhenSequenceEnds());
+        }
+        else
+        {
+            CompleteFirstUnlock();
+        }
+
+        return true;
+    }
+
+    private IEnumerator CompleteFirstUnlockWhenSequenceEnds()
+    {
+        while (StorySequenceCoordinator.IsStorySequenceActive)
+            yield return null;
+
+        CompleteFirstUnlock();
+    }
+
+    private void CompleteFirstUnlock()
+    {
+        if (unlockReveal == null || !unlockReveal.PlayReveal())
+        {
+            Debug.LogWarning(
+                "Journal tutorial was not started because the existing Journal reveal could not play.");
+        }
+    }
+
+    private void HandleUnlockRevealCompleted()
+    {
+        GameplaySystemTutorialManager.Instance.NotifySystemRevealCompleted(
+            GameplaySystemId.Journal);
+    }
+
+    private void HandleSystemUnlockChanged(
+        GameplaySystemId system,
+        bool unlocked)
+    {
+        if (system == GameplaySystemId.Journal && !unlocked && IsOpen)
+            CloseJournal();
     }
 
     public void OpenObservationsTab()

@@ -79,11 +79,17 @@ public sealed class MainInvestigationTaskController : MonoBehaviour
         if (SessionStoryState.GetFlag(MaestroBenCompletedFlag))
             return;
 
+        TaskManager manager = TaskManager.Instance;
+        if (manager == null || manager.GetTaskState(TaskId) != TaskState.Active)
+            return;
+
         if (!SessionStoryState.GetFlag(MaestroLeadFlag))
         {
             SessionStoryState.SetFlag(MaestroLeadFlag, true);
-            TaskManager.Instance?.RegisterProgress(TaskId, "aling_ika_lead", 1, true);
+            manager.RegisterProgress(TaskId, "aling_ika_lead", 1, true);
         }
-        TaskManager.Instance?.AdvanceTaskStage(TaskId, "maestro_ben_lead");
+
+        if (!manager.IsCurrentStage(TaskId, "maestro_ben_lead"))
+            manager.AdvanceTaskStage(TaskId, "maestro_ben_lead");
     }
 }

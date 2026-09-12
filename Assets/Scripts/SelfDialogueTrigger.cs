@@ -12,8 +12,12 @@ public class SelfDialogueTrigger : MonoBehaviour
     [SerializeField] private bool triggerOnce = true;
     [SerializeField] private bool autoStartOnEnter = true;
 
+    [Header("Presentation (Optional)")]
+    [SerializeField] private bool treatAsStorySequence;
+
     private bool hasTriggered = false;
     private bool conversationStarted = false;
+    private StorySequenceToken storySequenceToken;
 
     [Header("Callbacks")]
     public UnityEvent OnConversationFinished = new UnityEvent();
@@ -27,6 +31,11 @@ public class SelfDialogueTrigger : MonoBehaviour
     {
         ConversationManager.OnConversationEnded -= HandleConversationEnded;
         conversationStarted = false;
+        if (storySequenceToken != null)
+        {
+            storySequenceToken.Release();
+            storySequenceToken = null;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -53,6 +62,8 @@ public class SelfDialogueTrigger : MonoBehaviour
 
         conversationStarted = true;
         hasTriggered = true;
+        if (treatAsStorySequence)
+            storySequenceToken = StorySequenceCoordinator.Acquire(this);
         ConversationManager.Instance.StartConversation(myConversation);
     }
 
@@ -62,6 +73,11 @@ public class SelfDialogueTrigger : MonoBehaviour
             return;
 
         conversationStarted = false;
+        if (storySequenceToken != null)
+        {
+            storySequenceToken.Release();
+            storySequenceToken = null;
+        }
         ConversationFinished?.Invoke();
         OnConversationFinished?.Invoke();
     }

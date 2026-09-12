@@ -36,6 +36,8 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
     private bool sequenceRunning;
     private Coroutine sequenceRoutine;
     private bool[] previousBehaviourStates;
+    private StorySequenceToken storySequenceToken;
+    private bool sequenceHandedOff;
 
     public bool IsRunning => sequenceRunning;
 
@@ -71,6 +73,10 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
             StopCoroutine(sequenceRoutine);
         sequenceRoutine = null;
         sequenceRunning = false;
+        if (!sequenceHandedOff && storySequenceToken != null)
+            storySequenceToken.Release();
+        storySequenceToken = null;
+        sequenceHandedOff = false;
         if (preReactionFade != null)
             preReactionFade.ClearImmediately();
         RestoreGameplayBehaviours();
@@ -104,6 +110,8 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
             documentViewer.CloseDocument();
 
         sequenceRunning = true;
+        storySequenceToken = StorySequenceCoordinator.Acquire(this);
+        sequenceHandedOff = false;
         CaptureAndDisableGameplayBehaviours();
         sequenceRoutine = StartCoroutine(TransportRoutine());
     }
@@ -146,10 +154,19 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
             ? irisTransition
             : IrisTransitionController.Instance;
         if (transition != null)
-            yield return transition.TransitionToScene(destinationSceneName);
+        {
+            Coroutine transitionRoutine = transition.TransitionToScene(
+                destinationSceneName,
+                storySequenceToken);
+            sequenceHandedOff = transitionRoutine != null;
+            yield return transitionRoutine;
+        }
         else
             Debug.LogWarning("Manuscript transport has no IrisTransitionController; destination was not loaded.", this);
 
+        if (!sequenceHandedOff && storySequenceToken != null)
+            storySequenceToken.Release();
+        storySequenceToken = null;
         sequenceRunning = false;
         RestoreGameplayBehaviours();
         sequenceRoutine = null;

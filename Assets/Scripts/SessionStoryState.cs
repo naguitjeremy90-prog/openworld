@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class SessionStoryState
 {
+    public static event Action<string, bool> FlagChanged;
+
     private static readonly HashSet<string> completedFlags =
         new HashSet<string>(StringComparer.Ordinal);
     private static readonly Dictionary<string, int> integerValues =
@@ -22,10 +24,16 @@ public static class SessionStoryState
         if (string.IsNullOrEmpty(flagId))
             return;
 
+        bool wasCompleted = completedFlags.Contains(flagId);
+        if (wasCompleted == completed)
+            return;
+
         if (completed)
             completedFlags.Add(flagId);
         else
             completedFlags.Remove(flagId);
+
+        FlagChanged?.Invoke(flagId, completed);
     }
 
     public static int GetInt(string valueId)
@@ -74,5 +82,6 @@ public static class SessionStoryState
         completedFlags.Clear();
         integerValues.Clear();
         stringValues.Clear();
+        FlagChanged = null;
     }
 }

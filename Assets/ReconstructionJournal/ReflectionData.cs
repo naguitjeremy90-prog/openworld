@@ -46,7 +46,7 @@ public class ReflectionData : ScriptableObject
             case ObservationContext.MakamisaPili:
                 return "MAKAMISA";
             default:
-                return "KASALUKUYANG PILI";
+                return "PRESENT PILI";
         }
     }
 }

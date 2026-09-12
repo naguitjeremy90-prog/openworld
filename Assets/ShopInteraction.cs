@@ -22,6 +22,11 @@ public class ShopInteraction : MonoBehaviour
     private Coroutine openShopCoroutine;
     private Coroutine hideResponseCoroutine;
 
+    private void Awake()
+    {
+        GameplayHUDTarget.AttachTo(interactText);
+    }
+
     void Start()
     {
         IsShopOpen = false;
@@ -48,7 +53,8 @@ public class ShopInteraction : MonoBehaviour
         }
 
         // Show question UI when near
-        if (playerNear && Input.GetKeyDown(KeyCode.E) && !questionActive && !IsShopOpen)
+        if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            playerNear && Input.GetKeyDown(KeyCode.E) && !questionActive && !IsShopOpen)
         {
             if (interactText != null) interactText.SetActive(false);
             if (questionText != null) questionText.SetActive(true);

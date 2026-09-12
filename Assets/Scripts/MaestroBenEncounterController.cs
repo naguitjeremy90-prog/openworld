@@ -21,6 +21,8 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
     [Tooltip("Testing only. Skips the entrance Timeline without changing story state or progression.")]
     [SerializeField] private bool skipIntroTimelineForTesting = false;
 
+    private StorySequenceToken storySequenceToken;
+
     private void Awake()
     {
         if (introConversation != null)
@@ -81,6 +83,7 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
 
         // The visit is committed immediately before starting the existing asset.
         SessionStoryState.SetFlag(IntroSeenFlag, true);
+        storySequenceToken = StorySequenceCoordinator.Acquire(this);
         entranceTimeline.Play();
     }
 
@@ -91,6 +94,12 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
 
         if (interaction != null)
             interaction.OnFirstConversationFinished.RemoveListener(HandleManualFirstConversationFinished);
+
+        if (storySequenceToken != null)
+        {
+            storySequenceToken.Release();
+            storySequenceToken = null;
+        }
     }
 
     private void HandleTimelineConversationFinished()
@@ -120,6 +129,7 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
                 "Maestro Ben conversation finished, but TaskManager.Instance is null; " +
                 "the Church investigation stage could not be applied.",
                 this);
+            ReleaseStorySequence();
             return;
         }
 
@@ -130,5 +140,24 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
                 "to the Church investigation stage.",
                 this);
         }
+        else
+        {
+            GameplaySystemState.SetUnlocked(GameplaySystemId.Clarity, true);
+        }
+
+        if (storySequenceToken != null)
+        {
+            storySequenceToken.Release();
+            storySequenceToken = null;
+        }
+    }
+
+    private void ReleaseStorySequence()
+    {
+        if (storySequenceToken == null)
+            return;
+
+        storySequenceToken.Release();
+        storySequenceToken = null;
     }
 }

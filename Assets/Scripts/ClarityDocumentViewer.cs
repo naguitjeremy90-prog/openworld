@@ -85,6 +85,8 @@ public sealed class ClarityDocumentViewer : MonoBehaviour
     public event Action<string> OnDocumentInvestigationCompleted;
     public event Action<string> OnDocumentOpened;
     public event Action<string> OnDocumentClosed;
+    public static event Action<string, bool> AnyDocumentOpened;
+    public static event Action<string, bool> AnyDocumentClosed;
 
     private void Awake()
     {
@@ -188,6 +190,7 @@ public sealed class ClarityDocumentViewer : MonoBehaviour
 
         OnDocumentOpened?.Invoke(ActiveDocumentId);
         onDocumentOpened?.Invoke(ActiveDocumentId);
+        AnyDocumentOpened?.Invoke(ActiveDocumentId, usingObscuredDocument);
         return true;
     }
 
@@ -212,6 +215,7 @@ public sealed class ClarityDocumentViewer : MonoBehaviour
         ActiveDocumentId = string.Empty;
         OnDocumentClosed?.Invoke(closedDocumentId);
         onDocumentClosed?.Invoke(closedDocumentId);
+        AnyDocumentClosed?.Invoke(closedDocumentId, usingObscuredDocument);
     }
 
     public bool IsRegionInvestigated(string regionId)
