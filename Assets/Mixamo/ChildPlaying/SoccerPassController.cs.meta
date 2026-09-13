@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a4d5e8013deb4be4f8e26eba25795a23
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - maleAnimator: {fileID: 5866666021909216657, guid: ef0edea854a33864a9f04882a79851e4, type: 3}
+  - femaleAnimator: {fileID: 5866666021909216657, guid: 67420ef83703db94babe9fc9c5084bdc, type: 3}
+  - soccerBall: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
