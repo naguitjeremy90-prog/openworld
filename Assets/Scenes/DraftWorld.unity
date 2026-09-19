@@ -9607,6 +9607,109 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8001415a0c2d1ce44b31ddc0f7a7e8fa, type: 3}
   m_PrefabInstance: {fileID: 857008245}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &414242178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 414242182}
+  - component: {fileID: 414242181}
+  - component: {fileID: 414242180}
+  - component: {fileID: 414242179}
+  m_Layer: 5
+  m_Name: FadeImageCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &414242179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414242178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &414242180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414242178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &414242181
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414242178}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 32100
+  m_TargetDisplay: 0
+--- !u!224 &414242182
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414242178}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 873497765}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1 &418426719
 GameObject:
   m_ObjectHideFlags: 0
@@ -10197,7 +10300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 471.34
+      value: 330.41
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10205,7 +10308,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.52
+      value: 23.54
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17804,12 +17907,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 873497764}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1574999, y: 1.1574999, z: 1.1574999}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1324403101}
+  m_Father: {fileID: 414242182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -24000,6 +24103,7 @@ GameObject:
   - component: {fileID: 1220955099}
   - component: {fileID: 1220955101}
   - component: {fileID: 1220955100}
+  - component: {fileID: 1220955102}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -24074,6 +24178,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1220955102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220955098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0ba88a6c1d1c134c90531991c668dff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskProgressTrigger
+  taskId: main_investigate_pili
+  progressId: toto
+  registerOnCompletion: 1
+  once: 1
+  amount: 1
+  npcConversationTrigger: {fileID: 1220955100}
+  selfDialogueTrigger: {fileID: 0}
 --- !u!1 &1226733691
 GameObject:
   m_ObjectHideFlags: 0
@@ -24522,7 +24645,7 @@ Transform:
   m_GameObject: {fileID: 1242855888}
   serializedVersion: 2
   m_LocalRotation: {x: 0.05260068, y: 0.0038210817, z: -0.0002012716, w: 0.99860835}
-  m_LocalPosition: {x: 471.34, y: 5.34, z: 15.52}
+  m_LocalPosition: {x: 330.41, y: 5.34, z: 8.540001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25794,7 +25917,6 @@ RectTransform:
   - {fileID: 1906863331}
   - {fileID: 105701547}
   - {fileID: 1915363592}
-  - {fileID: 873497765}
   - {fileID: 1219552813}
   - {fileID: 724576057}
   - {fileID: 119051398}
@@ -26523,6 +26645,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ReconstructionFragments
   allFragments:
   - {fileID: 11400000, guid: dc8efb717638e814293b375fd68c2e20, type: 2}
+  - {fileID: 11400000, guid: b7e1c4a92d3f4b6e8a0c1d5f7e9b2a34, type: 2}
   listContent: {fileID: 536746358}
   listButtonPrefab: {fileID: 6598735624607580097, guid: eeb92d853011e934185adaf9cccc5f30, type: 3}
   emptyListText: {fileID: 1239583471}
@@ -26575,6 +26698,8 @@ MonoBehaviour:
   allObservations:
   - {fileID: 11400000, guid: 24c04e51cae3300479015e7efa946d7d, type: 2}
   - {fileID: 11400000, guid: a31c50f8c7d744e39476c2bfc8f1d295, type: 2}
+  - {fileID: 11400000, guid: 18f62c9148de483794229965c85b3c8f, type: 2}
+  - {fileID: 11400000, guid: 40d50c907efe4c7499067e3ea9408ed4, type: 2}
   listContent: {fileID: 286792336}
   listButtonPrefab: {fileID: 6598735624607580097, guid: 34fb655f8b6952149932dcf4fdf3a90f, type: 3}
   emptyListText: {fileID: 597976260}
@@ -28244,7 +28369,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 150
+  m_SortingOrder: 200
   m_TargetDisplay: 0
 --- !u!224 &1449975872
 RectTransform:
@@ -33410,6 +33535,7 @@ GameObject:
   - component: {fileID: 1732385627}
   - component: {fileID: 1732385629}
   - component: {fileID: 1732385628}
+  - component: {fileID: 1732385630}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -33484,6 +33610,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1732385630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732385626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0ba88a6c1d1c134c90531991c668dff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskProgressTrigger
+  taskId: main_investigate_pili
+  progressId: nena
+  registerOnCompletion: 1
+  once: 1
+  amount: 1
+  npcConversationTrigger: {fileID: 1732385628}
+  selfDialogueTrigger: {fileID: 0}
 --- !u!1001 &1742438815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36875,6 +37020,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1906863331}
   - component: {fileID: 1906863333}
+  - component: {fileID: 1906863334}
   m_Layer: 0
   m_Name: TaskUI
   m_TagString: Untagged
@@ -36938,6 +37084,17 @@ MonoBehaviour:
       - mang_iko
       - mang_tibo
       - aling_ika_lead
+      - nena
+      - toto
+      - randomhouse_resident
+      - randomhouse1_anday
+      - church_aling_rosa
+      - church_aling_pilar
+      - church_aling_marta
+      - church_mang_tomas
+      - church_mang_lando
+      - church_mang_pedro
+      - church_aling_elena
     - stageId: find_knowledgeable_person
       objectiveText: Humanap ng taong maaaring may higit na alam tungkol sa Makamisa.
       requiredCount: 0
@@ -36964,6 +37121,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainInvestigationTaskController
   forceMainTaskForTesting: 1
   enableProgressTesting: 1
+--- !u!114 &1906863334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906863330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7e0475bbbc9482cb7f5735ba28c8f3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GatherInformationReactionController
+  zoomInDuration: 0.5
+  zoomOutDuration: 0.5
+  perspectiveFovReduction: 0.08
+  orthographicSizeReduction: 0.08
 --- !u!1 &1908173513
 GameObject:
   m_ObjectHideFlags: 0
@@ -39572,9 +39745,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 3
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":141.400009,"yPos":83.6},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Magandang
-    araw po!","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Sara","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":173.6,"yPos":194.400024},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Maganda
-    araw din sayo.","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":164,"yPos":307.2},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"...","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Sara","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":78.2,"yPos":109.200012},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Magandang
+    araw po!","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Sara","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":110.399994,"yPos":220.000031},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Maganda
+    araw din sayo.","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":100.799988,"yPos":332.8},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"...","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Sara","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
   DefaultSprite: {fileID: 0}
@@ -41459,3 +41632,4 @@ SceneRoots:
   - {fileID: 140377533}
   - {fileID: 91192845}
   - {fileID: 2147000002}
+  - {fileID: 414242182}

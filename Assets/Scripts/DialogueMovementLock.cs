@@ -6,6 +6,10 @@ public class DialogueMovementLock : MonoBehaviour
     [SerializeField] private MonoBehaviour playerMovementScript;
     [SerializeField] private Animator playerAnimator;
 
+    private bool ownsConversationLock;
+    private bool previousMovementEnabled;
+    private bool capturedMovementState;
+
     private void OnEnable()
     {
         ConversationManager.OnConversationStarted += LockMovement;
@@ -20,8 +24,17 @@ public class DialogueMovementLock : MonoBehaviour
 
     public void LockMovement()
     {
+        if (ownsConversationLock)
+            return;
+
+        ownsConversationLock = true;
+
         if (playerMovementScript != null)
+        {
+            previousMovementEnabled = playerMovementScript.enabled;
+            capturedMovementState = true;
             playerMovementScript.enabled = false;
+        }
 
         if (playerAnimator != null)
             playerAnimator.SetFloat("MoveSpeed", 0f);
@@ -29,7 +42,13 @@ public class DialogueMovementLock : MonoBehaviour
 
     public void UnlockMovement()
     {
-        if (playerMovementScript != null)
-            playerMovementScript.enabled = true;
+        if (!ownsConversationLock)
+            return;
+
+        if (capturedMovementState && playerMovementScript != null)
+            playerMovementScript.enabled = previousMovementEnabled;
+
+        ownsConversationLock = false;
+        capturedMovementState = false;
     }
 }

@@ -5,11 +5,20 @@ using System.Collections;
 
 public class SceneFader : MonoBehaviour
 {
+    private const int FullScreenTransitionSortingOrder = 32100;
     public Image fadeImage;   // The black panel image
     public float fadeSpeed = 1f;
 
     private void Awake()
     {
+        Canvas canvas = fadeImage != null ? fadeImage.GetComponentInParent<Canvas>() : null;
+        if (canvas != null)
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = FullScreenTransitionSortingOrder;
+        }
+
         fadeImage.color = new Color(0, 0, 0, 0); // transparent
     }
 

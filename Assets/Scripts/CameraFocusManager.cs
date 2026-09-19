@@ -30,6 +30,8 @@ public class CameraFocusManager : MonoBehaviour
 
     private Coroutine cameraCoroutine;
 
+    public bool IsFocusing => isFocusing;
+
     private void Start()
     {
         usingCinemachine =

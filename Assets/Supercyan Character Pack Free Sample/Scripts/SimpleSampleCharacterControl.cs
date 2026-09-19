@@ -50,6 +50,7 @@ namespace Supercyan.FreeSample
         private bool m_jumpInput = false;
 
         private bool m_isGrounded;
+        private bool m_wasStorySequenceActive;
 
         // Prevent tiny bumps from immediately triggering the jump animation.
         private float m_airborneTime = 0f;
@@ -61,6 +62,10 @@ namespace Supercyan.FreeSample
         private bool m_isAirborneAnimating = false;
 
         private List<Collider> m_collisions = new List<Collider>();
+
+        // Read-only diagnostics for temporary development instrumentation.
+        public bool DebugIsGrounded => m_isGrounded;
+        public int DebugGroundContactCount => m_collisions.Count;
 
         private void Awake()
         {
@@ -146,6 +151,12 @@ namespace Supercyan.FreeSample
 
         private void Update()
         {
+            if (StorySequenceCoordinator.IsStorySequenceActive)
+            {
+                m_jumpInput = false;
+                return;
+            }
+
             if (!m_jumpInput && Input.GetKey(KeyCode.Space))
             {
                 m_jumpInput = true;
@@ -154,6 +165,38 @@ namespace Supercyan.FreeSample
 
         private void FixedUpdate()
         {
+            bool storySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
+
+            if (storySequenceActive)
+            {
+                m_wasStorySequenceActive = true;
+                m_currentV = 0f;
+                m_currentH = 0f;
+                m_currentDirection = Vector3.zero;
+                m_jumpInput = false;
+
+                if (m_animator)
+                {
+                    m_animator.SetFloat("MoveSpeed", 0f);
+                    // Keep the locomotion controller suppressed during story sequences,
+                    // while allowing the Animator to reflect the physical ground state.
+                    m_animator.SetBool("Grounded", m_isGrounded);
+                }
+
+                return;
+            }
+
+            if (m_wasStorySequenceActive)
+            {
+                // Story sequences suppress normal locomotion updates. Once control
+                // returns, bring the Animator's grounding parameter back in sync
+                // with the physics state before normal locomotion resumes.
+                if (m_animator)
+                    m_animator.SetBool("Grounded", m_isGrounded);
+
+                m_wasStorySequenceActive = false;
+            }
+
             switch (m_controlMode)
             {
                 case ControlMode.Direct:

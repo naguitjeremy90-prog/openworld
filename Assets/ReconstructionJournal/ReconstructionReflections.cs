@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -105,6 +106,8 @@ public class ReconstructionReflections : MonoBehaviour
     private Coroutine pendingSuggestionHide;
     private bool suppressNextSuggestionOpen;
 
+    public event Action<JournalEntryUnlockedInfo> EntryUnlocked;
+
     public int UnlockedReflectionCount
     {
         get { return unlockedReflectionIDs.Count; }
@@ -165,6 +168,10 @@ public class ReconstructionReflections : MonoBehaviour
 
         SessionStoryState.SetFlag(UnlockFlagPrefix + reflectionID, true);
         RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.Reflection,
+            reflection.reflectionID,
+            reflection.title));
         Debug.Log(
             "Reconstruction Journal: Unlocked reflection '" + reflectionID + "'.");
         return true;

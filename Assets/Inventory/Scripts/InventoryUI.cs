@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public sealed class InventoryUI : MonoBehaviour
 {
+    private const int FullInterfaceSortingOrder = 300;
     private enum InventoryFilter
     {
         All,
@@ -89,6 +90,16 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        Canvas inventoryCanvas = GetComponentInParent<Canvas>();
+        if (inventoryCanvas != null)
+        {
+            // Keep the full-screen inventory system UI explicitly above the
+            // normal gameplay HUD/task canvas. This is a visual Canvas rule;
+            // task visibility and gameplay state remain unchanged.
+            inventoryCanvas.overrideSorting = true;
+            inventoryCanvas.sortingOrder = FullInterfaceSortingOrder;
+        }
+
         if (canvasGroup == null)
             canvasGroup = GetComponent<CanvasGroup>();
 

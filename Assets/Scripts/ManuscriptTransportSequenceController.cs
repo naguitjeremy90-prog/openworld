@@ -105,6 +105,7 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
             return;
 
         SessionStoryState.SetFlag(InvestigatedFlag, true);
+        ReconstructionJournalManager.Instance?.UnlockFragment("ang_lumang_sulatin");
         CompleteMainTaskObjective();
         if (documentViewer != null && documentViewer.IsOpen)
             documentViewer.CloseDocument();

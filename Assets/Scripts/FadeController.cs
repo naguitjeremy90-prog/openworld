@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class FadeController : MonoBehaviour
 {
+    private const int FullScreenTransitionSortingOrder = 32100;
     [SerializeField] private CanvasGroup fadeCanvasGroup;
     [SerializeField] private float fadeDuration = 0.5f;
 
@@ -11,6 +12,18 @@ public class FadeController : MonoBehaviour
 
     private void Awake()
     {
+        Canvas canvas = fadeCanvasGroup != null
+            ? fadeCanvasGroup.GetComponentInParent<Canvas>()
+            : GetComponentInParent<Canvas>();
+        if (canvas != null)
+        {
+            // Ordinary door/room fades must participate in the same topmost
+            // screen-space presentation layer as the persistent iris overlay.
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = FullScreenTransitionSortingOrder;
+        }
+
         if (fadeCanvasGroup != null)
             fadeCanvasGroup.alpha = 1f;
     }

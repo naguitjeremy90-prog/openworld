@@ -610,7 +610,12 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         }
 
         if (target != null)
-            PositionCallout(journalCallout, target, itemDetailsStep ? new Vector2(0f, 180f) : Vector2.zero);
+        {
+            if (itemDetailsStep)
+                PositionInventoryItemDetailsCallout(journalCallout, target);
+            else
+                PositionCallout(journalCallout, target, Vector2.zero);
+        }
     }
 
     private RectTransform GetTabTarget(int index)
@@ -701,7 +706,12 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                 }
 
                 if (target != null)
-                    PositionCallout(journalCallout, target, inventoryStep == 1 ? new Vector2(0f, 180f) : Vector2.zero);
+                {
+                    if (inventoryStep == 1)
+                        PositionInventoryItemDetailsCallout(journalCallout, target);
+                    else
+                        PositionCallout(journalCallout, target, Vector2.zero);
+                }
             }
             else
             {
@@ -741,6 +751,73 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             RotatePointerToTarget(initialPointer.rectTransform, target);
         else if (callout == journalCallout && journalPointer != null && journalPointer.gameObject.activeSelf)
             RotatePointerToTarget(journalPointer.rectTransform, target);
+    }
+
+    private void PositionInventoryItemDetailsCallout(RectTransform callout, RectTransform target)
+    {
+        if (callout == null || target == null || canvasRect == null)
+            return;
+
+        Canvas.ForceUpdateCanvases();
+
+        Canvas targetCanvas = target.GetComponentInParent<Canvas>();
+        Camera sourceCamera = targetCanvas != null &&
+            targetCanvas.renderMode != RenderMode.ScreenSpaceOverlay
+            ? targetCanvas.worldCamera
+            : null;
+
+        Vector3[] worldCorners = new Vector3[4];
+        target.GetWorldCorners(worldCorners);
+        Vector2 itemMin = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+        Vector2 itemMax = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+        for (int i = 0; i < worldCorners.Length; i++)
+        {
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(sourceCamera, worldCorners[i]);
+            Vector2 localPoint;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    canvasRect, screenPoint, overlayCanvas.worldCamera, out localPoint))
+                return;
+
+            itemMin = Vector2.Min(itemMin, localPoint);
+            itemMax = Vector2.Max(itemMax, localPoint);
+        }
+
+        const float gap = 12f;
+        const float margin = 12f;
+        Vector2 half = callout.rect.size * 0.5f;
+        Rect bounds = canvasRect.rect;
+        bool spaceBelow = itemMin.y - bounds.yMin >= callout.rect.height + gap + margin;
+        Vector2 desired = new Vector2(
+            (itemMin.x + itemMax.x) * 0.5f,
+            spaceBelow
+                ? itemMin.y - gap - half.y
+                : itemMax.y + gap + half.y);
+
+        desired.x = Mathf.Clamp(desired.x, bounds.xMin + half.x + margin, bounds.xMax - half.x - margin);
+        desired.y = Mathf.Clamp(desired.y, bounds.yMin + half.y + margin, bounds.yMax - half.y - margin);
+        callout.anchoredPosition = desired;
+
+        // The approved item-details layout places the panel below the item and
+        // keeps the arrow attached to the panel edge facing that item. The
+        // above-item arrangement is only a genuine screen-space fallback.
+        if (journalPointer != null)
+        {
+            RectTransform pointer = journalPointer.rectTransform;
+            if (spaceBelow)
+            {
+                pointer.anchorMin = pointer.anchorMax = new Vector2(0.5f, 1f);
+                pointer.pivot = new Vector2(0.5f, 0f);
+                pointer.anchoredPosition = new Vector2(0f, 4f);
+                pointer.localRotation = Quaternion.identity;
+            }
+            else
+            {
+                pointer.anchorMin = pointer.anchorMax = new Vector2(0.5f, 0f);
+                pointer.pivot = new Vector2(0.5f, 1f);
+                pointer.anchoredPosition = new Vector2(0f, -4f);
+                pointer.localRotation = Quaternion.Euler(0f, 0f, 180f);
+            }
+        }
     }
 
     /// <summary>

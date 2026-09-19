@@ -5,6 +5,7 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public sealed class ScreenFadeController : MonoBehaviour
 {
+    private const int FullScreenTransitionSortingOrder = 32100;
     [Header("Pre-Reaction Fade Timing")]
     [SerializeField, Min(0f)] private float fadeToBlackDuration = 0.5f;
     [SerializeField, Min(0f)] private float blackHoldDuration = 1f;
@@ -97,7 +98,10 @@ public sealed class ScreenFadeController : MonoBehaviour
         overlayCanvas = canvasObject.GetComponent<Canvas>();
         overlayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         overlayCanvas.overrideSorting = true;
-        overlayCanvas.sortingOrder = sortingOrder;
+        // The pre-reaction black overlay is also a full-screen transition. Keep
+        // it above tutorial and gameplay canvases even when an older scene has
+        // serialized the historical 31900 value.
+        overlayCanvas.sortingOrder = Mathf.Max(sortingOrder, FullScreenTransitionSortingOrder);
 
         CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,8 +6,10 @@ using UnityEngine.UI;
 public class ReconstructionJournalManager : MonoBehaviour
 {
     private const string FirstDreamObservationId = "ang_panaginip";
+    private const int FullInterfaceSortingOrder = 300;
 
     public static ReconstructionJournalManager Instance { get; private set; }
+    public static event Action<JournalEntryUnlockedInfo> NewEntryUnlocked;
 
     [Header("Journal Window")]
     [SerializeField] private GameObject journalWindow;
@@ -48,7 +51,14 @@ public class ReconstructionJournalManager : MonoBehaviour
     public JournalTab CurrentTab { get; private set; } = JournalTab.Observations;
 
     private GameplayHUDUnlockReveal unlockReveal;
+    private JournalHUDEntryPulse entryPulse;
     private GameplaySystemTutorialAnchor tutorialAnchor;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetNewEntryEvent()
+    {
+        NewEntryUnlocked = null;
+    }
 
     private void Awake()
     {
@@ -60,6 +70,17 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         Instance = this;
 
+        Canvas journalCanvas = journalWindow != null
+            ? journalWindow.GetComponentInParent<Canvas>()
+            : GetComponentInParent<Canvas>();
+        if (journalCanvas != null)
+        {
+            // The opened journal is a full system interface. Keep it above all
+            // normal HUD canvases while remaining below tutorial presentation.
+            journalCanvas.overrideSorting = true;
+            journalCanvas.sortingOrder = FullInterfaceSortingOrder;
+        }
+
         if (openButton != null)
         {
             GameplayHUDTarget.AttachTo(openButton.gameObject);
@@ -70,6 +91,11 @@ public class ReconstructionJournalManager : MonoBehaviour
                 unlockReveal = openButton.gameObject.AddComponent<GameplayHUDUnlockReveal>();
             unlockReveal.Configure(group);
             unlockReveal.RevealCompleted += HandleUnlockRevealCompleted;
+
+            entryPulse = openButton.GetComponent<JournalHUDEntryPulse>();
+            if (entryPulse == null)
+                entryPulse = openButton.gameObject.AddComponent<JournalHUDEntryPulse>();
+            entryPulse.Configure(openButton.transform as RectTransform);
 
             tutorialAnchor = GameplaySystemTutorialAnchor.AttachTo(
                 openButton.gameObject,
@@ -84,6 +110,7 @@ public class ReconstructionJournalManager : MonoBehaviour
             reflectionsTabButton);
 
         GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
+        SubscribeToEntryUnlocks();
 
         AddButtonListeners();
         ShowTab(JournalTab.Observations);
@@ -96,6 +123,7 @@ public class ReconstructionJournalManager : MonoBehaviour
             unlockReveal.RevealCompleted -= HandleUnlockRevealCompleted;
 
         GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
+        UnsubscribeFromEntryUnlocks();
         RemoveButtonListeners();
 
         if (Instance == this)
@@ -194,6 +222,40 @@ public class ReconstructionJournalManager : MonoBehaviour
     {
         if (system == GameplaySystemId.Journal && !unlocked && IsOpen)
             CloseJournal();
+    }
+
+    public bool PulseNewEntryIcon()
+    {
+        return entryPulse != null && entryPulse.PlayPulse();
+    }
+
+    private void SubscribeToEntryUnlocks()
+    {
+        if (observations != null)
+            observations.EntryUnlocked += HandleEntryUnlocked;
+        if (people != null)
+            people.EntryUnlocked += HandleEntryUnlocked;
+        if (fragments != null)
+            fragments.EntryUnlocked += HandleEntryUnlocked;
+        if (reflections != null)
+            reflections.EntryUnlocked += HandleEntryUnlocked;
+    }
+
+    private void UnsubscribeFromEntryUnlocks()
+    {
+        if (observations != null)
+            observations.EntryUnlocked -= HandleEntryUnlocked;
+        if (people != null)
+            people.EntryUnlocked -= HandleEntryUnlocked;
+        if (fragments != null)
+            fragments.EntryUnlocked -= HandleEntryUnlocked;
+        if (reflections != null)
+            reflections.EntryUnlocked -= HandleEntryUnlocked;
+    }
+
+    private void HandleEntryUnlocked(JournalEntryUnlockedInfo entry)
+    {
+        NewEntryUnlocked?.Invoke(entry);
     }
 
     public void OpenObservationsTab()

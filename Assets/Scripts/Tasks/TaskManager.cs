@@ -5,6 +5,8 @@ using UnityEngine;
 
 public sealed class TaskManager : MonoBehaviour
 {
+    private const string GatherInformationStageId = "gather_information";
+    private const string GatherInformationJournalObservationId = "mga_bulung_bulungan_sa_pili";
     private const string ActiveFlagPrefix = "task_active:";
     private const string CompletedFlagPrefix = "task_completed:";
     private const string ProgressFlagPrefix = "task_progress:";
@@ -23,6 +25,8 @@ public sealed class TaskManager : MonoBehaviour
         new Dictionary<string, string>(StringComparer.Ordinal);
 
     public event Action TaskChanged;
+    public event Action<string, string> StageChanged;
+    public event Action<TaskPresentationChange> PresentationChanged;
 
     private string currentTaskId;
     private int presentationVersion;
@@ -67,6 +71,9 @@ public sealed class TaskManager : MonoBehaviour
             : FormatStageObjective(taskId, firstStage);
         currentTaskId = taskId;
         TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            taskId, task.Type, string.Empty, string.Empty,
+            objectivesById[taskId], taskStarted: true));
 
         ShowNotificationThenTracker(
             taskId,
@@ -93,9 +100,14 @@ public sealed class TaskManager : MonoBehaviour
             return false;
         }
 
+        string previousObjective = objectivesById.TryGetValue(taskId, out string existingObjective)
+            ? existingObjective
+            : string.Empty;
         objectivesById[taskId] = normalizedObjective;
         currentTaskId = taskId;
         TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            taskId, task.Type, previousObjective, previousObjective, normalizedObjective));
 
         ShowNotificationThenTracker(
             taskId,
@@ -115,6 +127,9 @@ public sealed class TaskManager : MonoBehaviour
         }
 
         presentationVersion++;
+        string previousObjective = objectivesById.TryGetValue(taskId, out string existingObjective)
+            ? existingObjective
+            : string.Empty;
 
         SessionStoryState.SetFlag(GetActiveFlag(taskId), false);
         SessionStoryState.SetFlag(GetCompletedFlag(taskId), true);
@@ -128,6 +143,9 @@ public sealed class TaskManager : MonoBehaviour
         }
 
         TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            taskId, task.Type, previousObjective, previousObjective, string.Empty,
+            taskCompleted: true));
 
         return true;
     }
@@ -153,6 +171,10 @@ public sealed class TaskManager : MonoBehaviour
             return false;
 
         string normalizedStageId = stage.StageId.Trim();
+        string previousObjective = objectivesById.TryGetValue(
+            normalizedTaskId, out string existingObjective)
+            ? existingObjective
+            : FormatStageObjective(normalizedTaskId, stage);
         string storageKey = GetProgressFlag(
             normalizedTaskId,
             normalizedStageId,
@@ -196,6 +218,23 @@ public sealed class TaskManager : MonoBehaviour
         TaskChanged?.Invoke();
 
         if (stageChanged)
+            StageChanged?.Invoke(normalizedTaskId, normalizedStageId);
+
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            normalizedTaskId,
+            task.Type,
+            previousObjective,
+            stageChanged
+                ? FormatStageObjective(normalizedTaskId, stage, stage.RequiredCount)
+                : previousObjective,
+            objectivesById[normalizedTaskId],
+            progressIncreased: updatedAmount > currentAmount,
+            stageChanged: stageChanged));
+
+        if (stageChanged && string.Equals(normalizedStageId, GatherInformationStageId, StringComparison.Ordinal))
+            ReconstructionJournalManager.Instance?.UnlockObservation(GatherInformationJournalObservationId);
+
+        if (stageChanged)
         {
             string updatedObjective = objectivesById[normalizedTaskId];
             ShowNotificationThenTracker(
@@ -222,6 +261,10 @@ public sealed class TaskManager : MonoBehaviour
 
         string normalizedTaskId = taskId.Trim();
         string normalizedStageId = stage.StageId?.Trim();
+        string previousObjective = objectivesById.TryGetValue(
+            normalizedTaskId, out string existingObjective)
+            ? existingObjective
+            : string.Empty;
         if (currentStageByTaskId.TryGetValue(normalizedTaskId, out string currentStageId) &&
             string.Equals(currentStageId, normalizedStageId, StringComparison.Ordinal))
         {
@@ -231,6 +274,9 @@ public sealed class TaskManager : MonoBehaviour
         SetStage(normalizedTaskId, stage);
         currentTaskId = normalizedTaskId;
         TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            normalizedTaskId, task.Type, previousObjective, previousObjective,
+            objectivesById[normalizedTaskId], stageChanged: true));
 
         string updatedObjective = objectivesById[normalizedTaskId];
         ShowNotificationThenTracker(
@@ -463,6 +509,13 @@ public sealed class TaskManager : MonoBehaviour
     {
         return stage.RequiredCount > 0
             ? stage.ObjectiveText + " (" + GetCurrentStageProgress(taskId, stage) + "/" + stage.RequiredCount + ")"
+            : stage.ObjectiveText;
+    }
+
+    private string FormatStageObjective(string taskId, TaskStage stage, int progress)
+    {
+        return stage.RequiredCount > 0
+            ? stage.ObjectiveText + " (" + Mathf.Clamp(progress, 0, stage.RequiredCount) + "/" + stage.RequiredCount + ")"
             : stage.ObjectiveText;
     }
 

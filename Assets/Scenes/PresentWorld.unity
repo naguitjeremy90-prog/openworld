@@ -1166,9 +1166,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94fab66f05eb7a249bf2c3e93a404307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::womanconversation
-  myConversation: {fileID: 161653267}
+  firstConversation: {fileID: 161653267}
+  repeatConversation: {fileID: 0}
   talkText: {fileID: 0}
-  closeUpCamera: {fileID: 0}
+  firstConversationCompletedFlagId: 
+  focusManager: {fileID: 0}
+  focusPoint: {fileID: 0}
+  treatAsStorySequence: 0
+  facePlayerWhenTalking: 1
+  npcTransform: {fileID: 0}
+  playerTransform: {fileID: 0}
+  turnSpeed: 5
+  returnToOriginalDirection: 1
+  linkedPatrol: {fileID: 0}
+  OnConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFirstConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &43301729
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13937,9 +13953,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94fab66f05eb7a249bf2c3e93a404307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::womanconversation
-  myConversation: {fileID: 1294593233}
+  firstConversation: {fileID: 1294593233}
+  repeatConversation: {fileID: 0}
   talkText: {fileID: 0}
-  closeUpCamera: {fileID: 0}
+  firstConversationCompletedFlagId: 
+  focusManager: {fileID: 0}
+  focusPoint: {fileID: 0}
+  treatAsStorySequence: 0
+  facePlayerWhenTalking: 1
+  npcTransform: {fileID: 0}
+  playerTransform: {fileID: 0}
+  turnSpeed: 5
+  returnToOriginalDirection: 1
+  linkedPatrol: {fileID: 0}
+  OnConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFirstConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &572137109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45718,7 +45750,7 @@ RectTransform:
   m_GameObject: {fileID: 2049157578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4950975, y: 0.4950975, z: 0.4950975}
+  m_LocalScale: {x: 0.41850126, y: 0.41850126, z: 0.41850126}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1703410038}
@@ -45726,7 +45758,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 504, y: 252.125}
+  m_AnchoredPosition: {x: 462.99997, y: 196.1}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2049157583
@@ -46014,9 +46046,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94fab66f05eb7a249bf2c3e93a404307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::womanconversation
-  myConversation: {fileID: 1444026628}
+  firstConversation: {fileID: 1444026628}
+  repeatConversation: {fileID: 0}
   talkText: {fileID: 0}
-  closeUpCamera: {fileID: 0}
+  firstConversationCompletedFlagId: 
+  focusManager: {fileID: 0}
+  focusPoint: {fileID: 0}
+  treatAsStorySequence: 0
+  facePlayerWhenTalking: 1
+  npcTransform: {fileID: 0}
+  playerTransform: {fileID: 0}
+  turnSpeed: 5
+  returnToOriginalDirection: 1
+  linkedPatrol: {fileID: 0}
+  OnConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFirstConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &2058521791
 BoxCollider:
   m_ObjectHideFlags: 0

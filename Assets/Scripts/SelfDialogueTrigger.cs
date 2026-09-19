@@ -67,6 +67,12 @@ public class SelfDialogueTrigger : MonoBehaviour
         ConversationManager.Instance.StartConversation(myConversation);
     }
 
+    public void ConfigureConversation(NPCConversation conversation)
+    {
+        if (conversation != null)
+            myConversation = conversation;
+    }
+
     private void HandleConversationEnded()
     {
         if (!conversationStarted)

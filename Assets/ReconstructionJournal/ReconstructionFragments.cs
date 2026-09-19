@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -34,6 +35,8 @@ public class ReconstructionFragments : MonoBehaviour
     private readonly List<GameObject> spawnedListButtons = new List<GameObject>();
 
     private FragmentData selectedFragment;
+
+    public event Action<JournalEntryUnlockedInfo> EntryUnlocked;
 
     public int UnlockedFragmentCount
     {
@@ -80,6 +83,10 @@ public class ReconstructionFragments : MonoBehaviour
         SessionStoryState.SetFlag(UnlockFlagPrefix + fragmentID, true);
         SessionStoryState.SetInt(StageValuePrefix + fragmentID, 0);
         RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.Fragment,
+            fragment.fragmentID,
+            fragment.title));
         Debug.Log("Reconstruction Journal: Unlocked fragment '" + fragmentID + "'.");
         return true;
     }

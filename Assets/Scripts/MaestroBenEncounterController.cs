@@ -11,6 +11,7 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
 
     private const string MainTaskId = "main_investigate_pili";
     private const string ChurchStageId = "investigate_church_document";
+    private const string MaestroBenObservationId = "ang_hindi_natapos_na_akda";
 
     [SerializeField] private PlayableDirector entranceTimeline;
     [SerializeField] private SelfDialogueTrigger introConversation;
@@ -118,6 +119,8 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
     private void CompleteFirstConversation()
     {
         SessionStoryState.SetFlag(CompletedFlag, true);
+
+        ReconstructionJournalManager.Instance?.UnlockObservation(MaestroBenObservationId);
 
         if (interaction != null)
             interaction.enabled = true;

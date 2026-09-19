@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public sealed class IrisTransitionController : MonoBehaviour
 {
+    private const int TransitionSortingOrder = 32100;
+
     public static IrisTransitionController Instance { get; private set; }
 
     [SerializeField, Min(0.01f)] private float closeDuration = 0.75f;
@@ -125,13 +127,14 @@ public sealed class IrisTransitionController : MonoBehaviour
             GameObject canvasObject = new GameObject("IrisTransitionOverlay", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvasObject.transform.SetParent(transform, false);
             overlayCanvas = canvasObject.GetComponent<Canvas>();
-            overlayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            overlayCanvas.overrideSorting = true;
-            overlayCanvas.sortingOrder = 32000;
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
         }
+
+        overlayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        overlayCanvas.overrideSorting = true;
+        overlayCanvas.sortingOrder = TransitionSortingOrder;
 
         if (overlayImage == null)
         {

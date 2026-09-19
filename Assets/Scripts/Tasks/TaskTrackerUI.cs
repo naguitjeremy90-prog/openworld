@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,21 @@ public sealed class TaskTrackerUI : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text typeLabel;
     [SerializeField] private TMPro.TMP_Text titleText;
     [SerializeField] private TMP_Text objectiveText;
+
+    [Header("Progress Presentation")]
+    [SerializeField] private Color progressPulseColor = Color.white;
+    [SerializeField, Min(0f)] private float progressPulseDuration = 0.45f;
+
+    [Header("Completion Presentation")]
+    [SerializeField] private Color completionHighlightColor = new Color(1f, 0.86f, 0.45f, 1f);
+    [SerializeField, Min(0f)] private float completionColorDuration = 0.2f;
+    [SerializeField, Min(0f)] private float completionHoldDuration = 0.35f;
+    [SerializeField, Min(0f)] private float completionFadeOutDuration = 0.35f;
+    [SerializeField, Min(0f)] private float nextObjectiveFadeInDuration = 0.35f;
+
+    private Color normalObjectiveColor = Color.white;
+    private Coroutine presentationRoutine;
+    private TaskPresentationChange queuedChange;
 
     private void Awake()
     {
@@ -21,32 +37,40 @@ public sealed class TaskTrackerUI : MonoBehaviour
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
         }
+
+        if (objectiveText != null)
+            normalObjectiveColor = objectiveText.color;
     }
 
     private void OnEnable()
     {
         Subscribe();
-        Refresh();
+        RefreshImmediate();
     }
 
     private void Start()
     {
         Subscribe();
-        Refresh();
+        RefreshImmediate();
     }
 
     private void OnDisable()
     {
         if (TaskManager.Instance != null)
-            TaskManager.Instance.TaskChanged -= Refresh;
+            TaskManager.Instance.PresentationChanged -= HandlePresentationChange;
+
+        if (presentationRoutine != null)
+            StopCoroutine(presentationRoutine);
+        presentationRoutine = null;
+        queuedChange = null;
     }
 
     private void Subscribe()
     {
         if (TaskManager.Instance != null)
-            TaskManager.Instance.TaskChanged -= Refresh;
+            TaskManager.Instance.PresentationChanged -= HandlePresentationChange;
         if (TaskManager.Instance != null)
-            TaskManager.Instance.TaskChanged += Refresh;
+            TaskManager.Instance.PresentationChanged += HandlePresentationChange;
     }
 
     public void ShowTask(string objective)
@@ -88,5 +112,125 @@ public sealed class TaskTrackerUI : MonoBehaviour
         if (titleText != null)
             titleText.text = definition.Title;
         ShowTask(objective);
+    }
+
+    private void RefreshImmediate()
+    {
+        Refresh();
+        if (objectiveText != null)
+            objectiveText.color = normalObjectiveColor;
+    }
+
+    private void HandlePresentationChange(TaskPresentationChange change)
+    {
+        if (change == null || change.TaskType != displayedTaskType)
+            return;
+
+        queuedChange = change;
+        if (presentationRoutine == null)
+            presentationRoutine = StartCoroutine(ProcessPresentationQueue());
+    }
+
+    private IEnumerator ProcessPresentationQueue()
+    {
+        while (queuedChange != null)
+        {
+            TaskPresentationChange change = queuedChange;
+            queuedChange = null;
+
+            if (change.StageChanged || change.TaskCompleted)
+                yield return PlayCompletion(change);
+            else if (change.ProgressIncreased)
+                yield return PlayProgressPulse(change);
+            else
+                ApplyObjective(change.NewObjective);
+        }
+
+        presentationRoutine = null;
+    }
+
+    private IEnumerator PlayProgressPulse(TaskPresentationChange change)
+    {
+        ApplyObjective(change.NewObjective);
+        yield return LerpObjectiveColor(normalObjectiveColor, progressPulseColor, progressPulseDuration * 0.5f);
+        yield return LerpObjectiveColor(progressPulseColor, normalObjectiveColor, progressPulseDuration * 0.5f);
+    }
+
+    private IEnumerator PlayCompletion(TaskPresentationChange change)
+    {
+        ApplyObjective(change.CompletedObjective);
+        yield return LerpObjectiveColor(normalObjectiveColor, completionHighlightColor, completionColorDuration);
+
+        if (completionHoldDuration > 0f)
+            yield return new WaitForSecondsRealtime(completionHoldDuration);
+
+        yield return FadeCanvas(1f, 0f, completionFadeOutDuration);
+
+        if (change.TaskCompleted || string.IsNullOrEmpty(change.NewObjective))
+        {
+            HideTask();
+            yield break;
+        }
+
+        ApplyObjective(change.NewObjective);
+        if (canvasGroup != null)
+            canvasGroup.alpha = 0f;
+        yield return FadeCanvas(0f, 1f, nextObjectiveFadeInDuration);
+    }
+
+    private void ApplyObjective(string objective)
+    {
+        if (objectiveText != null)
+        {
+            objectiveText.text = objective ?? string.Empty;
+            objectiveText.color = normalObjectiveColor;
+        }
+
+        if (canvasGroup != null)
+            canvasGroup.alpha = string.IsNullOrEmpty(objective) ? 0f : 1f;
+    }
+
+    private IEnumerator LerpObjectiveColor(Color from, Color to, float duration)
+    {
+        if (objectiveText == null)
+            yield break;
+
+        if (duration <= 0f)
+        {
+            objectiveText.color = to;
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            objectiveText.color = Color.Lerp(from, to, elapsed / duration);
+            yield return null;
+        }
+
+        objectiveText.color = to;
+    }
+
+    private IEnumerator FadeCanvas(float from, float to, float duration)
+    {
+        if (canvasGroup == null)
+            yield break;
+
+        if (duration <= 0f)
+        {
+            canvasGroup.alpha = to;
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            canvasGroup.alpha = Mathf.Lerp(from, to, elapsed / duration);
+            yield return null;
+        }
+
+        canvasGroup.alpha = to;
     }
 }

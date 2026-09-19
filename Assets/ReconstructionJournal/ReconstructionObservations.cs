@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -28,6 +29,8 @@ public class ReconstructionObservations : MonoBehaviour
     private readonly List<GameObject> spawnedListButtons = new List<GameObject>();
 
     private ObservationData selectedObservation;
+
+    public event Action<JournalEntryUnlockedInfo> EntryUnlocked;
 
     public int UnlockedObservationCount
     {
@@ -68,6 +71,10 @@ public class ReconstructionObservations : MonoBehaviour
 
         SessionStoryState.SetFlag(UnlockFlagPrefix + observationID, true);
         RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.Observation,
+            observation.observationID,
+            observation.title));
         Debug.Log("Reconstruction Journal: Unlocked observation '" + observationID + "'.");
         return true;
     }

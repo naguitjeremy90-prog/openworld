@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -33,6 +34,8 @@ public class ReconstructionPeople : MonoBehaviour
     private readonly List<GameObject> spawnedListButtons = new List<GameObject>();
 
     private PersonData selectedPerson;
+
+    public event Action<JournalEntryUnlockedInfo> EntryUnlocked;
 
     public int UnlockedPersonCount
     {
@@ -79,6 +82,10 @@ public class ReconstructionPeople : MonoBehaviour
         SessionStoryState.SetFlag(UnlockFlagPrefix + personID, true);
         SessionStoryState.SetInt(StageValuePrefix + personID, 0);
         RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.People,
+            person.personID,
+            person.characterName));
         Debug.Log("Reconstruction Journal: Unlocked person '" + personID + "'.");
         return true;
     }
