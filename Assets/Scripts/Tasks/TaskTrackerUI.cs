@@ -24,6 +24,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
     private Color normalObjectiveColor = Color.white;
     private Coroutine presentationRoutine;
     private TaskPresentationChange queuedChange;
+    private bool hasActiveTask;
 
     private void Awake()
     {
@@ -65,6 +66,18 @@ public sealed class TaskTrackerUI : MonoBehaviour
         queuedChange = null;
     }
 
+    private void LateUpdate()
+    {
+        // GameplayHUDTarget can restore a previously visible canvas after a
+        // story sequence. Keep an empty tracker hidden until a task exists.
+        if (!hasActiveTask && canvasGroup != null)
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+        }
+    }
+
     private void Subscribe()
     {
         if (TaskManager.Instance != null)
@@ -75,6 +88,11 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
     public void ShowTask(string objective)
     {
+        hasActiveTask = !string.IsNullOrWhiteSpace(objective);
+        if (typeLabel != null)
+            typeLabel.text = hasActiveTask
+                ? (displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK")
+                : string.Empty;
         if (objectiveText != null)
             objectiveText.text = objective;
         if (canvasGroup != null)
@@ -83,6 +101,9 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
     public void HideTask()
     {
+        hasActiveTask = false;
+        if (typeLabel != null)
+            typeLabel.text = string.Empty;
         if (objectiveText != null)
             objectiveText.text = string.Empty;
         if (titleText != null)
@@ -180,6 +201,11 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
     private void ApplyObjective(string objective)
     {
+        hasActiveTask = !string.IsNullOrWhiteSpace(objective);
+        if (typeLabel != null)
+            typeLabel.text = hasActiveTask
+                ? (displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK")
+                : string.Empty;
         if (objectiveText != null)
         {
             objectiveText.text = objective ?? string.Empty;

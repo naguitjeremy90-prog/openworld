@@ -136,7 +136,8 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
             return;
         }
 
-        if (!manager.AdvanceTaskStage(MainTaskId, ChurchStageId))
+        bool advanced = manager.AdvanceTaskStage(MainTaskId, ChurchStageId);
+        if (!advanced)
         {
             Debug.LogWarning(
                 "Maestro Ben conversation finished, but the main task could not advance " +
@@ -152,6 +153,12 @@ public sealed class MaestroBenEncounterController : MonoBehaviour
         {
             storySequenceToken.Release();
             storySequenceToken = null;
+        }
+
+        if (advanced && GameplaySystemState.IsUnlocked(GameplaySystemId.Clarity))
+        {
+            GameplaySystemTutorialManager.Instance?.NotifySystemRevealCompleted(
+                GameplaySystemId.Clarity);
         }
     }
 

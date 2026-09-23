@@ -13,7 +13,7 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
 
     [Header("Generic Clarity completion")]
     [SerializeField] private ClarityDocumentViewer documentViewer;
-    [SerializeField] private string destinationSceneName = "NEWMAKAMISA";
+    [SerializeField] private string destinationSceneName = "ChurchNEWMAKAMISA";
 
     [Header("Existing self-dialogue data")]
     [SerializeField] private SelfDialogueTrigger firstReaction;
@@ -106,7 +106,7 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
 
         SessionStoryState.SetFlag(InvestigatedFlag, true);
         ReconstructionJournalManager.Instance?.UnlockFragment("ang_lumang_sulatin");
-        CompleteMainTaskObjective();
+        PreserveMainTaskForTransport();
         if (documentViewer != null && documentViewer.IsOpen)
             documentViewer.CloseDocument();
 
@@ -117,7 +117,7 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
         sequenceRoutine = StartCoroutine(TransportRoutine());
     }
 
-    private void CompleteMainTaskObjective()
+    private void PreserveMainTaskForTransport()
     {
         TaskManager manager = TaskManager.Instance;
         if (manager == null)
@@ -126,10 +126,9 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
         if (manager.GetTaskState(MainTaskId) != TaskState.Active)
             return;
 
-        // The authored task already ends at the church-document stage. Reassert
-        // that stage, then complete it through the existing TaskManager API.
+        // Keep the existing Main Task active through transport. The next
+        // objective is assigned after Miguel's final overheard reaction.
         manager.AdvanceTaskStage(MainTaskId, ChurchStageId);
-        manager.CompleteTask(MainTaskId);
     }
 
     private IEnumerator TransportRoutine()

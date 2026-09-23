@@ -5,6 +5,10 @@ public class FarmerController : MonoBehaviour
     [Header("Random NPC Destinations")]
     public Transform[] destinations;
 
+    [Header("Optional Final Exit")]
+    public bool deactivateAtFinalDestination;
+    public Transform finalDestination;
+
     [Header("Waiting")]
     public float minWaitTime = 2f;
     public float maxWaitTime = 6f;
@@ -99,6 +103,12 @@ public class FarmerController : MonoBehaviour
         if (distance <= stoppingDistance)
         {
             animator.SetBool("IsWalking", false);
+
+            if (deactivateAtFinalDestination && target == finalDestination)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
 
             StartWaiting();
 

@@ -52,6 +52,14 @@ public class ClarityUI : MonoBehaviour
             target = gameObject.AddComponent<GameplayHUDTarget>();
         target.Configure(canvasGroup, hudTransform != null ? hudTransform.gameObject : gameObject);
 
+        // Register the existing Clarity HUD as the target for the reusable
+        // gameplay-system tutorial callout.
+        GameplaySystemTutorialAnchor.AttachTo(
+            hudTransform != null
+                ? hudTransform.gameObject
+                : (canvasGroup != null ? canvasGroup.gameObject : gameObject),
+            GameplaySystemId.Clarity);
+
         if (hudTransform != null)
             hudTransform.localScale = Vector3.one * currentScale;
     }

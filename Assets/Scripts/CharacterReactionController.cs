@@ -30,6 +30,7 @@ public sealed class CharacterReactionController : MonoBehaviour
 
     private bool isReacting;
     private float visibleAlpha = 1f;
+    private Vector3 indicatorBaseScale = Vector3.one;
 
     public bool IsReacting => isReacting;
 
@@ -40,6 +41,10 @@ public sealed class CharacterReactionController : MonoBehaviour
 
         if (indicatorRoot == null && reactionText != null)
             indicatorRoot = reactionText.transform;
+
+        // Capture the authored scale once, before any reaction animation.
+        if (indicatorRoot != null)
+            indicatorBaseScale = indicatorRoot.localScale;
 
         HideIndicator();
     }
@@ -85,7 +90,7 @@ public sealed class CharacterReactionController : MonoBehaviour
         yield return FadeIndicator();
 
         HideIndicator();
-        SetIndicatorScale(normalScale);
+        SetIndicatorScale(1f);
         SetTextAlpha(visibleAlpha);
         isReacting = false;
     }
@@ -154,7 +159,7 @@ public sealed class CharacterReactionController : MonoBehaviour
     private void SetIndicatorScale(float scale)
     {
         if (indicatorRoot != null)
-            indicatorRoot.localScale = Vector3.one * scale;
+            indicatorRoot.localScale = indicatorBaseScale * scale;
     }
 
     private void SetTextAlpha(float alpha)

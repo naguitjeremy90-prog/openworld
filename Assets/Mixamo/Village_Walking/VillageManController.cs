@@ -2,8 +2,22 @@ using UnityEngine;
 
 public class VillageManController : MonoBehaviour
 {
+    public enum DestinationMode
+    {
+        Random,
+        Sequential
+    }
+
     [Header("Random NPC Destinations")]
     public Transform[] destinations;
+
+    [Header("Destination Order")]
+    public DestinationMode destinationMode = DestinationMode.Random;
+    [Min(0f)] public float sequentialWaypointPause = 0.25f;
+
+    [Header("Optional Final Exit")]
+    public bool deactivateAtFinalDestination;
+    public Transform finalDestination;
 
     [Header("Waiting")]
     public float minWaitTime = 2f;
@@ -43,7 +57,10 @@ public class VillageManController : MonoBehaviour
         animator.SetBool("IsWalking", true);
         animator.SetBool("IsReacting", false);
 
-        ChooseRandomDestination();
+        if (destinationMode == DestinationMode.Sequential)
+            currentDestination = destinations != null && destinations.Length > 0 ? 0 : -1;
+        else
+            ChooseRandomDestination();
     }
 
     void Update()
@@ -61,7 +78,18 @@ public class VillageManController : MonoBehaviour
 
         if (target == null)
         {
-            ChooseRandomDestination();
+            if (destinationMode == DestinationMode.Sequential)
+            {
+                if (currentDestination < destinations.Length - 1)
+                    currentDestination++;
+                else
+                {
+                    animator.SetBool("IsWalking", false);
+                    isWaiting = true;
+                }
+            }
+            else
+                ChooseRandomDestination();
             return;
         }
 
@@ -99,6 +127,12 @@ public class VillageManController : MonoBehaviour
         if (distance <= stoppingDistance)
         {
             animator.SetBool("IsWalking", false);
+
+            if (deactivateAtFinalDestination && target == finalDestination)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
 
             StartWaiting();
 
@@ -191,6 +225,13 @@ public class VillageManController : MonoBehaviour
 
         isWaiting = true;
 
+        if (destinationMode == DestinationMode.Sequential)
+        {
+            if (currentDestination < destinations.Length - 1)
+                Invoke(nameof(GoToNextDestination), sequentialWaypointPause);
+            return;
+        }
+
         float waitTime = Random.Range(
             minWaitTime,
             maxWaitTime
@@ -203,7 +244,10 @@ public class VillageManController : MonoBehaviour
     {
         isWaiting = false;
 
-        ChooseRandomDestination();
+        if (destinationMode == DestinationMode.Sequential)
+            currentDestination++;
+        else
+            ChooseRandomDestination();
 
         animator.SetBool("IsWalking", true);
     }
