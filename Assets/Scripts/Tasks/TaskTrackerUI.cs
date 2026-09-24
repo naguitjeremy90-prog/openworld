@@ -89,6 +89,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
     public void ShowTask(string objective)
     {
         hasActiveTask = !string.IsNullOrWhiteSpace(objective);
+        RefreshActiveTitle();
         if (typeLabel != null)
             typeLabel.text = hasActiveTask
                 ? (displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK")
@@ -121,7 +122,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
         }
 
         if (!TaskManager.Instance.TryGetActiveTask(
-            displayedTaskType, out TaskData definition, out string objective))
+            displayedTaskType, out _, out string objective))
         {
             HideTask();
             return;
@@ -130,8 +131,6 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
         if (typeLabel != null)
             typeLabel.text = displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK";
-        if (titleText != null)
-            titleText.text = definition.Title;
         ShowTask(objective);
     }
 
@@ -202,6 +201,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
     private void ApplyObjective(string objective)
     {
         hasActiveTask = !string.IsNullOrWhiteSpace(objective);
+        RefreshActiveTitle();
         if (typeLabel != null)
             typeLabel.text = hasActiveTask
                 ? (displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK")
@@ -214,6 +214,23 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
         if (canvasGroup != null)
             canvasGroup.alpha = string.IsNullOrEmpty(objective) ? 0f : 1f;
+    }
+
+    private void RefreshActiveTitle()
+    {
+        if (titleText == null)
+            return;
+
+        if (!hasActiveTask ||
+            TaskManager.Instance == null ||
+            !TaskManager.Instance.TryGetActiveTask(
+                displayedTaskType, out TaskData definition, out _))
+        {
+            titleText.text = string.Empty;
+            return;
+        }
+
+        titleText.text = definition.Title;
     }
 
     private IEnumerator LerpObjectiveColor(Color from, Color to, float duration)

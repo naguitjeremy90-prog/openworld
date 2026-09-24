@@ -1905,7 +1905,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'MY REFLECTION:'
+  m_text: 'AKING PAGNINILAY:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -2532,7 +2532,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: REFLECTIONS
+  m_text: PAGNINILAY
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -3305,7 +3305,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'ADDITIONAL NOTES:'
+  m_text: 'KARAGDAGANG TALA:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -3733,7 +3733,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: KNOWN PEOPLE
+  m_text: MGA TAONG NAKILALA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -4252,7 +4252,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Fragments have been recovered yet.
+  m_text: Wala pang nakalap na pira-piraso.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -4389,7 +4389,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Reconstruction Journal
+  m_text: Tala-arawan
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5578,7 +5578,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select an Observation to read Peter's notes.
+  m_text: I-unlock at pumili ng obserbasyon para basahin ang mga tala ni Peter.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -5877,7 +5877,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No people have been encountered yet.
+  m_text: Wala pang nakikilalang tao.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -6014,7 +6014,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Image
+  m_text: Walang larawan.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -6321,7 +6321,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Observation Selected
+  m_text: Walang napiling obserbasyon.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -7203,7 +7203,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No observations unlocked.
+  m_text: Wala pang naitalang obserbasyon.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -8523,7 +8523,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RECOVERED FRAGMENTS
+  m_text: MGA NAKALAP NA PIRA-PIRASO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -10015,7 +10015,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CLOSE
+  m_text: ISARA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
@@ -11651,7 +11651,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Person Selected
+  m_text: Walang napiling tao.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -12999,7 +12999,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Fragment Selected
+  m_text: Walang napiling pira-piraso.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -14023,7 +14023,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select a Reflection to consider Peter's experiences.
+  m_text: I-unlock at pumili ng pagninilay para pag-isipan ang mga karanasan ni Peter.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -14203,7 +14203,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Write your response...
+  m_text: Isulat ang iyong sagot...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -14742,7 +14742,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SUBMIT
+  m_text: IPASA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -16557,7 +16557,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select a Fragment to examine Peter's interpretation.
+  m_text: I-unlock at pumili ng pira-piraso para suriin ang pagbasa ni Peter.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -17426,7 +17426,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Portrait
+  m_text: Walang larawan.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -17571,7 +17571,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Write a response before reflecting.
+  m_text: Sumulat muna ng sagot bago magnilay.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -17953,7 +17953,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Reflection Selected
+  m_text: Walang napiling pagninilay.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -19387,7 +19387,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Reflections Unlocked Yet.
+  m_text: Wala pang pagninilay.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -20927,7 +20927,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select a person to read Peter's understanding of them.
+  m_text: I-unlock at pumili ng tao para basahin ang pagkaunawa ni Peter tungkol sa kanya.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}

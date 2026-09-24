@@ -21,6 +21,13 @@ public sealed class StoryBoundarySequenceController : MonoBehaviour
     [SerializeField] private string firstSequenceCompletedFlag =
         "present_church_boundary_intro_seen";
 
+    [Header("Task-stage bypass (Optional)")]
+    [SerializeField] private string bypassTaskId;
+    [SerializeField] private string bypassTaskStageId;
+
+    [Header("Morning bypass (Optional)")]
+    [SerializeField] private bool bypassWhenMorning;
+
     [Header("Player return")]
     [SerializeField] private Transform returnPoint;
     [SerializeField] private Transform player;
@@ -52,6 +59,12 @@ public sealed class StoryBoundarySequenceController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player"))
+            return;
+
+        if (bypassWhenMorning && GameFlags.isMorning)
+            return;
+
+        if (IsTaskStageBypassed())
             return;
 
         playerInside = true;
@@ -98,6 +111,19 @@ public sealed class StoryBoundarySequenceController : MonoBehaviour
         sequenceRoutine = StartCoroutine(RunSequence());
     }
 
+    private bool IsTaskStageBypassed()
+    {
+        if (string.IsNullOrWhiteSpace(bypassTaskId) ||
+            string.IsNullOrWhiteSpace(bypassTaskStageId))
+        {
+            return false;
+        }
+
+        TaskManager manager = TaskManager.Instance;
+        return manager != null &&
+               manager.IsCurrentStage(bypassTaskId, bypassTaskStageId);
+    }
+
     private IEnumerator RunSequence()
     {
         bool firstSequence = !SessionStoryState.GetFlag(firstSequenceCompletedFlag);
@@ -105,10 +131,13 @@ public sealed class StoryBoundarySequenceController : MonoBehaviour
         {
             if (firstSequence)
             {
-                phaseSucceeded = false;
-                yield return StartConversationAndWait(firstConversation);
-                if (!phaseSucceeded)
-                    yield break;
+                if (firstConversation != null)
+                {
+                    phaseSucceeded = false;
+                    yield return StartConversationAndWait(firstConversation);
+                    if (!phaseSucceeded)
+                        yield break;
+                }
 
                 phaseSucceeded = false;
                 yield return StartSelfDialogueAndWait(firstReaction);

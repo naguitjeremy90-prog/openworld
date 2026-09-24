@@ -297,10 +297,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Exit
+  m_text: Lumabas
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b010cfd2658544a42ae2c81ec40e1a75, type: 2}
-  m_sharedMaterial: {fileID: -6538209117638626294, guid: b010cfd2658544a42ae2c81ec40e1a75, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
+  m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1101,10 +1101,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Continue
+  m_text: Magpatuloy
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b010cfd2658544a42ae2c81ec40e1a75, type: 2}
-  m_sharedMaterial: {fileID: -6538209117638626294, guid: b010cfd2658544a42ae2c81ec40e1a75, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
+  m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1840,10 +1840,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Game
+  m_text: Bagong Laro
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b010cfd2658544a42ae2c81ec40e1a75, type: 2}
-  m_sharedMaterial: {fileID: 2121778122}
+  m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
+  m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_fontSharedMaterials:
   - {fileID: 2121778122}
   m_fontMaterial: {fileID: 2121778122}
@@ -1982,7 +1982,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f24899332cf6a884290b7cd721449c47, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9ee8a1702ac20af4eaa5feeb7cd1ab29, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4035,10 +4035,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Settings
+  m_text: Mga Setting
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b010cfd2658544a42ae2c81ec40e1a75, type: 2}
-  m_sharedMaterial: {fileID: 693981089}
+  m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
+  m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_fontSharedMaterials:
   - {fileID: 693981089}
   m_fontMaterial: {fileID: 693981089}
@@ -4288,7 +4288,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 13bf9d73e39154b4484f1dc138187767, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 34ce9c18168332e4c85ebbfe64bbf1da, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

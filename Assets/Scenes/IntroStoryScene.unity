@@ -536,8 +536,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 4
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":163.654541,"yPos":52.54547},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Gumagabi
-    na...\nmedyo malayo-layo rin pala ang biyahe\npapuntang Pili.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":112.599991,"yPos":109.200012},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Gumagabi
+    na... ang layo naman nitong Bayan ng Pili...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
   DefaultSprite: {fileID: 0}
@@ -871,18 +871,16 @@ MonoBehaviour:
   narrationText: {fileID: 276649244}
   narrationCanvasGroup: {fileID: 276649241}
   narrationLines:
-  - Text: Ako si Miguel, isang batang mananaliksik ng kasaysayan.
+  - Text: Anong oras na kaya ngayon. Hindi ko na namalayan ang oras.
     HoldDuration: 5
     PauseAfter: 1
-  - Text: "Sa pag-aaral ko sa mga akda ni Jos\xE9 Rizal, may isang hindi natapos
-      na nobela na talagang nakakuha ng pansin ko"
+  - Text: Ito ang pinaka-una kong gagawin sa ngalan ng historya.
     HoldDuration: 8
     PauseAfter: 1
   - Text: Ang Makamisa.
     HoldDuration: 4
     PauseAfter: 1
-  - Text: ' Hindi ko maiwasang isipin kung ano ang maaaring mabuo mula sa mga naiwan
-      nitong bahagi.'
+  - Text: Akdang hindi natapos ni Rizal. Ano kaya ang mga pwedeng malaman dito.
     HoldDuration: 7
     PauseAfter: 1
   fadeDuration: 1
@@ -2423,6 +2421,10 @@ MonoBehaviour:
   myConversation: {fileID: 236294386}
   triggerOnce: 1
   autoStartOnEnter: 1
+  treatAsStorySequence: 0
+  OnConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1476590210
 Transform:
   m_ObjectHideFlags: 0

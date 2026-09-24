@@ -305,8 +305,8 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     {
         RegisterDefinition(new GameplaySystemTutorialDefinition(
             GameplaySystemId.Journal,
-            "JOURNAL",
-            "Use the Journal to keep track of important discoveries, people, fragments, and reflections.",
+            "TALA-ARAWAN",
+            "Gamitin ang tala-arawan upang itala ang mahahalagang natuklasan, tao, pira-piraso, at pagninilay.",
             JournalPostRevealDelay,
             false));
         RegisterDefinition(new GameplaySystemTutorialDefinition(
@@ -539,42 +539,42 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     private void ShowJournalStep()
     {
         RectTransform target = journalWindow;
-        journalTitle.text = "JOURNAL";
+        journalTitle.text = "TALA-ARAWAN";
 
         switch (journalStep)
         {
             case 1:
                 journalBody.text =
-                    "The Journal records the important things Miguel discovers during his investigation.";
-                journalNextLabel.text = "Next";
+                    "Itinatala rito ang mahahalagang natutuklasan ni Miguel habang nagsasaliksik.";
+                journalNextLabel.text = "Susunod";
                 break;
             case 2:
                 target = GetTabTarget(0);
-                journalTitle.text = "OBSERVATIONS";
+                journalTitle.text = "OBSERBASYON";
                 journalBody.text =
-                    "Important discoveries and details Miguel notices during the investigation.";
-                journalNextLabel.text = "Next";
+                    "Mahahalagang natuklasan at detalyeng napapansin ni Miguel sa pagsasaliksik.";
+                journalNextLabel.text = "Susunod";
                 break;
             case 3:
                 target = GetTabTarget(1);
-                journalTitle.text = "PEOPLE";
+                journalTitle.text = "MGA TAO";
                 journalBody.text =
-                    "Information about people Miguel meets and what he learns about them.";
-                journalNextLabel.text = "Next";
+                    "Impormasyon tungkol sa mga taong nakikilala ni Miguel at mga natututuhan niya tungkol sa kanila.";
+                journalNextLabel.text = "Susunod";
                 break;
             case 4:
                 target = GetTabTarget(2);
-                journalTitle.text = "FRAGMENTS";
+                journalTitle.text = "PIRA-PIRASO";
                 journalBody.text =
-                    "Documents, clues, and pieces of information connected to Makamisa.";
-                journalNextLabel.text = "Next";
+                    "Mga dokumento, pahiwatig, at impormasyong kaugnay ng Makamisa.";
+                journalNextLabel.text = "Susunod";
                 break;
             default:
                 target = GetTabTarget(3);
-                journalTitle.text = "REFLECTIONS";
+                journalTitle.text = "PAGNINILAY";
                 journalBody.text =
-                    "Questions that let Miguel reflect on what he has learned.";
-                journalNextLabel.text = "Got it";
+                    "Mga tanong na tumutulong kay Miguel na magnilay sa kanyang mga natutuhan.";
+                journalNextLabel.text = "Sige";
                 break;
         }
 
@@ -892,7 +892,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
         initialCallout = CreateCallout("System Callout", new Vector2(390f, 132f), false,
             out initialTitle, out initialBody, out initialPointer, out _, out _);
-        journalCallout = CreateCallout("Journal Walkthrough", new Vector2(470f, 146f), true,
+        journalCallout = CreateCallout("Gabay sa Tala-arawan", new Vector2(470f, 146f), true,
             out journalTitle, out journalBody, out journalPointer, out journalNextButton, out journalNextLabel);
         journalNextButton.onClick.AddListener(AdvanceActiveTutorial);
         HideAll();

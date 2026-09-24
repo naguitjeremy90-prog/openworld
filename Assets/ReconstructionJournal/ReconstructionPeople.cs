@@ -256,18 +256,18 @@ public class ReconstructionPeople : MonoBehaviour
         if (portraitPlaceholderText != null)
         {
             portraitPlaceholderText.gameObject.SetActive(true);
-            portraitPlaceholderText.text = "No Portrait";
+            portraitPlaceholderText.text = "Walang larawan.";
         }
 
         if (detailNameText != null)
-            detailNameText.text = "No Person Selected";
+            detailNameText.text = "Walang napiling tao.";
 
         if (detailContextText != null)
             detailContextText.text = "";
 
         if (detailDescriptionText != null)
             detailDescriptionText.text =
-                "Unlock and select a person to read Peter's understanding of them.";
+                "I-unlock at pumili ng tao para basahin ang pagkaunawa ni Peter tungkol sa kanya.";
     }
 
     private void ClearSpawnedButtons()

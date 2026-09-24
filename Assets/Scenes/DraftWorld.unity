@@ -643,7 +643,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: KNOWN PEOPLE
+  m_text: MGA TAONG NAKILALA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -3508,7 +3508,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Observation Selected
+  m_text: Walang napiling obserbasyon.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -5256,7 +5256,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select a Fragment to examine Peter's interpretation.
+  m_text: I-unlock at pumili ng pira-piraso para suriin ang pagbasa ni Peter.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -5393,7 +5393,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RECOVERED FRAGMENTS
+  m_text: MGA NAKALAP NA PIRA-PIRASO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -5598,86 +5598,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7381775301970821947, guid: 3f3fe03e033d43a49ba2cfb47082b18f, type: 3}
   m_PrefabInstance: {fileID: 219066915}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &222487609
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2.9593
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2.9593
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2.9593
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 134.42
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 15.91
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794724728681, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794725213001, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_Name
-      value: Book_Open
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794725213001, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098996794725213002, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 542743988}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6098996794725213001, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1930106905}
-  m_SourcePrefab: {fileID: 100100000, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
 --- !u!1 &230456849
 GameObject:
   m_ObjectHideFlags: 0
@@ -7798,7 +7718,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No people have been encountered yet.
+  m_text: Wala pang nakikilalang tao.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -9767,7 +9687,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CLOSE
+  m_text: ISARA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
@@ -10300,7 +10220,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 330.41
+      value: 146.18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10308,7 +10228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 23.54
+      value: 15.05
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10770,7 +10690,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Reconstruction Journal
+  m_text: Tala-arawan
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11572,19 +11492,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21a364ddeffc797439f2a5721660b0e6, type: 3}
---- !u!134 &542743988
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1001 &546881251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12963,7 +12870,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No observations unlocked.
+  m_text: Wala pang naitalang obserbasyon.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -14345,7 +14252,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'MY REFLECTION:'
+  m_text: 'AKING PAGNINILAY:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -15620,7 +15527,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SUBMIT
+  m_text: IPASA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -17105,7 +17012,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select an Observation to read Peter's notes.
+  m_text: I-unlock at pumili ng obserbasyon para basahin ang mga tala ni Peter.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -18398,7 +18305,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Portrait
+  m_text: Walang larawan.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -21276,6 +21183,195 @@ MonoBehaviour:
   TMPFont: {fileID: 0}
   Icon: {fileID: 0}
   Audio: {fileID: 0}
+--- !u!1 &1072042559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1072042566}
+  - component: {fileID: 1072042565}
+  - component: {fileID: 1072042564}
+  - component: {fileID: 1072042563}
+  - component: {fileID: 1072042562}
+  - component: {fileID: 1072042561}
+  - component: {fileID: 1072042560}
+  m_Layer: 0
+  m_Name: PosadaNightBoundary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1072042560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072042559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c3b781aaed56b84e84203e4b64d4503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelfDialogueTrigger
+  myConversation: {fileID: 1072042562}
+  triggerOnce: 0
+  autoStartOnEnter: 0
+  treatAsStorySequence: 0
+  OnConversationFinished:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1072042561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072042559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c03c5e75db6c3104fb114f3731220927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryBoundarySequenceController
+  firstConversation: {fileID: 0}
+  firstReaction: {fileID: 1072042560}
+  repeatReaction: {fileID: 1072042560}
+  firstSequenceCompletedFlag: posada_night_boundary_intro_seen
+  bypassTaskId: 
+  bypassTaskStageId: 
+  bypassWhenMorning: 1
+  returnPoint: {fileID: 1626591246}
+  player: {fileID: 432565506}
+  playerMovement: {fileID: 432565503}
+  playerRigidbody: {fileID: 432565504}
+  playerAnimator: {fileID: 432565507}
+  walkSpeed: 2
+  turnSpeed: 240
+  arrivalThreshold: 0.05
+--- !u!114 &1072042562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072042559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Gabi
+    na rin... Maghanap muna ako ng matutuluyan.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":[],"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
+  saveVersion: 110
+  DefaultName: 
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 1737924137}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!65 &1072042563
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072042559}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1072042564
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072042559}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1072042565
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072042559}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1072042566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072042559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 216.52, y: 2.12055, z: 11.85}
+  m_LocalScale: {x: 1, y: 3.4835, z: 100.37651}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1626591246}
+  - {fileID: 1737924138}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1078702647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21513,7 +21609,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Reflections Unlocked Yet.
+  m_text: Wala pang pagninilay.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -23368,7 +23464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Image
+  m_text: Walang larawan.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -24476,7 +24572,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Fragments have been recovered yet.
+  m_text: Wala pang nakalap na pira-piraso.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -24645,7 +24741,7 @@ Transform:
   m_GameObject: {fileID: 1242855888}
   serializedVersion: 2
   m_LocalRotation: {x: 0.05260068, y: 0.0038210817, z: -0.0002012716, w: 0.99860835}
-  m_LocalPosition: {x: 330.41, y: 5.34, z: 8.540001}
+  m_LocalPosition: {x: 146.18, y: 5.34, z: 0.05000019}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24713,7 +24809,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Person Selected
+  m_text: Walang napiling tao.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -29370,6 +29466,13 @@ MonoBehaviour:
   typeLabel: {fileID: 1804818316}
   titleText: {fileID: 90057629}
   objectiveText: {fileID: 2052326487}
+  progressPulseColor: {r: 1, g: 1, b: 1, a: 1}
+  progressPulseDuration: 0.45
+  completionHighlightColor: {r: 1, g: 0.86, b: 0.45, a: 1}
+  completionColorDuration: 0.2
+  completionHoldDuration: 0.35
+  completionFadeOutDuration: 0.35
+  nextObjectiveFadeInDuration: 0.35
 --- !u!114 &1479786656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31523,7 +31626,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Write a response before reflecting.
+  m_text: Sumulat muna ng sagot bago magnilay.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -31614,6 +31717,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueMovementLock
   playerMovementScript: {fileID: 432565503}
   playerAnimator: {fileID: 432565507}
+--- !u!1 &1626591245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1626591246}
+  m_Layer: 0
+  m_Name: return
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1626591246
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626591245}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.87, y: -0.57, z: 0.0239}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1072042566}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1629521400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32212,7 +32346,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select a Reflection to consider Peter's experiences.
+  m_text: I-unlock at pumili ng pagninilay para pag-isipan ang mga karanasan ni Peter.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -32726,7 +32860,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: REFLECTIONS
+  m_text: PAGNINILAY
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -33046,7 +33180,7 @@ MonoBehaviour:
   nightEnvironment: {fileID: 600333651}
   daySkyBox: {fileID: 2100000, guid: 59573b088aaea0442bf29e0a0e9d1339, type: 2}
   nightSkyBox: {fileID: 2100000, guid: 94caf2ba4ca5e46bfaba53afcc8778dd, type: 2}
-  forceDaytimeForTesting: 1
+  forceDaytimeForTesting: 0
 --- !u!4 &1719506767
 Transform:
   m_ObjectHideFlags: 0
@@ -33302,7 +33436,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Write your response...
+  m_text: Isulat ang iyong sagot...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -33629,6 +33763,57 @@ MonoBehaviour:
   amount: 1
   npcConversationTrigger: {fileID: 1732385628}
   selfDialogueTrigger: {fileID: 0}
+--- !u!1 &1737924136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1737924138}
+  - component: {fileID: 1737924137}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1737924137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737924136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
+--- !u!4 &1737924138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737924136}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -216.52, y: -0.6087412, z: -0.11805552}
+  m_LocalScale: {x: 1, y: 0.28706762, z: 0.009962491}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1072042566}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1742438815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35052,7 +35237,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'ADDITIONAL NOTES:'
+  m_text: 'KARAGDAGANG TALA:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -36930,7 +37115,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlock and select a person to read Peter's understanding of them.
+  m_text: I-unlock at pumili ng tao para basahin ang pagkaunawa ni Peter tungkol sa kanya.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -37119,8 +37304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f11e27fa1b560841b33df9f5b69b0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainInvestigationTaskController
-  forceMainTaskForTesting: 1
-  enableProgressTesting: 1
+  forceMainTaskForTesting: 0
+  enableProgressTesting: 0
 --- !u!114 &1906863334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37756,25 +37941,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1927944062}
   m_CullTransparentMesh: 1
---- !u!1 &1930106900 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6098996794725213001, guid: 6353832c19eb9674b8143b16ab17c820, type: 3}
-  m_PrefabInstance: {fileID: 222487609}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1930106905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1930106900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da0e8978f0495da43ad577378038781d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventoryPickup
-  item: {fileID: 11400000, guid: cd0b5904819c8d149b8db337d2ddb0ac, type: 2}
-  pickupDistance: 3
 --- !u!1 &1931770701
 GameObject:
   m_ObjectHideFlags: 0
@@ -39196,7 +39362,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Fragment Selected
+  m_text: Walang napiling pira-piraso.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -40778,6 +40944,13 @@ MonoBehaviour:
   typeLabel: {fileID: 365169025}
   titleText: {fileID: 122997358}
   objectiveText: {fileID: 247382270}
+  progressPulseColor: {r: 1, g: 1, b: 1, a: 1}
+  progressPulseDuration: 0.45
+  completionHighlightColor: {r: 1, g: 0.86, b: 0.45, a: 1}
+  completionColorDuration: 0.2
+  completionHoldDuration: 0.35
+  completionFadeOutDuration: 0.35
+  nextObjectiveFadeInDuration: 0.35
 --- !u!224 &2099230190
 RectTransform:
   m_ObjectHideFlags: 0
@@ -41627,9 +41800,9 @@ SceneRoots:
   - {fileID: 174521159}
   - {fileID: 1083048591}
   - {fileID: 1449975872}
-  - {fileID: 222487609}
   - {fileID: 683920640}
   - {fileID: 140377533}
   - {fileID: 91192845}
   - {fileID: 2147000002}
   - {fileID: 414242182}
+  - {fileID: 1072042566}

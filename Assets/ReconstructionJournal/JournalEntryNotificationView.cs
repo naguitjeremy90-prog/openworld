@@ -25,7 +25,7 @@ public sealed class JournalEntryNotificationView : MonoBehaviour
     public void Show(JournalEntryUnlockedInfo entry)
     {
         if (headingText != null)
-            headingText.text = "NEW JOURNAL ENTRY";
+            headingText.text = "BAGONG TALA SA TALA-ARAWAN";
         if (categoryText != null)
             categoryText.text = GetCategoryLabel(entry.Category);
         if (titleText != null)
@@ -47,13 +47,13 @@ public sealed class JournalEntryNotificationView : MonoBehaviour
         switch (category)
         {
             case JournalEntryCategory.Observation:
-                return "OBSERVATION";
+                return "OBSERBASYON";
             case JournalEntryCategory.People:
-                return "PEOPLE";
+                return "MGA TAO";
             case JournalEntryCategory.Fragment:
-                return "FRAGMENT";
+                return "PIRA-PIRASO";
             case JournalEntryCategory.Reflection:
-                return "REFLECTION";
+                return "PAGNINILAY";
             default:
                 return category.ToString().ToUpperInvariant();
         }

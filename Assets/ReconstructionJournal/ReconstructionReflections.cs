@@ -234,27 +234,27 @@ public class ReconstructionReflections : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(response))
         {
-            validationMessage = "Write a response before reflecting.";
+            validationMessage = "Sumulat muna ng sagot bago magnilay.";
             return false;
         }
 
         if (!ContainsUsableCharacters(response))
         {
-            validationMessage = "Try writing a clear response.";
+            validationMessage = "Subukang sumulat ng malinaw na sagot.";
             return false;
         }
 
         if (ContainsBlockedLanguage(response))
         {
             validationMessage =
-                "Use appropriate language in your reflection.";
+                "Gumamit ng angkop na pananalita sa iyong pagninilay.";
             return false;
         }
 
         if (HasExcessiveRepeatedCharacters(response) ||
             LooksLikeKeyboardSmash(response))
         {
-            validationMessage = "Try writing a clear response.";
+            validationMessage = "Subukang sumulat ng malinaw na sagot.";
             return false;
         }
 
@@ -857,14 +857,14 @@ public class ReconstructionReflections : MonoBehaviour
         selectedReflection = null;
 
         if (detailTitleText != null)
-            detailTitleText.text = "No Reflection Selected";
+            detailTitleText.text = "Walang napiling pagninilay.";
 
         if (detailContextText != null)
             detailContextText.text = "";
 
         if (promptText != null)
             promptText.text =
-                "Unlock and select a Reflection to consider Peter's experiences.";
+                "I-unlock at pumili ng pagninilay para pag-isipan ang mga karanasan ni Peter.";
 
         ClearSuggestionButtons();
         HideSuggestionPanel();

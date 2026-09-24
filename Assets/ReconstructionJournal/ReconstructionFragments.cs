@@ -263,11 +263,11 @@ public class ReconstructionFragments : MonoBehaviour
         if (imagePlaceholderText != null)
         {
             imagePlaceholderText.gameObject.SetActive(true);
-            imagePlaceholderText.text = "No Image";
+            imagePlaceholderText.text = "Walang larawan.";
         }
 
         if (detailTitleText != null)
-            detailTitleText.text = "No Fragment Selected";
+            detailTitleText.text = "Walang napiling pira-piraso.";
 
         if (recoveredInText != null)
             recoveredInText.text = "";
@@ -277,7 +277,7 @@ public class ReconstructionFragments : MonoBehaviour
 
         if (interpretationText != null)
             interpretationText.text =
-                "Unlock and select a Fragment to examine Peter's interpretation.";
+                "I-unlock at pumili ng pira-piraso para suriin ang pagbasa ni Peter.";
     }
 
     private void ClearSpawnedButtons()
