@@ -3175,6 +3175,13 @@ MonoBehaviour:
   typeLabel: {fileID: 526739202}
   titleText: {fileID: 1168616188}
   objectiveText: {fileID: 141937647}
+  progressPulseColor: {r: 1, g: 1, b: 1, a: 1}
+  progressPulseDuration: 0.45
+  completionHighlightColor: {r: 1, g: 0.86, b: 0.45, a: 1}
+  completionColorDuration: 0.2
+  completionHoldDuration: 0.35
+  completionFadeOutDuration: 0.35
+  nextObjectiveFadeInDuration: 0.35
 --- !u!114 &372249094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3839,8 +3846,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6088,13 +6095,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 545803166}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.001956989, y: -0.99991935, z: 0.0009484953, w: -0.012512205}
-  m_LocalPosition: {x: 481.97, y: 6.6, z: 71.4}
+  m_LocalRotation: {x: -0.0019617546, y: -0.99996984, z: 0.0009385989, w: -0.0074616857}
+  m_LocalPosition: {x: 481.43, y: 6.6, z: 71.39}
   m_LocalScale: {x: 0.93023324, y: 0.9302318, z: 0.9302328}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0.111, y: -181.434, z: 0.223}
+  m_LocalEulerAnglesHint: {x: 0.109, y: -180.855, z: 0.224}
 --- !u!224 &558923384 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8667668233394738377, guid: a150e943bef62b54e8392d55aa0c1f3e, type: 3}
@@ -18909,7 +18916,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: I-unlock at pumili ng tao para basahin ang pagkaunawa ni Peter tungkol sa kanya.
+  m_text: I-unlock at pumili ng tao para basahin ang pagkaunawa ni Peter tungkol
+    sa kanya.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -19321,6 +19329,13 @@ MonoBehaviour:
   typeLabel: {fileID: 2094869935}
   titleText: {fileID: 1849203271}
   objectiveText: {fileID: 1211371214}
+  progressPulseColor: {r: 1, g: 1, b: 1, a: 1}
+  progressPulseDuration: 0.45
+  completionHighlightColor: {r: 1, g: 0.86, b: 0.45, a: 1}
+  completionColorDuration: 0.2
+  completionHoldDuration: 0.35
+  completionFadeOutDuration: 0.35
+  nextObjectiveFadeInDuration: 0.35
 --- !u!114 &1793820738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21336,8 +21351,8 @@ MonoBehaviour:
   lingerDuration: 0.7
   fadeDuration: 0.25
   startScale: 0
-  peakScale: 1.2
-  normalScale: 1
+  peakScale: 20
+  normalScale: 30
   audioSource: {fileID: 2031429376}
   reactionAudioClip: {fileID: 8300000, guid: 4847ec9870584df4ca0096269699114e, type: 3}
 --- !u!82 &2031429376
