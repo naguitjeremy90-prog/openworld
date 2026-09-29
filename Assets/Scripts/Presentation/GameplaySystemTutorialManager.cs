@@ -306,7 +306,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         RegisterDefinition(new GameplaySystemTutorialDefinition(
             GameplaySystemId.Journal,
             "TALA-ARAWAN",
-            "Gamitin ang tala-arawan upang itala ang mahahalagang natuklasan, tao, pira-piraso, at pagninilay.",
+            "Gamitin ang tala-arawan upang itala ang mahahalagang napansin, tao, bahagi ng sulatin, at pagninilay.",
             JournalPostRevealDelay,
             false));
         RegisterDefinition(new GameplaySystemTutorialDefinition(
@@ -550,7 +550,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                 break;
             case 2:
                 target = GetTabTarget(0);
-                journalTitle.text = "OBSERBASYON";
+                journalTitle.text = "MGA NAPANSIN";
                 journalBody.text =
                     "Mahahalagang natuklasan at detalyeng napapansin ni Miguel sa pagsasaliksik.";
                 journalNextLabel.text = "Susunod";
@@ -564,14 +564,14 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                 break;
             case 4:
                 target = GetTabTarget(2);
-                journalTitle.text = "PIRA-PIRASO";
+                journalTitle.text = "MGA BAHAGI";
                 journalBody.text =
                     "Mga dokumento, pahiwatig, at impormasyong kaugnay ng Makamisa.";
                 journalNextLabel.text = "Susunod";
                 break;
             default:
                 target = GetTabTarget(3);
-                journalTitle.text = "PAGNINILAY";
+                journalTitle.text = "MGA PAGNINILAY";
                 journalBody.text =
                     "Mga tanong na tumutulong kay Miguel na magnilay sa kanyang mga natutuhan.";
                 journalNextLabel.text = "Sige";

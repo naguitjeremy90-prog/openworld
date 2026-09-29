@@ -267,7 +267,7 @@ public class ReconstructionPeople : MonoBehaviour
 
         if (detailDescriptionText != null)
             detailDescriptionText.text =
-                "I-unlock at pumili ng tao para basahin ang pagkaunawa ni Peter tungkol sa kanya.";
+                "Pumili ng tao upang mabasa ang mga nalaman ni Miguel tungkol sa kanya.";
     }
 
     private void ClearSpawnedButtons()

@@ -19,6 +19,7 @@ public sealed class ChurchNPCDepartureController : MonoBehaviour
     [SerializeField] private DepartureEntry[] departures = Array.Empty<DepartureEntry>();
 
     private bool departureStarted;
+    private bool departureCompleted;
 
     private void Awake()
     {
@@ -38,6 +39,9 @@ public sealed class ChurchNPCDepartureController : MonoBehaviour
 
     private void Start()
     {
+        if (departureCompleted)
+            return;
+
         // The stop clips end in standing poses. Hold those poses while the walkers wait.
         foreach (DepartureEntry entry in departures)
         {
@@ -51,7 +55,7 @@ public sealed class ChurchNPCDepartureController : MonoBehaviour
 
     public void BeginDeparture()
     {
-        if (departureStarted)
+        if (departureStarted || departureCompleted)
             return;
 
         departureStarted = true;
@@ -65,6 +69,25 @@ public sealed class ChurchNPCDepartureController : MonoBehaviour
                 entry.movement.enabled = true;
             else
                 StartCoroutine(ReleaseAfterDelay(entry));
+        }
+    }
+
+    public void CompleteDepartureImmediately()
+    {
+        if (departureCompleted)
+            return;
+
+        departureCompleted = true;
+        departureStarted = true;
+        StopAllCoroutines();
+        foreach (DepartureEntry entry in departures)
+        {
+            if (entry == null || entry.movement == null)
+                continue;
+
+            // Each configured walker deactivates its own root at the final exit.
+            entry.movement.enabled = false;
+            entry.movement.gameObject.SetActive(false);
         }
     }
 

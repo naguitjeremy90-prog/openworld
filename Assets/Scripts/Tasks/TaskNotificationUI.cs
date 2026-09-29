@@ -81,8 +81,14 @@ public sealed class TaskNotificationUI : MonoBehaviour
 
     private static string GetHeading(TaskType taskType, string status)
     {
-        string typeLabel = taskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK";
-        return typeLabel + " " + status;
+        string typeLabel = taskType == TaskType.Main ? "PANGUNAHING GAWAIN" : "KARAGDAGANG GAWAIN";
+        switch (status)
+        {
+            case "OBTAINED": return "NATANGGAP ANG " + typeLabel;
+            case "UPDATED": return "NA-UPDATE ANG " + typeLabel;
+            case "COMPLETED": return "NATAPOS ANG " + typeLabel;
+            default: return typeLabel + " " + status;
+        }
     }
 
     private IEnumerator ShowRoutine(int version, Action onFinished)

@@ -178,14 +178,14 @@ public class ReconstructionObservations : MonoBehaviour
         selectedObservation = null;
 
         if (detailTitleText != null)
-            detailTitleText.text = "Walang napiling obserbasyon.";
+            detailTitleText.text = "Walang napili.";
 
         if (detailContextText != null)
             detailContextText.text = "";
 
         if (detailObservationText != null)
             detailObservationText.text =
-                "I-unlock at pumili ng obserbasyon para basahin ang mga tala ni Peter.";
+                "Pumili ng tala upang mabasa ang mga napansin ni Miguel.";
     }
 
     private void ClearSpawnedButtons()

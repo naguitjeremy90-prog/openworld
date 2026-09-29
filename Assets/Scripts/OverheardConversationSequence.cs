@@ -32,12 +32,19 @@ public sealed class OverheardConversationSequence : MonoBehaviour
     private bool reactionFinished;
     private bool introHasPlayed;
     private bool introCompleted;
+    private bool introSeenOnSceneLoad;
+
+    // True only while this sequence owns its overheard dialogue, including its closing fade.
+    public bool IsOverheardPresentationPending => running && waitingForOverheardClose;
 
     private void Awake()
     {
         Collider trigger = GetComponent<Collider>();
         trigger.isTrigger = true;
         completed = !string.IsNullOrEmpty(completionFlag) && SessionStoryState.GetFlag(completionFlag);
+        // Awake runs before the wake-up coroutine commits this visit. Keep the
+        // first arrival gated by this scene's Timeline, even after it starts.
+        introSeenOnSceneLoad = SessionStoryState.GetFlag(MiguelWakeUpSequence.IntroSeenFlag);
         if (reaction != null && reactionConversation != null)
             reaction.ConfigureConversation(reactionConversation);
     }
@@ -90,7 +97,7 @@ public sealed class OverheardConversationSequence : MonoBehaviour
     private void TryBegin()
     {
         if (!playerInside || running || completed || overheardConversation == null ||
-            reaction == null || ConversationManager.Instance == null ||
+            ConversationManager.Instance == null ||
             ConversationManager.Instance.IsConversationActive ||
             StorySequenceCoordinator.IsStorySequenceActive ||
             !GameplayGateComplete() ||
@@ -110,9 +117,10 @@ public sealed class OverheardConversationSequence : MonoBehaviour
         if (gameplayGateDirector == null)
             return true;
 
-        // This director resets time to zero when it stops. A stopped director
-        // is eligible only after this scene's intro actually played and stopped.
-        return introCompleted && gameplayGateDirector.state != PlayState.Playing;
+        // The first visit waits for this Timeline to stop. On later visits the
+        // already-seen intro satisfies the same requirement without replaying.
+        return (introCompleted || introSeenOnSceneLoad) &&
+               gameplayGateDirector.state != PlayState.Playing;
     }
 
     private void HandleIntroPlayed(PlayableDirector director)
@@ -142,10 +150,16 @@ public sealed class OverheardConversationSequence : MonoBehaviour
             yield return null;
 
         waitingForOverheardClose = false;
-        sequenceRoutine = null;
-        if (!running || reaction == null)
+        if (!running)
             yield break;
 
+        if (reaction == null)
+        {
+            yield return CompleteAfterReactionCloses();
+            yield break;
+        }
+
+        sequenceRoutine = null;
         reaction.enabled = true;
         reaction.StartSelfDialogue();
     }

@@ -92,7 +92,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
         RefreshActiveTitle();
         if (typeLabel != null)
             typeLabel.text = hasActiveTask
-                ? (displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK")
+                ? (displayedTaskType == TaskType.Main ? "PANGUNAHING GAWAIN" : "KARAGDAGANG GAWAIN")
                 : string.Empty;
         if (objectiveText != null)
             objectiveText.text = objective;
@@ -130,7 +130,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
 
         if (typeLabel != null)
-            typeLabel.text = displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK";
+            typeLabel.text = displayedTaskType == TaskType.Main ? "PANGUNAHING GAWAIN" : "KARAGDAGANG GAWAIN";
         ShowTask(objective);
     }
 
@@ -204,7 +204,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
         RefreshActiveTitle();
         if (typeLabel != null)
             typeLabel.text = hasActiveTask
-                ? (displayedTaskType == TaskType.Main ? "MAIN TASK" : "SIDE TASK")
+                ? (displayedTaskType == TaskType.Main ? "PANGUNAHING GAWAIN" : "KARAGDAGANG GAWAIN")
                 : string.Empty;
         if (objectiveText != null)
         {

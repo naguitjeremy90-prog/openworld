@@ -21,7 +21,7 @@ public class PersonData : ScriptableObject
             case PersonContext.MakamisaPili:
                 return "MAKAMISA";
             default:
-                return "PRESENT PILI";
+                return "KASALUKUYANG PILI";
         }
     }
 }

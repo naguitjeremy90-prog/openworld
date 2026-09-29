@@ -267,7 +267,7 @@ public class ReconstructionFragments : MonoBehaviour
         }
 
         if (detailTitleText != null)
-            detailTitleText.text = "Walang napiling pira-piraso.";
+            detailTitleText.text = "Walang napiling bahagi.";
 
         if (recoveredInText != null)
             recoveredInText.text = "";
@@ -277,7 +277,7 @@ public class ReconstructionFragments : MonoBehaviour
 
         if (interpretationText != null)
             interpretationText.text =
-                "I-unlock at pumili ng pira-piraso para suriin ang pagbasa ni Peter.";
+                "Pumili ng bahagi upang suriin ang nilalaman nito.";
     }
 
     private void ClearSpawnedButtons()

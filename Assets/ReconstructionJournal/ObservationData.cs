@@ -20,7 +20,7 @@ public class ObservationData : ScriptableObject
         switch (context)
         {
             case ObservationContext.PresentPili:
-                return "PRESENT PILI";
+                return "KASALUKUYANG PILI";
 
             case ObservationContext.MakamisaPili:
                 return "MAKAMISA";

@@ -37,6 +37,12 @@ public sealed class OneWayNPCDeparture : MonoBehaviour
         SetWalking(true);
     }
 
+    public void CompleteDepartureImmediately()
+    {
+        if (!completed)
+            FinishDeparture();
+    }
+
     private void Update()
     {
         if (!departing)

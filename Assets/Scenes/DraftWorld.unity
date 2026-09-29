@@ -298,7 +298,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 594, y: -0}
+  m_AnchoredPosition: {x: 594, y: 23.99995}
   m_SizeDelta: {x: 200, y: 156}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7039273
@@ -365,9 +365,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2fff48b2123fcb94ab229ade84a50f0b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 491633582fe268b4bb2ad5a17d09b348, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -2458,7 +2458,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5cc0591fa0a82ba4ea6bcab5b8e09555, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c9085bb9ac393e04babf36ea2b2dcd51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2813,7 +2813,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Write Your Own Response:'
+  m_text: 'ISULAT ANG IYONG SAGOT:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -3508,7 +3508,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Walang napiling obserbasyon.
+  m_text: Walang napili.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -4588,7 +4588,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Witnessed
+  m_text: MGA NAPANSIN
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -5031,7 +5031,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bceef14bd2adb9344a421be27b218e78, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0a4d0287e7baf4946a6996683f78c99a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5256,7 +5256,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: I-unlock at pumili ng pira-piraso para suriin ang pagbasa ni Peter.
+  m_text: Pumili ng bahagi upang suriin ang nilalaman nito.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -5393,7 +5393,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MGA NAKALAP NA PIRA-PIRASO
+  m_text: MGA NAKALAP NA BAHAGI
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -8404,7 +8404,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SIDE TASK
+  m_text: KARAGDAGANG GAWAIN
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8659,10 +8659,10 @@ MonoBehaviour:
   m_text: INVENTORY
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}
-  m_sharedMaterial: {fileID: 577780636}
+  m_sharedMaterial: {fileID: 939019467}
   m_fontSharedMaterials:
   - {fileID: 577780636}
-  m_fontMaterial: {fileID: 577780636}
+  m_fontMaterial: {fileID: 939019467}
   m_fontMaterials:
   - {fileID: 577780636}
   m_fontColor32:
@@ -12870,7 +12870,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Wala pang naitalang obserbasyon.
+  m_text: Wala pang naitatala.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -17012,7 +17012,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: I-unlock at pumili ng obserbasyon para basahin ang mga tala ni Peter.
+  m_text: Pumili ng tala upang mabasa ang mga napansin ni Miguel.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -19311,6 +19311,115 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 733095060949975869, guid: ee3765450774c8d4eb636add57071bfa, type: 3}
   m_PrefabInstance: {fileID: 937638968}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &939019467
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CormorantGaramond-Bold Atlas Material (Instance)
+  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Cube:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: -801505419657473812, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OutlineTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Ambient: 0.5
+    - _Bevel: 0.5
+    - _BevelClamp: 0
+    - _BevelOffset: 0
+    - _BevelRoundness: 0
+    - _BevelWidth: 0
+    - _BumpFace: 0
+    - _BumpOutline: 0
+    - _ColorMask: 15
+    - _CullMode: 0
+    - _Diffuse: 0.5
+    - _FaceDilate: 0
+    - _FaceUVSpeedX: 0
+    - _FaceUVSpeedY: 0
+    - _GlowInner: 0.05
+    - _GlowOffset: 0
+    - _GlowOuter: 0.05
+    - _GlowPower: 0.75
+    - _GradientScale: 10
+    - _LightAngle: 3.1416
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _OutlineSoftness: 0
+    - _OutlineUVSpeedX: 0
+    - _OutlineUVSpeedY: 0
+    - _OutlineWidth: 0
+    - _PerspectiveFilter: 0.875
+    - _Reflectivity: 10
+    - _ScaleRatioA: 0.9
+    - _ScaleRatioB: 0.73125
+    - _ScaleRatioC: 0.73125
+    - _ScaleX: 1
+    - _ScaleY: 1
+    - _ShaderFlags: 0
+    - _Sharpness: 0
+    - _SpecularPower: 2
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _TextureHeight: 1024
+    - _TextureWidth: 1024
+    - _UnderlayDilate: 0
+    - _UnderlayOffsetX: 0
+    - _UnderlayOffsetY: 0
+    - _UnderlaySoftness: 0
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    - _WeightBold: 0.75
+    - _WeightNormal: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
+    - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &945118678
 GameObject:
   m_ObjectHideFlags: 0
@@ -23327,7 +23436,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MAIN TASK OBTAINED
+  m_text: NATANGGAP ANG PANGUNAHING GAWAIN
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -24572,7 +24681,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Wala pang nakalap na pira-piraso.
+  m_text: Wala pang nakalap na bahagi.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -25246,7 +25355,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'QUESTION:'
+  m_text: 'TANONG:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -26378,7 +26487,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 396, y: -0}
+  m_AnchoredPosition: {x: 396, y: 18.7}
   m_SizeDelta: {x: 200, y: 156}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1373993479
@@ -26445,9 +26554,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6fc72a529227ecc45bb4bd041a75a3f8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5e23bf9132d14b744ae4b2d16c0abd6f, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -29637,7 +29746,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 24}
   m_SizeDelta: {x: 200, y: 156}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1498273550
@@ -29704,9 +29813,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8f2d5511351156147bc80e06db67ecfa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 81da09f1dd1c2274093fc21a56b46fc6, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -32346,7 +32455,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: I-unlock at pumili ng pagninilay para pag-isipan ang mga karanasan ni Peter.
+  m_text: Pumili ng pagninilay upang pag-isipan ang mga karanasan ni Miguel.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -34883,7 +34992,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MAIN TASK
+  m_text: PANGUNAHING GAWAIN
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -36591,7 +36700,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 141c25d297ecd2748ae3138fa49b1ed3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: abfe2e27660c4b845a5e4fc5bf0497ab, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -37115,7 +37224,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: I-unlock at pumili ng tao para basahin ang pagkaunawa ni Peter tungkol sa kanya.
+  m_text: Pumili ng tao upang mabasa ang mga nalaman ni Miguel tungkol sa kanya.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -37856,7 +37965,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 198, y: -0}
+  m_AnchoredPosition: {x: 198, y: 23.99995}
   m_SizeDelta: {x: 200, y: 156}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1927944064
@@ -37923,9 +38032,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1980720120d2bda438947412b2c6148b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e55b0e217c38c104db326ba5ca97fbe0, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -39362,7 +39471,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Walang napiling pira-piraso.
+  m_text: Walang napiling bahagi.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
   m_sharedMaterial: {fileID: -3408395368805224787, guid: 0930d776137167745a19f5a7f05850b7, type: 2}
@@ -39961,7 +40070,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -19, y: -27}
+  m_AnchoredPosition: {x: -46, y: -51}
   m_SizeDelta: {x: 660, y: 220}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2021382228
@@ -39984,7 +40093,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7603738d97259fe438efa5116b8907fc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fa8ffcafacdba78488e5445e26758562, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -40324,7 +40433,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 17160c16f22e8ca408ace45c1e4c5fc7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5412d145c90eca547b93555f122e98cd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -41798,8 +41907,8 @@ SceneRoots:
   - {fileID: 810413422}
   - {fileID: 1390738432}
   - {fileID: 174521159}
-  - {fileID: 1083048591}
   - {fileID: 1449975872}
+  - {fileID: 1083048591}
   - {fileID: 683920640}
   - {fileID: 140377533}
   - {fileID: 91192845}

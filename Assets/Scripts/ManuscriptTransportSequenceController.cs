@@ -13,7 +13,7 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
 
     [Header("Generic Clarity completion")]
     [SerializeField] private ClarityDocumentViewer documentViewer;
-    [SerializeField] private string destinationSceneName = "ChurchNEWMAKAMISA";
+    [SerializeField] private string destinationSceneName = "TransportationScene";
 
     [Header("Existing self-dialogue data")]
     [SerializeField] private SelfDialogueTrigger firstReaction;

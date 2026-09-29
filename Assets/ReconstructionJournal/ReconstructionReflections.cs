@@ -864,7 +864,7 @@ public class ReconstructionReflections : MonoBehaviour
 
         if (promptText != null)
             promptText.text =
-                "I-unlock at pumili ng pagninilay para pag-isipan ang mga karanasan ni Peter.";
+                "Pumili ng pagninilay upang pag-isipan ang mga karanasan ni Miguel.";
 
         ClearSuggestionButtons();
         HideSuggestionPanel();

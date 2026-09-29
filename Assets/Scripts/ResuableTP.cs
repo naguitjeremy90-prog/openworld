@@ -21,11 +21,6 @@ public class SceneEntrance : MonoBehaviour
     private Color[] originalBaseColors;
     private Color[] originalEmissionColors;
 
-    private void Awake()
-    {
-        GameplayHUDTarget.AttachTo(interactText);
-    }
-
     public UnityEvent OnRequirementFailed => onRequirementFailed;
 
     private void Start()
@@ -44,7 +39,10 @@ public class SceneEntrance : MonoBehaviour
             playerNear = true;
 
             if (interactText != null)
+            {
                 interactText.SetActive(true);
+                GameplayHUDTarget.AttachTo(interactText);
+            }
 
             SetHighlight(true);
         }

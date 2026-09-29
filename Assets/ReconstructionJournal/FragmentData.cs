@@ -17,12 +17,12 @@ public class FragmentData : ScriptableObject
 
     public string GetRecoveredInLabel()
     {
-        return "RECOVERED IN: " + GetContextLabel(recoveredIn);
+        return "NAKALAP SA: " + GetContextLabel(recoveredIn);
     }
 
     public string GetRelatedToLabel()
     {
-        return "RELATED TO: " + GetContextLabel(relatedTo);
+        return "KAUGNAY SA: " + GetContextLabel(relatedTo);
     }
 
     private string GetContextLabel(ObservationContext context)
@@ -32,7 +32,7 @@ public class FragmentData : ScriptableObject
             case ObservationContext.MakamisaPili:
                 return "MAKAMISA";
             default:
-                return "PRESENT PILI";
+                return "KASALUKUYANG PILI";
         }
     }
 }

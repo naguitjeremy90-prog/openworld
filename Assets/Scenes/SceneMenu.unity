@@ -297,7 +297,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lumabas
+  m_text: Isara ang Laro
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1134,7 +1134,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1840,7 +1840,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bagong Laro
+  m_text: Simulan
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
@@ -1875,7 +1875,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2519,7 +2519,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0.27450982}
+    m_HighlightedColor: {r: 0.89411765, g: 0.7647059, b: 0.6784314, a: 0.27450982}
     m_PressedColor: {r: 0.78039217, g: 0.49019608, b: 0.14901961, a: 0.27450982}
     m_SelectedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -2627,7 +2627,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -260.6998, y: -130}
+  m_AnchoredPosition: {x: -260.6998, y: -128.00006}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1076352710
@@ -2652,7 +2652,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0.27450982}
+    m_HighlightedColor: {r: 0.89411765, g: 0.7647059, b: 0.6784314, a: 0.27450982}
     m_PressedColor: {r: 0.78039217, g: 0.49019608, b: 0.14901961, a: 0.27450982}
     m_SelectedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0}
     m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.5019608}
@@ -3136,7 +3136,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0.27450982}
+    m_HighlightedColor: {r: 0.89411765, g: 0.7647059, b: 0.6784314, a: 0.27450982}
     m_PressedColor: {r: 0.78039217, g: 0.49019608, b: 0.14901961, a: 0.27450982}
     m_SelectedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -3257,9 +3257,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0.9}
-    m_PressedColor: {r: 0.78039217, g: 0.49019608, b: 0.14901961, a: 1}
-    m_SelectedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0.9}
+    m_HighlightedColor: {r: 0.89433956, g: 0.76407635, b: 0.68003553, a: 0.27450982}
+    m_PressedColor: {r: 0.78039217, g: 0.49019608, b: 0.14901961, a: 0.27450982}
+    m_SelectedColor: {r: 0.74509805, g: 0.5019608, b: 0.34509805, a: 0}
     m_DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
     m_ColorMultiplier: 1.2
     m_FadeDuration: 0.08
@@ -4035,7 +4035,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Mga Setting
+  m_text: Mga Ayos
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
   m_sharedMaterial: {fileID: -3469513016607406549, guid: 32e428a4ea33ab945940490791df08d3, type: 2}
@@ -4070,7 +4070,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535

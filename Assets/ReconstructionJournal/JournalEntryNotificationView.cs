@@ -47,13 +47,13 @@ public sealed class JournalEntryNotificationView : MonoBehaviour
         switch (category)
         {
             case JournalEntryCategory.Observation:
-                return "OBSERBASYON";
+                return "MGA NAPANSIN";
             case JournalEntryCategory.People:
                 return "MGA TAO";
             case JournalEntryCategory.Fragment:
-                return "PIRA-PIRASO";
+                return "MGA BAHAGI";
             case JournalEntryCategory.Reflection:
-                return "PAGNINILAY";
+                return "MGA PAGNINILAY";
             default:
                 return category.ToString().ToUpperInvariant();
         }
