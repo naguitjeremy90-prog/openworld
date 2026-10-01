@@ -353,6 +353,25 @@ public sealed class TaskManager : MonoBehaviour
         return objectivesById.TryGetValue(taskId, out objective);
     }
 
+#if UNITY_EDITOR
+    // Only restores the non-persistent post-Church objective for direct Editor scene testing.
+    public bool RestoreObjectiveForDirectSceneTesting(string taskId, string objective)
+    {
+        if (string.IsNullOrWhiteSpace(taskId) ||
+            string.IsNullOrWhiteSpace(objective) ||
+            !TryGetDefinition(taskId, out _))
+            return false;
+
+        string normalizedTaskId = taskId.Trim();
+        if (GetTaskState(normalizedTaskId) != TaskState.Active ||
+            !objectivesById.ContainsKey(normalizedTaskId))
+            return false;
+
+        objectivesById[normalizedTaskId] = objective.Trim();
+        return true;
+    }
+#endif
+
     public bool IsCurrentStage(string taskId, string stageId)
     {
         if (string.IsNullOrWhiteSpace(taskId) || string.IsNullOrWhiteSpace(stageId))

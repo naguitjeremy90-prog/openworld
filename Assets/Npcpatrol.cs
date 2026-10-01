@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NPCPatrol : MonoBehaviour
+public class NPCPatrol : MonoBehaviour, INPCConversationMovement
 {
     private const string IsWalkingParameterName = "IsWalking";
     private const int GroundHitBufferSize = 16;
@@ -94,6 +94,11 @@ public class NPCPatrol : MonoBehaviour
 
         isPatrolPaused = paused;
         SetWalkingAnimation(!isPatrolPaused && enabled && !isWaiting);
+    }
+
+    public void SetConversationMovementPaused(bool paused)
+    {
+        SetPatrolPaused(paused);
     }
 
     void SnapToGround()

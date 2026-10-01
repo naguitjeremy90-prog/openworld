@@ -1,3 +1,5 @@
+using System.Collections;
+using DialogueEditor;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -11,8 +13,10 @@ public sealed class IntroMakamisaCutsceneController : MonoBehaviour
 
     [SerializeField] private PlayableDirector introDirector;
     [SerializeField] private CinemachineCamera introCamera;
+    [SerializeField] private SelfDialogueTrigger openingSelfDialogue;
 
     private StorySequenceToken storyToken;
+    private Coroutine openingDialogueRoutine;
     private bool started;
     private bool cleaningUp;
 
@@ -57,20 +61,69 @@ public sealed class IntroMakamisaCutsceneController : MonoBehaviour
 
     private void HandleIntroStopped(PlayableDirector stoppedDirector)
     {
-        if (!started || cleaningUp || stoppedDirector != introDirector)
+        if (!started || cleaningUp || !isActiveAndEnabled || stoppedDirector != introDirector)
             return;
 
-        // The stopped event also fires for an interrupted Timeline. Only a
-        // director that reached its authored end completes this session flag.
-        bool completed = introDirector.duration > 0d &&
-            introDirector.time >= introDirector.duration;
-
+        // This director uses Wrap Mode None. Teardown cancels the sequence and
+        // unsubscribes before stopping it, so this is its natural end.
         started = false;
         introDirector.stopped -= HandleIntroStopped;
-        if (completed)
-            SessionStoryState.SetFlag(IntroSeenFlag, true);
-
         DisableIntroCamera();
+
+        ConversationManager manager = ConversationManager.Instance;
+        Debug.Log(
+            $"[PiliIntroDiagnostic] selfDialogueNull={openingSelfDialogue == null}, " +
+            $"selfDialogueName={(openingSelfDialogue != null ? openingSelfDialogue.gameObject.name : "<null>")}, " +
+            $"selfDialogueActive={openingSelfDialogue != null && openingSelfDialogue.gameObject.activeInHierarchy}, " +
+            $"selfDialogueEnabled={openingSelfDialogue != null && openingSelfDialogue.enabled}, " +
+            $"conversationManagerNull={manager == null}, " +
+            $"conversationManagerActive={manager != null && manager.gameObject.activeInHierarchy}, " +
+            $"conversationManagerEnabled={manager != null && manager.enabled}, " +
+            $"conversationActive={manager != null && manager.IsConversationActive}", this);
+        if (openingSelfDialogue == null || !openingSelfDialogue.isActiveAndEnabled ||
+            manager == null || !manager.isActiveAndEnabled || manager.IsConversationActive)
+        {
+            Debug.LogError("Pili opening self-dialogue is unavailable after the Timeline.", this);
+            ReleaseStoryToken();
+            return;
+        }
+
+        bool dialogueStarted = false;
+        ConversationManager.ConversationStartEvent onStarted = () => dialogueStarted = true;
+        ConversationManager.OnConversationStarted += onStarted;
+        try
+        {
+            openingSelfDialogue.StartSelfDialogue();
+        }
+        finally
+        {
+            ConversationManager.OnConversationStarted -= onStarted;
+        }
+
+        if (!dialogueStarted || !manager.IsConversationActive)
+        {
+            Debug.LogError("Pili opening self-dialogue did not start.", this);
+            ReleaseStoryToken();
+            return;
+        }
+
+        openingDialogueRoutine = StartCoroutine(WaitForOpeningDialogue(manager));
+    }
+
+    private IEnumerator WaitForOpeningDialogue(ConversationManager manager)
+    {
+        // The end event fires when the closing transition begins. Keep the
+        // intro token until ConversationManager has fully turned its UI off.
+        while (manager != null && manager.isActiveAndEnabled &&
+               manager.IsConversationActive)
+            yield return null;
+
+        openingDialogueRoutine = null;
+        if (manager != null && manager.isActiveAndEnabled)
+            SessionStoryState.SetFlag(IntroSeenFlag, true);
+        else
+            Debug.LogWarning("Pili opening self-dialogue closed unexpectedly.", this);
+
         ReleaseStoryToken();
     }
 
@@ -91,6 +144,11 @@ public sealed class IntroMakamisaCutsceneController : MonoBehaviour
 
         cleaningUp = true;
         started = false;
+        if (openingDialogueRoutine != null)
+        {
+            StopCoroutine(openingDialogueRoutine);
+            openingDialogueRoutine = null;
+        }
         if (introDirector != null)
         {
             introDirector.stopped -= HandleIntroStopped;

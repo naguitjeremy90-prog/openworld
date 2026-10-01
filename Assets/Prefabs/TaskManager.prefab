@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6492435229044996695
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3744170062784308339}
+  - component: {fileID: 4539478978178648670}
+  m_Layer: 0
+  m_Name: TaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3744170062784308339
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6492435229044996695}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4539478978178648670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6492435229044996695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4642a0783bb065741935333f667dcbe9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskManager
+  taskDefinitions:
+  - taskId: aling_ika_errand
+    title: Tulong kay Aling Ika
+    startingObjective: Hanapin ang batang may lilang bandana.
+    taskType: 1
+    stages: []
+  - taskId: main_investigate_pili
+    title: Pagsisiyasat sa Pili
+    startingObjective: Mangalap ng impormasyon tungkol sa Makamisa. (0/3)
+    taskType: 0
+    stages:
+    - stageId: gather_information
+      objectiveText: Mangalap ng impormasyon tungkol sa Makamisa.
+      requiredCount: 3
+      allowedProgressIds:
+      - overheard_maria_nene
+      - questioned_maria_nene
+      - mang_kardo
+      - mang_nardo
+      - mang_iko
+      - mang_tibo
+      - aling_ika_lead
+      - nena
+      - toto
+      - randomhouse_resident
+      - randomhouse1_anday
+      - church_aling_rosa
+      - church_aling_pilar
+      - church_aling_marta
+      - church_mang_tomas
+      - church_mang_lando
+      - church_mang_pedro
+      - church_aling_elena
+    - stageId: find_knowledgeable_person
+      objectiveText: Humanap ng taong maaaring may higit na alam tungkol sa Makamisa.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: maestro_ben_lead
+      objectiveText: Kausapin si Maestro Ben.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: investigate_church_document
+      objectiveText: Siyasatin ang lumang sulatin sa simbahan.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: find_anday
+      objectiveText: Hanapin si Anday.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: find_kutsero
+      objectiveText: Hanapin ang kutserong hinihintay ni Anday.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: find_rope
+      objectiveText: Humanap ng matibay na tali para sa kutsero.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: return_rope_to_kutsero
+      objectiveText: Dalhin ang tali sa kutsero.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: return_to_anday
+      objectiveText: Bumalik kay Anday.
+      requiredCount: 0
+      allowedProgressIds: []

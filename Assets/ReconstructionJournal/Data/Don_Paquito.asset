@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f057abf5e4e2946ae1eefc132e0be2, type: 3}
+  m_Name: Don_Paquito
+  m_EditorClassIdentifier: Assembly-CSharp::PersonData
+  personID: don_paquito
+  characterName: Don Paquito
+  portrait: {fileID: 0}
+  context: 1
+  descriptionStages:
+  - Isang lalaki sa Pili na nakipagtalo kay Dr. Lopez tungkol sa kilos ng Padre.
+    Mas maingat siya sa pagbuo ng konklusyon at ayaw niyang ituring na katotohanan
+    ang isang hinala.

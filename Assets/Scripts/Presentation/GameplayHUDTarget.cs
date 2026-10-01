@@ -12,7 +12,6 @@ public sealed class GameplayHUDTarget : MonoBehaviour
 
     private Coroutine fadeRoutine;
     private bool presentationHidden;
-    private bool wasActive;
     private float previousAlpha = 1f;
     private bool previousInteractable;
     private bool previousBlocksRaycasts;
@@ -98,7 +97,6 @@ public sealed class GameplayHUDTarget : MonoBehaviour
             if (!presentationHidden)
             {
                 presentationHidden = true;
-                wasActive = visualRoot == null || visualRoot.activeSelf;
                 previousAlpha = canvasGroup != null ? canvasGroup.alpha : 1f;
                 previousInteractable = canvasGroup != null && canvasGroup.interactable;
                 previousBlocksRaycasts = canvasGroup != null && canvasGroup.blocksRaycasts;
@@ -118,12 +116,14 @@ public sealed class GameplayHUDTarget : MonoBehaviour
             return;
 
         presentationHidden = false;
-        if (!available || !wasActive)
+        if (!available)
         {
             FadeTo(0f, false);
             return;
         }
 
+        // Restore presentation without changing the visual root's active state.
+        // An initially inactive prompt can then become visible when requested.
         if (canvasGroup != null)
         {
             canvasGroup.interactable = previousInteractable;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Woman_Controller : MonoBehaviour
+public class Woman_Controller : MonoBehaviour, INPCConversationMovement
 {
     [Header("Random NPC Destinations")]
     public Transform[] destinations;
@@ -31,6 +31,9 @@ public class Woman_Controller : MonoBehaviour
     private bool canReact = true;
     private bool isWaiting = false;
     private bool isAvoiding = false;
+    private bool conversationMovementPaused;
+    private float waitEndsAt;
+    private float remainingWaitTime;
 
     private float avoidanceTimer = 0f;
 
@@ -48,6 +51,9 @@ public class Woman_Controller : MonoBehaviour
 
     void Update()
     {
+        if (conversationMovementPaused)
+            return;
+
         if (isReacting)
             return;
 
@@ -148,6 +154,36 @@ public class Woman_Controller : MonoBehaviour
         animator.SetBool("IsWalking", true);
     }
 
+    public void SetConversationMovementPaused(bool paused)
+    {
+        if (conversationMovementPaused == paused)
+            return;
+
+        conversationMovementPaused = paused;
+        if (paused)
+        {
+            if (isWaiting)
+            {
+                remainingWaitTime = Mathf.Max(0f, waitEndsAt - Time.time);
+                CancelInvoke(nameof(GoToNextDestination));
+            }
+
+            if (animator != null)
+                animator.SetBool("IsWalking", false);
+            return;
+        }
+
+        if (isWaiting)
+        {
+            waitEndsAt = Time.time + remainingWaitTime;
+            Invoke(nameof(GoToNextDestination), remainingWaitTime);
+        }
+
+        if (animator != null && !isReacting)
+            animator.SetBool("IsWalking", !isWaiting && destinations != null &&
+                destinations.Length > 0);
+    }
+
     void StartAvoidance()
     {
         isAvoiding = true;
@@ -196,11 +232,16 @@ public class Woman_Controller : MonoBehaviour
             maxWaitTime
         );
 
+        remainingWaitTime = waitTime;
+        waitEndsAt = Time.time + waitTime;
         Invoke(nameof(GoToNextDestination), waitTime);
     }
 
     void GoToNextDestination()
     {
+        if (conversationMovementPaused)
+            return;
+
         isWaiting = false;
 
         ChooseRandomDestination();
@@ -214,7 +255,8 @@ public class Woman_Controller : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && canReact)
+        if (collision.gameObject.CompareTag("Player") && canReact &&
+            !conversationMovementPaused)
         {
             StartReaction();
         }
@@ -240,7 +282,7 @@ public class Woman_Controller : MonoBehaviour
 
         animator.SetBool("IsReacting", false);
 
-        if (!isWaiting &&
+        if (!isWaiting && !conversationMovementPaused &&
             destinations != null &&
             destinations.Length > 0)
         {

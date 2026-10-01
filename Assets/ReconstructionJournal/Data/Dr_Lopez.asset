@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f057abf5e4e2946ae1eefc132e0be2, type: 3}
+  m_Name: Dr_Lopez
+  m_EditorClassIdentifier: Assembly-CSharp::PersonData
+  personID: dr_lopez
+  characterName: Dr. Lopez
+  portrait: {fileID: 0}
+  context: 1
+  descriptionStages:
+  - Isang doktor sa Pili na hayagang nagtatanong tungkol sa kilos ng Padre. Para
+    sa kaniya, hindi dapat maging hadlang ang katayuan ng isang tao sa pagtatanong
+    kung mayroong bagay na dapat siyasatin.

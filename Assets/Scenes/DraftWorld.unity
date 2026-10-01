@@ -37344,63 +37344,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1906863332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2147000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4642a0783bb065741935333f667dcbe9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TaskManager
-  taskDefinitions:
-  - taskId: aling_ika_errand
-    title: Tulong kay Aling Ika
-    startingObjective: Hanapin ang batang may lilang bandana.
-    taskType: 1
-    stages: []
-  - taskId: main_investigate_pili
-    title: Pagsisiyasat sa Pili
-    startingObjective: Mangalap ng impormasyon tungkol sa Makamisa. (0/3)
-    taskType: 0
-    stages:
-    - stageId: gather_information
-      objectiveText: Mangalap ng impormasyon tungkol sa Makamisa.
-      requiredCount: 3
-      allowedProgressIds:
-      - overheard_maria_nene
-      - questioned_maria_nene
-      - mang_kardo
-      - mang_nardo
-      - mang_iko
-      - mang_tibo
-      - aling_ika_lead
-      - nena
-      - toto
-      - randomhouse_resident
-      - randomhouse1_anday
-      - church_aling_rosa
-      - church_aling_pilar
-      - church_aling_marta
-      - church_mang_tomas
-      - church_mang_lando
-      - church_mang_pedro
-      - church_aling_elena
-    - stageId: find_knowledgeable_person
-      objectiveText: Humanap ng taong maaaring may higit na alam tungkol sa Makamisa.
-      requiredCount: 0
-      allowedProgressIds: []
-    - stageId: maestro_ben_lead
-      objectiveText: Kausapin si Maestro Ben.
-      requiredCount: 0
-      allowedProgressIds: []
-    - stageId: investigate_church_document
-      objectiveText: Siyasatin ang lumang sulatin sa simbahan.
-      requiredCount: 0
-      allowedProgressIds: []
 --- !u!114 &1906863333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41856,38 +41799,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 683920640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2147000001
-GameObject:
+--- !u!1001 &1449241785884285321
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2147000002}
-  - component: {fileID: 1906863332}
-  m_Layer: 0
-  m_Name: TaskManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2147000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2147000001}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6492435229044996695, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: m_Name
+      value: TaskManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -41912,6 +41880,6 @@ SceneRoots:
   - {fileID: 683920640}
   - {fileID: 140377533}
   - {fileID: 91192845}
-  - {fileID: 2147000002}
+  - {fileID: 1449241785884285321}
   - {fileID: 414242182}
   - {fileID: 1072042566}

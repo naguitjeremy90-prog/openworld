@@ -17,6 +17,9 @@ public class CameraFocusManager : MonoBehaviour
     [SerializeField] private MonoBehaviour playerMovementScript;
     [SerializeField] private Animator playerAnimator;
 
+    [Header("Return Completion")]
+    [SerializeField, Min(0.1f)] private float cinemachineReturnTimeout = 8f;
+
     private bool isFocusing = false;
     private bool usingCinemachine = false;
     private bool isReturning = false;
@@ -31,6 +34,7 @@ public class CameraFocusManager : MonoBehaviour
     private Coroutine cameraCoroutine;
 
     public bool IsFocusing => isFocusing;
+    public bool LastReturnCompleted { get; private set; }
 
     private void Start()
     {
@@ -57,11 +61,12 @@ public class CameraFocusManager : MonoBehaviour
         CameraFocusPoint focusPoint,
         UnityEvent onFinished = null)
     {
-        if (isFocusing || focusPoint == null)
+        if (!isActiveAndEnabled || isFocusing || focusPoint == null)
             return false;
 
         isFocusing = true;
         isReturning = false;
+        LastReturnCompleted = false;
         activeFocusPoint = focusPoint;
         focusFinishedCallback = onFinished;
 
@@ -85,6 +90,14 @@ public class CameraFocusManager : MonoBehaviour
         // CINEMACHINE
         if (usingCinemachine)
         {
+            if (focusCinemachineCamera == null || !focusCinemachineCamera.isActiveAndEnabled ||
+                normalCinemachineCamera == null || !normalCinemachineCamera.isActiveAndEnabled)
+            {
+                Debug.LogWarning("Camera focus could not start because a Cinemachine camera is unavailable.", this);
+                yield return ReturnRoutine(focusPoint);
+                yield break;
+            }
+
             focusCinemachineCamera.transform.position =
                 focusPoint.transform.position;
 
@@ -113,8 +126,7 @@ public class CameraFocusManager : MonoBehaviour
                 focusPoint.focusDuration);
 
             isReturning = true;
-            yield return StartCoroutine(
-                ReturnRoutine(focusPoint));
+            yield return ReturnRoutine(focusPoint);
         }
     }
 
@@ -143,13 +155,42 @@ public class CameraFocusManager : MonoBehaviour
     private IEnumerator ReturnRoutine(
         CameraFocusPoint focusPoint)
     {
+        LastReturnCompleted = false;
         // CINEMACHINE
         if (usingCinemachine)
         {
-            focusCinemachineCamera.Priority = 0;
-            normalCinemachineCamera.Priority = 10;
+            RestoreCinemachinePriorities();
 
-            yield return new WaitForSeconds(0.5f);
+            Camera renderingCamera = Camera.main;
+            CinemachineBrain brain = renderingCamera != null
+                ? renderingCamera.GetComponent<CinemachineBrain>()
+                : null;
+            if (brain == null || !renderingCamera.isActiveAndEnabled ||
+                normalCinemachineCamera == null || !normalCinemachineCamera.isActiveAndEnabled)
+            {
+                Debug.LogWarning("Camera focus return could not be verified: rendering Brain or normal Cinemachine camera is unavailable.", this);
+            }
+            else
+            {
+                // Allow Cinemachine to process the new priorities before testing completion.
+                yield return null;
+                float deadline = Time.unscaledTime + cinemachineReturnTimeout;
+                while (Time.unscaledTime < deadline && brain != null &&
+                       normalCinemachineCamera != null &&
+                       brain.isActiveAndEnabled && normalCinemachineCamera.isActiveAndEnabled &&
+                       (brain.IsBlending ||
+                        !ReferenceEquals(brain.ActiveVirtualCamera, normalCinemachineCamera)))
+                    yield return null;
+
+                LastReturnCompleted = brain != null && normalCinemachineCamera != null &&
+                    brain.isActiveAndEnabled && normalCinemachineCamera.isActiveAndEnabled &&
+                    !brain.IsBlending &&
+                    ReferenceEquals(brain.ActiveVirtualCamera, normalCinemachineCamera);
+                if (!LastReturnCompleted)
+                    Debug.LogWarning("Camera focus return did not complete before the timeout or was interrupted.", this);
+            }
+
+            RestoreCinemachinePriorities();
         }
 
         // REGULAR CAMERA
@@ -160,6 +201,7 @@ public class CameraFocusManager : MonoBehaviour
                     normalCameraPosition,
                     normalCameraRotation,
                     focusPoint.returnSpeed));
+            LastReturnCompleted = true;
         }
 
         // Unlock Peter
@@ -177,6 +219,37 @@ public class CameraFocusManager : MonoBehaviour
         focusFinishedCallback = null;
         cameraCoroutine = null;
 
+        finishedCallback?.Invoke();
+    }
+
+    private void RestoreCinemachinePriorities()
+    {
+        if (focusCinemachineCamera != null)
+            focusCinemachineCamera.Priority = 0;
+        if (normalCinemachineCamera != null)
+            normalCinemachineCamera.Priority = 10;
+    }
+
+    private void OnDisable()
+    {
+        if (!isFocusing)
+            return;
+
+        if (cameraCoroutine != null)
+            StopCoroutine(cameraCoroutine);
+        if (usingCinemachine)
+            RestoreCinemachinePriorities();
+        if (activeFocusPoint != null && activeFocusPoint.lockPlayer && playerMovementScript != null)
+            playerMovementScript.enabled = true;
+
+        UnityEvent finishedCallback = focusFinishedCallback;
+        LastReturnCompleted = false;
+        isFocusing = false;
+        isReturning = false;
+        activeFocusPoint = null;
+        focusFinishedCallback = null;
+        cameraCoroutine = null;
+        Debug.LogWarning("Camera focus was interrupted because its manager was disabled.", this);
         finishedCallback?.Invoke();
     }
 

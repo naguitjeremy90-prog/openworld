@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -6,6 +7,10 @@ using DialogueEditor;
 
 public class NPCConversationTrigger : MonoBehaviour
 {
+    private static readonly HashSet<NPCConversationTrigger> nearbyTriggers =
+        new HashSet<NPCConversationTrigger>();
+    private static NPCConversationTrigger activeConversationTrigger;
+
     public event System.Action ConversationFinished;
     [Header("Dialogue")]
     [FormerlySerializedAs("myConversation")]
@@ -32,6 +37,10 @@ public class NPCConversationTrigger : MonoBehaviour
 
     [Header("Walking NPC (Optional)")]
     [SerializeField] private NPCPatrol linkedPatrol;
+    [SerializeField] private MonoBehaviour linkedConversationMovement;
+
+    [Header("Interaction Availability (Optional)")]
+    [SerializeField] private MonoBehaviour availabilityCondition;
 
     [Header("After Conversation")]
     public UnityEvent OnConversationFinished = new UnityEvent();
@@ -40,8 +49,9 @@ public class NPCConversationTrigger : MonoBehaviour
     private bool playerNear = false;
     private bool isTalking = false;
     private bool hasCompletedFirstConversation = false;
-    private bool pausedLinkedPatrol = false;
+    private INPCConversationMovement pausedMovement;
     private StoryConversationSelector storyConversationSelector;
+    private TaskStageConversationSelector taskStageConversationSelector;
 
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
@@ -51,8 +61,17 @@ public class NPCConversationTrigger : MonoBehaviour
     private void Awake()
     {
         storyConversationSelector = GetComponent<StoryConversationSelector>();
+        taskStageConversationSelector = GetComponent<TaskStageConversationSelector>();
         storyFocusFinishedEvent.AddListener(HandleStoryFocusFinished);
         GameplayHUDTarget.AttachTo(talkText);
+
+        if (linkedConversationMovement != null &&
+            !(linkedConversationMovement is INPCConversationMovement))
+            Debug.LogWarning("Linked conversation movement must implement INPCConversationMovement.", this);
+
+        if (availabilityCondition != null &&
+            !(availabilityCondition is IInteractionAvailabilityCondition))
+            Debug.LogWarning("Interaction availability must implement IInteractionAvailabilityCondition.", this);
     }
 
     public void SetConversations(
@@ -73,10 +92,11 @@ public class NPCConversationTrigger : MonoBehaviour
                focusPoint == point;
     }
 
-    private void Start()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetInteractionState()
     {
-        if (npcTransform != null)
-            originalRotation = npcTransform.rotation;
+        nearbyTriggers.Clear();
+        activeConversationTrigger = null;
     }
 
     private void OnEnable()
@@ -94,17 +114,15 @@ public class NPCConversationTrigger : MonoBehaviour
             turnCoroutine = null;
         }
 
-        if (pausedLinkedPatrol && linkedPatrol != null)
-            linkedPatrol.SetPatrolPaused(false);
+        nearbyTriggers.Remove(this);
+        if (activeConversationTrigger == this)
+            activeConversationTrigger = null;
 
-        pausedLinkedPatrol = false;
+        ResumeOwnedMovement();
         isTalking = false;
         ReleaseStorySequence();
-
-        if (playerNear && talkText != null)
-            talkText.SetActive(false);
-
         playerNear = false;
+        RefreshPrompt(talkText);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -112,10 +130,8 @@ public class NPCConversationTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = true;
-
-            if (!StorySequenceCoordinator.IsStorySequenceActive &&
-                !isTalking && talkText != null)
-                talkText.SetActive(true);
+            nearbyTriggers.Add(this);
+            RefreshPrompt(talkText);
         }
     }
 
@@ -124,16 +140,20 @@ public class NPCConversationTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = false;
-
-            if (talkText != null)
-                talkText.SetActive(false);
+            nearbyTriggers.Remove(this);
+            RefreshPrompt(talkText);
         }
     }
 
     private void Update()
     {
+        if (playerNear)
+            RefreshPrompt(talkText);
+
         if (!StorySequenceCoordinator.IsStorySequenceActive &&
-            playerNear && !isTalking && Input.GetKeyDown(KeyCode.E))
+            activeConversationTrigger == null && IsInteractionCandidate() &&
+            IsClosestAvailableTrigger() &&
+            Input.GetKeyDown(KeyCode.E))
         {
             StartConversation();
         }
@@ -142,18 +162,19 @@ public class NPCConversationTrigger : MonoBehaviour
     private void StartConversation()
     {
         isTalking = true;
+        activeConversationTrigger = this;
 
         if (treatAsStorySequence)
             storySequenceToken = StorySequenceCoordinator.Acquire(this);
 
-        if (talkText != null)
-            talkText.SetActive(false);
+        RefreshPrompt(talkText);
 
-        // Turn NPC toward Peter
+        // Capture this conversation's heading before turning toward the player.
         if (facePlayerWhenTalking &&
             npcTransform != null &&
             playerTransform != null)
         {
+            originalRotation = npcTransform.rotation;
             if (turnCoroutine != null)
                 StopCoroutine(turnCoroutine);
 
@@ -165,7 +186,12 @@ public class NPCConversationTrigger : MonoBehaviour
             focusManager.FocusOn(focusPoint, storyFocusFinishedEvent);
 
         NPCConversation conversation =
-            storyConversationSelector != null
+            taskStageConversationSelector != null
+                ? taskStageConversationSelector.GetCurrentConversation()
+                : null;
+
+        if (conversation == null)
+            conversation = storyConversationSelector != null
                 ? storyConversationSelector.GetCurrentConversation()
                 : null;
 
@@ -179,11 +205,86 @@ public class NPCConversationTrigger : MonoBehaviour
 
         ConversationManager.Instance.StartConversation(conversation);
 
-        if (linkedPatrol != null)
+        INPCConversationMovement movement = linkedConversationMovement != null
+            ? linkedConversationMovement as INPCConversationMovement
+            : linkedPatrol;
+        if (movement != null)
         {
-            linkedPatrol.SetPatrolPaused(true);
-            pausedLinkedPatrol = true;
+            movement.SetConversationMovementPaused(true);
+            pausedMovement = movement;
         }
+    }
+
+    private bool IsInteractionAvailable()
+    {
+        return availabilityCondition == null ||
+               (availabilityCondition is IInteractionAvailabilityCondition condition &&
+                condition.IsAvailable());
+    }
+
+    private bool IsInteractionCandidate()
+    {
+        return isActiveAndEnabled && playerNear && !isTalking &&
+               IsInteractionAvailable();
+    }
+
+    private bool IsClosestAvailableTrigger()
+    {
+        NPCConversationTrigger closest = null;
+        float closestDistance = float.PositiveInfinity;
+
+        foreach (NPCConversationTrigger candidate in nearbyTriggers)
+        {
+            if (candidate == null || !candidate.IsInteractionCandidate())
+                continue;
+
+            Transform npc = candidate.npcTransform != null
+                ? candidate.npcTransform : candidate.transform;
+            Transform player = candidate.playerTransform != null
+                ? candidate.playerTransform : playerTransform;
+            float distance = player != null
+                ? (npc.position - player.position).sqrMagnitude
+                : 0f;
+
+            if (distance < closestDistance)
+            {
+                closest = candidate;
+                closestDistance = distance;
+            }
+        }
+
+        return closest == this;
+    }
+
+    private static void RefreshPrompt(GameObject prompt)
+    {
+        if (prompt == null)
+            return;
+
+        bool shouldShow = false;
+        if (activeConversationTrigger == null &&
+            !StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            foreach (NPCConversationTrigger candidate in nearbyTriggers)
+            {
+                if (candidate != null && candidate.talkText == prompt &&
+                    candidate.IsInteractionCandidate())
+                {
+                    shouldShow = true;
+                    break;
+                }
+            }
+        }
+
+        if (prompt.activeSelf != shouldShow)
+            prompt.SetActive(shouldShow);
+    }
+
+    private void ResumeOwnedMovement()
+    {
+        if (pausedMovement is UnityEngine.Object movementObject && movementObject != null)
+            pausedMovement.SetConversationMovementPaused(false);
+        pausedMovement = null;
     }
 
     private IEnumerator TurnTowardPlayer()
@@ -227,6 +328,8 @@ public class NPCConversationTrigger : MonoBehaviour
         }
 
         npcTransform.rotation = originalRotation;
+        turnCoroutine = null;
+        FinishOwnedInteraction();
     }
 
     private void OnConversationEnded()
@@ -235,11 +338,6 @@ public class NPCConversationTrigger : MonoBehaviour
             return;
 
         isTalking = false;
-
-        if (pausedLinkedPatrol && linkedPatrol != null)
-            linkedPatrol.SetPatrolPaused(false);
-
-        pausedLinkedPatrol = false;
 
         bool finishedFirstConversation = !HasCompletedFirstConversation();
         if (finishedFirstConversation)
@@ -269,20 +367,31 @@ public class NPCConversationTrigger : MonoBehaviour
         else
             ReleaseStorySequence();
 
-        // Turn NPC back
+        if (turnCoroutine != null)
+        {
+            StopCoroutine(turnCoroutine);
+            turnCoroutine = null;
+        }
+
+        // Keep this NPC paused until its return turn has completed.
         if (facePlayerWhenTalking &&
             returnToOriginalDirection &&
-            npcTransform != null)
+            npcTransform != null &&
+            playerTransform != null)
         {
-            if (turnCoroutine != null)
-                StopCoroutine(turnCoroutine);
-
             turnCoroutine = StartCoroutine(
                 ReturnToOriginalRotation());
         }
+        else
+            FinishOwnedInteraction();
+    }
 
-        if (playerNear && talkText != null)
-            talkText.SetActive(true);
+    private void FinishOwnedInteraction()
+    {
+        ResumeOwnedMovement();
+        if (activeConversationTrigger == this)
+            activeConversationTrigger = null;
+        RefreshPrompt(talkText);
     }
 
     private void HandleStoryFocusFinished()

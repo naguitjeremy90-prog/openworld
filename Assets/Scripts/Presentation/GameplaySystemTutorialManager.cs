@@ -52,6 +52,10 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     private bool journalOpen;
     private bool activeSystemTemporarilyHidden;
     private bool lastStorySequenceActive;
+#if UNITY_EDITOR
+    private readonly HashSet<GameplaySystemId> developmentTutorialSuppressed =
+        new HashSet<GameplaySystemId>();
+#endif
 
     public static bool HasInstance => instance != null;
 
@@ -183,6 +187,8 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     public void NotifySystemRevealCompleted(GameplaySystemId system)
     {
         presentationReady.Add(system);
+        if (IsDevelopmentTutorialSuppressed(system))
+            return;
 
         if (!hasActiveTutorial && GameplaySystemState.IsUnlocked(system) &&
             !GameplaySystemTutorialState.IsSeen(system))
@@ -264,6 +270,9 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     /// <summary>Called only after the payment item was successfully removed.</summary>
     public void NotifyInventoryPaymentReturned()
     {
+        if (IsDevelopmentTutorialSuppressed(GameplaySystemId.Inventory))
+            return;
+
         if (!GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory) ||
             GameplaySystemTutorialState.IsSeen(GameplaySystemId.Inventory))
             return;
@@ -289,6 +298,14 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    /// <summary>Allow direct-scene UI testing without consuming the story tutorial.</summary>
+    public void SuppressTutorialForDevelopment(GameplaySystemId system)
+    {
+        developmentTutorialSuppressed.Add(system);
+        if (hasActiveTutorial && activeSystem == system)
+            ClearActive();
+    }
+
     public void RequestDevelopmentTutorial(
         GameplaySystemId system,
         GameplaySystemTutorialDefinition definition = null)
@@ -331,6 +348,9 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                 ClearActive();
             return;
         }
+
+        if (IsDevelopmentTutorialSuppressed(system))
+            return;
 
         if (!GameplaySystemTutorialState.IsSeen(system))
             Activate(system);
@@ -407,6 +427,9 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
     private void Activate(GameplaySystemId system)
     {
+        if (IsDevelopmentTutorialSuppressed(system))
+            return;
+
         CancelDelay();
         hasActiveTutorial = true;
         activeSystem = system;
@@ -751,6 +774,15 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             RotatePointerToTarget(initialPointer.rectTransform, target);
         else if (callout == journalCallout && journalPointer != null && journalPointer.gameObject.activeSelf)
             RotatePointerToTarget(journalPointer.rectTransform, target);
+    }
+
+    private bool IsDevelopmentTutorialSuppressed(GameplaySystemId system)
+    {
+#if UNITY_EDITOR
+        return developmentTutorialSuppressed.Contains(system);
+#else
+        return false;
+#endif
     }
 
     private void PositionInventoryItemDetailsCallout(RectTransform callout, RectTransform target)

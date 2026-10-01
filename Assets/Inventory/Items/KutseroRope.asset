@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3c486c1d391e14b99eff1a060a7677, type: 3}
+  m_Name: KutseroRope
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryItemData
+  itemID: kutsero_rope
+  displayName: Tali
+  icon: {fileID: 21300000, guid: 884a3b872c2089642a84f002336c7ea6, type: 3}
+  description: Isang matibay na tali na maaaring gamitin upang maayos ang kargamento
+    ng kutsero.
+  category: 1

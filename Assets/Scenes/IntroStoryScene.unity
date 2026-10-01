@@ -536,7 +536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 4
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":112.599991,"yPos":109.200012},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Gumagabi
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":101.399994,"yPos":106},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Gumagabi
     na... ang layo naman nitong Bayan ng Pili...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
@@ -874,13 +874,14 @@ MonoBehaviour:
   - Text: Anong oras na kaya ngayon. Hindi ko na namalayan ang oras.
     HoldDuration: 5
     PauseAfter: 1
-  - Text: Ito ang pinaka-una kong gagawin sa ngalan ng historya.
+  - Text: Ito ang pangatlong nobela ni Rizal na gusto kong makilala at mabasa.
     HoldDuration: 8
     PauseAfter: 1
   - Text: Ang Makamisa.
     HoldDuration: 4
     PauseAfter: 1
-  - Text: Akdang hindi natapos ni Rizal. Ano kaya ang mga pwedeng malaman dito.
+  - Text: Tungkol saan kaya ito? At sino-sino kaya ang mga tauhang magbibigay-buhay
+      sa nobela?
     HoldDuration: 7
     PauseAfter: 1
   fadeDuration: 1
