@@ -12,7 +12,10 @@ public sealed class CharacterReactionController : MonoBehaviour
     [SerializeField] private Transform reactionAnchor;
     [SerializeField] private Transform indicatorRoot;
     [SerializeField] private TMP_Text reactionText;
+    // Kept serialized so existing scene data remains compatible. Sprite rendering no longer uses this value.
+#pragma warning disable 0414
     [SerializeField] private string defaultGlyph = "!";
+#pragma warning restore 0414
 
     [Header("Timing")]
     [SerializeField, Min(0f)] private float popDuration = 0.15f;
@@ -31,16 +34,68 @@ public sealed class CharacterReactionController : MonoBehaviour
     private bool isReacting;
     private float visibleAlpha = 1f;
     private Vector3 indicatorBaseScale = Vector3.one;
+    private Transform reactionSpriteRoot;
+    private SpriteRenderer reactionSpriteRenderer;
+    private float spriteBaseScale = 0.05f;
+
+    private static CharacterReactionConfig sharedConfig;
+    private static bool configResolved;
 
     public bool IsReacting => isReacting;
 
     private void Awake()
     {
-        if (reactionText != null)
-            visibleAlpha = reactionText.color.a;
-
         if (indicatorRoot == null && reactionText != null)
             indicatorRoot = reactionText.transform;
+
+        if (reactionText != null)
+        {
+            visibleAlpha = reactionText.color.a;
+            reactionText.enabled = false;
+
+            // TMP's world-space renderer is retained in existing scenes for serialization
+            // compatibility, but disabled so the legacy glyph can never appear behind the sprite.
+            MeshRenderer legacyTextRenderer = reactionText.GetComponent<MeshRenderer>();
+            if (legacyTextRenderer != null)
+                legacyTextRenderer.enabled = false;
+        }
+
+        CharacterReactionConfig config = ResolveConfig();
+        if (config != null)
+            spriteBaseScale = config.SpriteBaseScale;
+
+        if (indicatorRoot != null)
+        {
+            reactionSpriteRoot = indicatorRoot.Find("ReactionSprite");
+            if (reactionSpriteRoot == null)
+            {
+                GameObject spriteObject = new GameObject("ReactionSprite");
+                reactionSpriteRoot = spriteObject.transform;
+                reactionSpriteRoot.SetParent(indicatorRoot, false);
+            }
+
+            reactionSpriteRoot.localPosition = Vector3.zero;
+            reactionSpriteRoot.localRotation = Quaternion.identity;
+            reactionSpriteRoot.localScale = Vector3.one;
+
+            reactionSpriteRenderer = reactionSpriteRoot.GetComponent<SpriteRenderer>();
+            if (reactionSpriteRenderer == null)
+                reactionSpriteRenderer = reactionSpriteRoot.gameObject.AddComponent<SpriteRenderer>();
+
+            if (reactionSpriteRenderer != null && config != null)
+                reactionSpriteRenderer.sprite = config.ReactionSprite;
+
+            if (reactionSpriteRenderer != null)
+            {
+                // Use the default world sorting layer with a small order offset over same-layer sprites.
+                reactionSpriteRenderer.sortingLayerName = "Default";
+                reactionSpriteRenderer.sortingOrder = 1;
+                reactionSpriteRenderer.enabled = false;
+
+                // Keep the comic mark white; the animation only changes its alpha.
+                reactionSpriteRenderer.color = new Color(1f, 1f, 1f, visibleAlpha);
+            }
+        }
 
         // Capture the authored scale once, before any reaction animation.
         if (indicatorRoot != null)
@@ -59,7 +114,8 @@ public sealed class CharacterReactionController : MonoBehaviour
     /// <summary>Runs the configured reaction and completes when it is hidden.</summary>
     public IEnumerator PlayReaction()
     {
-        if (isReacting || reactionText == null)
+        if (isReacting || indicatorRoot == null || reactionSpriteRoot == null ||
+            reactionSpriteRenderer == null || reactionSpriteRenderer.sprite == null)
             yield break;
 
         isReacting = true;
@@ -70,14 +126,11 @@ public sealed class CharacterReactionController : MonoBehaviour
             indicatorRoot.SetParent(reactionAnchor, false);
         }
 
-        reactionText.text = defaultGlyph;
-        SetTextAlpha(visibleAlpha);
+        indicatorRoot.gameObject.SetActive(true);
+        reactionSpriteRoot.gameObject.SetActive(true);
+        reactionSpriteRenderer.enabled = true;
+        SetSpriteAlpha(visibleAlpha);
         SetIndicatorScale(startScale);
-
-        if (indicatorRoot != null)
-            indicatorRoot.gameObject.SetActive(true);
-        else
-            reactionText.gameObject.SetActive(true);
 
         if (audioSource != null && reactionAudioClip != null)
             audioSource.PlayOneShot(reactionAudioClip);
@@ -91,16 +144,16 @@ public sealed class CharacterReactionController : MonoBehaviour
 
         HideIndicator();
         SetIndicatorScale(1f);
-        SetTextAlpha(visibleAlpha);
+        SetSpriteAlpha(visibleAlpha);
         isReacting = false;
     }
 
     private void LateUpdate()
     {
-        if (!isReacting || reactionText == null || Camera.main == null)
+        if (!isReacting || indicatorRoot == null || Camera.main == null)
             return;
 
-        reactionText.transform.forward = Camera.main.transform.forward;
+        indicatorRoot.forward = Camera.main.transform.forward;
     }
 
     private IEnumerator PopIndicator()
@@ -133,7 +186,7 @@ public sealed class CharacterReactionController : MonoBehaviour
     {
         if (fadeDuration <= 0f)
         {
-            SetTextAlpha(0f);
+            SetSpriteAlpha(0f);
             yield break;
         }
 
@@ -141,15 +194,21 @@ public sealed class CharacterReactionController : MonoBehaviour
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            SetTextAlpha(Mathf.Lerp(visibleAlpha, 0f, elapsed / fadeDuration));
+            SetSpriteAlpha(Mathf.Lerp(visibleAlpha, 0f, elapsed / fadeDuration));
             yield return null;
         }
 
-        SetTextAlpha(0f);
+        SetSpriteAlpha(0f);
     }
 
     private void HideIndicator()
     {
+        if (reactionSpriteRenderer != null)
+            reactionSpriteRenderer.enabled = false;
+
+        if (reactionSpriteRoot != null)
+            reactionSpriteRoot.gameObject.SetActive(false);
+
         if (indicatorRoot != null)
             indicatorRoot.gameObject.SetActive(false);
         else if (reactionText != null)
@@ -159,16 +218,25 @@ public sealed class CharacterReactionController : MonoBehaviour
     private void SetIndicatorScale(float scale)
     {
         if (indicatorRoot != null)
-            indicatorRoot.localScale = indicatorBaseScale * scale;
+            indicatorRoot.localScale = indicatorBaseScale * (scale * spriteBaseScale);
     }
 
-    private void SetTextAlpha(float alpha)
+    private void SetSpriteAlpha(float alpha)
     {
-        if (reactionText == null)
+        if (reactionSpriteRenderer == null)
             return;
 
-        Color color = reactionText.color;
-        color.a = alpha;
-        reactionText.color = color;
+        reactionSpriteRenderer.color = new Color(1f, 1f, 1f, alpha);
+    }
+
+    private static CharacterReactionConfig ResolveConfig()
+    {
+        if (!configResolved)
+        {
+            sharedConfig = Resources.Load<CharacterReactionConfig>("CharacterReactionConfig");
+            configResolved = true;
+        }
+
+        return sharedConfig;
     }
 }

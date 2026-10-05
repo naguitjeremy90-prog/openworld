@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class ReconstructionJournalManager : MonoBehaviour
 {
     private const string FirstDreamObservationId = "ang_panaginip";
     private const int FullInterfaceSortingOrder = 300;
+    private const string JournalAudioConfigResourcePath = "JournalAudioConfig";
 
     public static ReconstructionJournalManager Instance { get; private set; }
     public static event Action<JournalEntryUnlockedInfo> NewEntryUnlocked;
@@ -47,12 +49,17 @@ public class ReconstructionJournalManager : MonoBehaviour
     [SerializeField] private JournalTabHover fragmentsTabVisual;
     [SerializeField] private JournalTabHover reflectionsTabVisual;
 
+    [Header("Journal UI Audio")]
+    [SerializeField] private AudioSource journalAudioSource;
+
     public bool IsOpen { get; private set; }
     public JournalTab CurrentTab { get; private set; } = JournalTab.Observations;
 
     private GameplayHUDUnlockReveal unlockReveal;
     private JournalHUDEntryPulse entryPulse;
     private GameplaySystemTutorialAnchor tutorialAnchor;
+    private JournalAudioConfig journalAudioConfig;
+    private AudioClip lastTabSwitchClip;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetNewEntryEvent()
@@ -69,6 +76,9 @@ public class ReconstructionJournalManager : MonoBehaviour
         }
 
         Instance = this;
+
+        journalAudioConfig = Resources.Load<JournalAudioConfig>(JournalAudioConfigResourcePath);
+        ConfigureJournalAudioSource();
 
         Canvas journalCanvas = journalWindow != null
             ? journalWindow.GetComponentInParent<Canvas>()
@@ -113,7 +123,7 @@ public class ReconstructionJournalManager : MonoBehaviour
         SubscribeToEntryUnlocks();
 
         AddButtonListeners();
-        ShowTab(JournalTab.Observations);
+        ShowTab(JournalTab.Observations, playTabSwitchSound: false);
         CloseJournal();
     }
 
@@ -142,12 +152,16 @@ public class ReconstructionJournalManager : MonoBehaviour
             StorySequenceCoordinator.IsStorySequenceActive)
             return;
 
+        bool wasClosed = !IsOpen;
         IsOpen = true;
 
         if (journalWindow != null)
             journalWindow.SetActive(true);
 
-        OpenObservationsTab();
+        OpenObservationsTab(playTabSwitchSound: !wasClosed);
+        if (wasClosed)
+            PlayJournalSound(journalAudioConfig != null ? journalAudioConfig.JournalOpenSound : null);
+
         GameplaySystemTutorialManager.Instance.NotifyJournalOpened();
     }
 
@@ -158,6 +172,9 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         if (journalWindow != null)
             journalWindow.SetActive(false);
+
+        if (wasOpen)
+            PlayJournalSound(journalAudioConfig != null ? journalAudioConfig.JournalCloseSound : null);
 
         if (wasOpen && GameplaySystemTutorialManager.HasInstance)
             GameplaySystemTutorialManager.Instance.NotifyJournalClosed();
@@ -260,7 +277,12 @@ public class ReconstructionJournalManager : MonoBehaviour
 
     public void OpenObservationsTab()
     {
-        ShowTab(JournalTab.Observations);
+        OpenObservationsTab(playTabSwitchSound: true);
+    }
+
+    private void OpenObservationsTab(bool playTabSwitchSound)
+    {
+        ShowTab(JournalTab.Observations, playTabSwitchSound);
 
         // NEW: Keep Observations tab raised
         if (observationsTabVisual != null)
@@ -272,7 +294,7 @@ public class ReconstructionJournalManager : MonoBehaviour
 
     public void OpenPeopleTab()
     {
-        ShowTab(JournalTab.People);
+        ShowTab(JournalTab.People, playTabSwitchSound: true);
 
         // NEW: Keep People tab raised
         if (peopleTabVisual != null)
@@ -284,7 +306,7 @@ public class ReconstructionJournalManager : MonoBehaviour
 
     public void OpenFragmentsTab()
     {
-        ShowTab(JournalTab.Fragments);
+        ShowTab(JournalTab.Fragments, playTabSwitchSound: true);
 
         // NEW: Keep Fragments tab raised
         if (fragmentsTabVisual != null)
@@ -296,7 +318,7 @@ public class ReconstructionJournalManager : MonoBehaviour
 
     public void OpenReflectionsTab()
     {
-        ShowTab(JournalTab.Reflections);
+        ShowTab(JournalTab.Reflections, playTabSwitchSound: true);
 
         // NEW: Keep Reflections tab raised
         if (reflectionsTabVisual != null)
@@ -306,9 +328,13 @@ public class ReconstructionJournalManager : MonoBehaviour
             reflections.RefreshList();
     }
 
-    private void ShowTab(JournalTab tab)
+    private void ShowTab(JournalTab tab, bool playTabSwitchSound)
     {
+        bool tabChanged = tab != CurrentTab;
         CurrentTab = tab;
+
+        if (tabChanged && playTabSwitchSound && IsOpen)
+            PlayRandomTabSwitchSound();
 
         if (observationsPanel != null)
             observationsPanel.SetActive(tab == JournalTab.Observations);
@@ -321,6 +347,51 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         if (reflectionsPanel != null)
             reflectionsPanel.SetActive(tab == JournalTab.Reflections);
+    }
+
+    private void ConfigureJournalAudioSource()
+    {
+        if (journalAudioSource == null)
+            journalAudioSource = gameObject.AddComponent<AudioSource>();
+
+        journalAudioSource.spatialBlend = 0f;
+        journalAudioSource.playOnAwake = false;
+        journalAudioSource.loop = false;
+        journalAudioSource.volume = 1f;
+        journalAudioSource.clip = null;
+    }
+
+    private void PlayRandomTabSwitchSound()
+    {
+        if (journalAudioConfig == null || journalAudioConfig.TabSwitchSounds == null)
+            return;
+
+        List<AudioClip> validClips = new List<AudioClip>();
+        AudioClip[] configuredClips = journalAudioConfig.TabSwitchSounds;
+        for (int i = 0; i < configuredClips.Length; i++)
+        {
+            AudioClip clip = configuredClips[i];
+            if (clip != null && !validClips.Contains(clip))
+                validClips.Add(clip);
+        }
+
+        if (validClips.Count == 0)
+            return;
+
+        if (validClips.Count > 1)
+            validClips.Remove(lastTabSwitchClip);
+
+        AudioClip selectedClip = validClips[UnityEngine.Random.Range(0, validClips.Count)];
+        lastTabSwitchClip = selectedClip;
+        PlayJournalSound(selectedClip);
+    }
+
+    private void PlayJournalSound(AudioClip clip)
+    {
+        if (clip == null || journalAudioSource == null || journalAudioConfig == null)
+            return;
+
+        journalAudioSource.PlayOneShot(clip, Mathf.Clamp01(journalAudioConfig.UIVolume));
     }
 
     private void AddButtonListeners()
@@ -388,6 +459,29 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         return people.UnlockPerson(personID);
     }
+
+#if UNITY_EDITOR
+    public bool SetPersonUnlockedForDevelopmentTesting(string personID, bool unlocked)
+    {
+        return people != null &&
+               people.SetPersonUnlockedForDevelopmentTesting(personID, unlocked);
+    }
+
+    public bool SetObservationUnlockedForDevelopmentTesting(
+        string observationID, bool unlocked)
+    {
+        return observations != null &&
+               observations.SetObservationUnlockedForDevelopmentTesting(
+                   observationID, unlocked);
+    }
+
+    public bool SetFragmentUnlockedForDevelopmentTesting(
+        string fragmentID, bool unlocked)
+    {
+        return fragments != null &&
+               fragments.SetFragmentUnlockedForDevelopmentTesting(fragmentID, unlocked);
+    }
+#endif
 
     public bool SetPersonStage(string personID, int stageIndex)
     {

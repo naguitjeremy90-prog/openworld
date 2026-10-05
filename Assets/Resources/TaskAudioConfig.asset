@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60adecd2d2024ed1b271eb4dfdc52d68, type: 3}
+  m_Name: TaskAudioConfig
+  m_EditorClassIdentifier: Assembly-CSharp::TaskAudioConfig
+  mainTaskReceivedSound: {fileID: 8300000, guid: 9807a19b9f71ec648b75048cf115c2f6, type: 3}
+  sideTaskReceivedSound: {fileID: 8300000, guid: 0b2dc3f8bd139b04d9328ed800a6a70c, type: 3}
+  taskUpdatedSound: {fileID: 8300000, guid: 7478151cf36724a7dada558f746c3633, type: 3}
+  mainTaskCompletedSound: {fileID: 8300000, guid: 3a6cd568bbc5b4146b5763b9bf28ba85, type: 3}
+  sideTaskCompletedSound: {fileID: 8300000, guid: f9161582126b2034d8dbcbc0ad2a1dc4, type: 3}
+  uiVolume: 1

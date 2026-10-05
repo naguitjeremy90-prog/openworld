@@ -328,14 +328,14 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             false));
         RegisterDefinition(new GameplaySystemTutorialDefinition(
             GameplaySystemId.Inventory,
-            "Inventory",
-            "Stores important items Miguel receives during his investigation.",
+            "Imbentaryo",
+            "Dito inilalagay ang mahahalagang gamit na natatanggap ni Miguel habang nag-iimbestiga.",
             JournalPostRevealDelay,
             false));
         RegisterDefinition(new GameplaySystemTutorialDefinition(
             GameplaySystemId.Clarity,
-            "Clarity",
-            "Hold C to reveal important details that may be difficult to notice.",
+            "Pagsusuri",
+            "Pindutin at hawakan ang C para makita ang mahahalagang detalyeng mahirap mapansin.",
             JournalPostRevealDelay,
             false));
     }
@@ -363,8 +363,11 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
     private void HandleFlagChanged(string flagId, bool value)
     {
+        string seenFlagId = activeSystem == GameplaySystemId.Clarity && clarityStep == 1
+            ? GameplaySystemTutorialState.ClarityDocumentSeenFlagId
+            : GameplaySystemTutorialState.GetSeenFlagId(activeSystem);
         if (!hasActiveTutorial || !value ||
-            flagId != GameplaySystemTutorialState.GetSeenFlagId(activeSystem))
+            flagId != seenFlagId)
             return;
 
         ClearActive();
@@ -492,8 +495,11 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     private void RefreshPresentation()
     {
         HideAll();
+        bool activeTutorialSeen = activeSystem == GameplaySystemId.Clarity && clarityStep == 1
+            ? GameplaySystemTutorialState.ClarityDocumentSeen
+            : GameplaySystemTutorialState.IsSeen(activeSystem);
         if (!hasActiveTutorial || StorySequenceCoordinator.IsStorySequenceActive ||
-            GameplaySystemTutorialState.IsSeen(activeSystem) ||
+            activeTutorialSeen ||
             !presentationReady.Contains(activeSystem) || delayedPresentation != null ||
             activeSystemTemporarilyHidden)
             return;
@@ -508,32 +514,32 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         {
             if (inventoryStep == 1 && inventoryOpen)
             {
-                ShowInventoryStep("Item Details", "You can select an item to view its description.");
+                ShowInventoryStep("Mga Detalye ng Gamit", "Pumili ng gamit para makita ang paglalarawan nito.");
                 return;
             }
 
             if (inventoryStep == 3 && inventoryOpen)
             {
                 ShowInventoryStep(
-                    "Quest Items",
-                    "Quest Items may be removed when they are no longer needed.");
+                    "Mga Gamit sa Gawain",
+                    "Maaaring alisin ang mga gamit sa gawain kapag hindi na kailangan.");
                 return;
             }
 
             if (inventoryStep == 4 && inventoryOpen)
             {
                 ShowInventoryStep(
-                    "Key Items and Documents",
-                    "Key Items and Documents hold important items and information worth keeping.");
+                    "Mahahalagang Gamit at mga Kasulatan",
+                    "Dito makikita ang mahahalagang gamit at mga kasulatang dapat mong ingatan.");
                 return;
             }
         }
 
         if (activeSystem == GameplaySystemId.Clarity && clarityStep == 1)
         {
-            initialTitle.text = "Clarity — Documents";
+            initialTitle.text = "Pagsusuri sa mga Kasulatan";
             initialBody.text =
-                "You can also hold C while examining unreadable documents to reveal hidden details.";
+                "Pindutin at hawakan ang C habang sinusuri ang mga hindi mabasang kasulatan para makita ang mga nakatagong detalye.";
             initialPointer.gameObject.SetActive(false);
             initialCallout.gameObject.SetActive(true);
             presentationGroup.alpha = 1f;
@@ -551,8 +557,8 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         initialBody.text = definition.Description;
         if (activeSystem == GameplaySystemId.Inventory && inventoryStep == 2)
         {
-            initialTitle.text = "Inventory Updated";
-            initialBody.text = "Open your Inventory to see what changed.";
+            initialTitle.text = "May Bago sa Imbentaryo";
+            initialBody.text = "Buksan ang Imbentaryo para makita kung ano ang nagbago.";
         }
         initialPointer.gameObject.SetActive(definition.ShowInitialPointer);
         initialCallout.gameObject.SetActive(true);
@@ -610,7 +616,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     {
         journalTitle.text = title;
         journalBody.text = body;
-        journalNextLabel.text = inventoryStep >= 4 ? "Got it" : "Next";
+        journalNextLabel.text = inventoryStep >= 4 ? "Naintindihan ko" : "Susunod";
         bool itemDetailsStep = inventoryStep == 1;
         RectTransform target = null;
         if (itemDetailsStep)
@@ -924,7 +930,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
         initialCallout = CreateCallout("System Callout", new Vector2(390f, 132f), false,
             out initialTitle, out initialBody, out initialPointer, out _, out _);
-        journalCallout = CreateCallout("Gabay sa Tala-arawan", new Vector2(470f, 146f), true,
+        journalCallout = CreateCallout("Gabay sa Tala-arawan", new Vector2(510f, 146f), true,
             out journalTitle, out journalBody, out journalPointer, out journalNextButton, out journalNextLabel);
         journalNextButton.onClick.AddListener(AdvanceActiveTutorial);
         HideAll();
@@ -958,14 +964,14 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         RectTransform titleRect = title.rectTransform;
         titleRect.anchorMin = titleRect.anchorMax = new Vector2(0.5f, 1f);
         titleRect.pivot = new Vector2(0.5f, 1f);
-        titleRect.sizeDelta = new Vector2(size.x - (includeButton ? 121f : 32f), 28f);
-        titleRect.anchoredPosition = new Vector2(includeButton ? -44.5f : 0f, -10f);
+        titleRect.sizeDelta = new Vector2(size.x - (includeButton ? 161f : 32f), 28f);
+        titleRect.anchoredPosition = new Vector2(includeButton ? -64.5f : 0f, -10f);
 
         RectTransform bodyRect = body.rectTransform;
         bodyRect.anchorMin = bodyRect.anchorMax = new Vector2(0.5f, 1f);
         bodyRect.pivot = new Vector2(0.5f, 1f);
-        bodyRect.sizeDelta = new Vector2(size.x - (includeButton ? 121f : 32f), 88f);
-        bodyRect.anchoredPosition = new Vector2(includeButton ? -44.5f : 0f, -42f);
+        bodyRect.sizeDelta = new Vector2(size.x - (includeButton ? 161f : 32f), 88f);
+        bodyRect.anchoredPosition = new Vector2(includeButton ? -64.5f : 0f, -42f);
 
         pointer = CreateText(
             panel, "Pointer", Vector2.zero, Vector2.zero, 24f, FontStyles.Bold);
@@ -988,7 +994,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             buttonRect.anchorMax = new Vector2(1f, 0.5f);
             buttonRect.pivot = new Vector2(1f, 0.5f);
             buttonRect.anchoredPosition = new Vector2(-14f, 0f);
-            buttonRect.sizeDelta = new Vector2(80f, 38f);
+            buttonRect.sizeDelta = new Vector2(120f, 38f);
             buttonObject.GetComponent<Image>().color = new Color(0.68f, 0.55f, 0.34f, 1f);
             actionButton = buttonObject.GetComponent<Button>();
             actionLabel = CreateText(buttonRect, "Label", Vector2.zero, Vector2.zero, 15f, FontStyles.Bold);

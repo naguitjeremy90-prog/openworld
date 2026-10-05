@@ -7474,6 +7474,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 1
   linkedPatrol: {fileID: 0}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -8656,7 +8658,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: INVENTORY
+  m_text: IMBENTARYO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}
   m_sharedMaterial: {fileID: 939019467}
@@ -8750,6 +8752,7 @@ GameObject:
   - component: {fileID: 377387058}
   - component: {fileID: 377387057}
   - component: {fileID: 377387060}
+  - component: {fileID: 2300000006}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -8797,6 +8800,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 0
   linkedPatrol: {fileID: 1593871886}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -8838,7 +8843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TaskProgressTrigger
   taskId: main_investigate_pili
   progressId: mang_iko
-  registerOnCompletion: 0
+  registerOnCompletion: 1
   once: 1
   amount: 1
   npcConversationTrigger: {fileID: 377387057}
@@ -10047,6 +10052,127 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &432565508
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432565502}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &432565509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432565502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c980cf549ad7884d9a21f930c6daec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementAudio
+  movementAudioSource: {fileID: 432565508}
+  runningSequenceAudioSource: {fileID: 432565508}
+  walkingFootsteps:
+  - {fileID: 8300000, guid: b3e9cdac26b78934197456d8199e30bc, type: 3}
+  runningFootsteps:
+  - {fileID: 8300000, guid: 05bffc1466b85b747aee4c35e6f65258, type: 3}
+  walkingFootstepVolume: 0.399
+  runningFootstepVolume: 1
+  jumpSound: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+  landingSound: {fileID: 8300000, guid: 98e005e2d5100484b88927d0803cb395, type: 3}
+  jumpVolume: 1
+  landingVolume: 1
 --- !u!1001 &432737812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10325,6 +10451,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       insertIndex: -1
       addedObject: {fileID: 432565507}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 432565509}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 432565508}
   m_SourcePrefab: {fileID: 100100000, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
 --- !u!4 &455556418 stripped
 Transform:
@@ -10952,17 +11084,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3900108755395677323, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.6639633
+    - target: {fileID: 3900108755395677320, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: m_Type
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3900108755395677320, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2157221d5a60b7e4fa7cf9f4501281e3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3900108755062758285, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1619567840}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
 --- !u!1001 &499569764
 PrefabInstance:
@@ -15814,6 +15947,7 @@ GameObject:
   - component: {fileID: 758248278}
   - component: {fileID: 758248277}
   - component: {fileID: 758248280}
+  - component: {fileID: 2300000008}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -15939,6 +16073,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 1
   linkedPatrol: {fileID: 0}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -16041,6 +16177,7 @@ GameObject:
   - component: {fileID: 789395902}
   - component: {fileID: 789395905}
   - component: {fileID: 789395906}
+  - component: {fileID: 2300000001}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -16166,6 +16303,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 1
   linkedPatrol: {fileID: 0}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -18912,7 +19051,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -125.6}
-  m_SizeDelta: {x: 250, y: 60}
+  m_SizeDelta: {x: 360, y: 60}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &928605630
 MonoBehaviour:
@@ -20647,6 +20786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   player: {fileID: 432565506}
+  movementToHoldDuringReturn: {fileID: 0}
 --- !u!1001 &1045004944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22440,7 +22580,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.09998894}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 324, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1129244819
 MonoBehaviour:
@@ -24309,6 +24449,7 @@ GameObject:
   - component: {fileID: 1220955101}
   - component: {fileID: 1220955100}
   - component: {fileID: 1220955102}
+  - component: {fileID: 2300000005}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -24356,6 +24497,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 0
   linkedPatrol: {fileID: 0}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -26944,6 +27087,7 @@ MonoBehaviour:
   peopleTabVisual: {fileID: 1882548573}
   fragmentsTabVisual: {fileID: 2039164619}
   reflectionsTabVisual: {fileID: 196671147}
+  journalAudioSource: {fileID: 0}
 --- !u!114 &1390738429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30517,6 +30661,7 @@ GameObject:
   - component: {fileID: 1535944420}
   - component: {fileID: 1535944419}
   - component: {fileID: 1535944422}
+  - component: {fileID: 2300000009}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -30642,6 +30787,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 1
   linkedPatrol: {fileID: 0}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -31807,25 +31954,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &1619567837 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3900108755062758285, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
-  m_PrefabInstance: {fileID: 491072692}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1619567840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1619567837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba3b10855e36b6e4086f9c61c601bed7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueMovementLock
-  playerMovementScript: {fileID: 432565503}
-  playerAnimator: {fileID: 432565507}
 --- !u!1 &1626591245
 GameObject:
   m_ObjectHideFlags: 0
@@ -32572,6 +32700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   player: {fileID: 432565506}
+  movementToHoldDuringReturn: {fileID: 0}
 --- !u!1 &1690817457
 GameObject:
   m_ObjectHideFlags: 0
@@ -33779,6 +33908,7 @@ GameObject:
   - component: {fileID: 1732385629}
   - component: {fileID: 1732385628}
   - component: {fileID: 1732385630}
+  - component: {fileID: 2300000004}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -33826,6 +33956,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 1
   linkedPatrol: {fileID: 0}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -34590,6 +34722,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 1
   linkedPatrol: {fileID: 0}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -34782,6 +34916,7 @@ GameObject:
   - component: {fileID: 1801965142}
   - component: {fileID: 1801965141}
   - component: {fileID: 1801965144}
+  - component: {fileID: 2300000007}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -34829,6 +34964,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 0
   linkedPatrol: {fileID: 1045004946}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -34870,7 +35007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TaskProgressTrigger
   taskId: main_investigate_pili
   progressId: mang_tibo
-  registerOnCompletion: 0
+  registerOnCompletion: 1
   once: 1
   amount: 1
   npcConversationTrigger: {fileID: 1801965141}
@@ -36372,9 +36509,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 74765f022891b1a4792d8693bc6155bc, type: 3}
+  m_Resource: {fileID: 8300000, guid: 898836e4e90615f4aaf689d67e21785c, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.246
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -36554,6 +36691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   player: {fileID: 432565506}
+  movementToHoldDuringReturn: {fileID: 0}
 --- !u!1 &1882250572 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 955420883331370343, guid: feebd43cdc3bf574e9bf5ee896dd72c0, type: 3}
@@ -38664,6 +38802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   player: {fileID: 432565506}
+  movementToHoldDuringReturn: {fileID: 0}
 --- !u!1 &1958591831
 GameObject:
   m_ObjectHideFlags: 0
@@ -38931,6 +39070,7 @@ GameObject:
   - component: {fileID: 1973718975}
   - component: {fileID: 1973718974}
   - component: {fileID: 1973718977}
+  - component: {fileID: 2300000002}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -38978,6 +39118,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 0
   linkedPatrol: {fileID: 1968608781}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -39582,6 +39724,7 @@ GameObject:
   - component: {fileID: 1990274571}
   - component: {fileID: 1990274570}
   - component: {fileID: 1990274573}
+  - component: {fileID: 2300000003}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -39629,6 +39772,8 @@ MonoBehaviour:
   turnSpeed: 5
   returnToOriginalDirection: 0
   linkedPatrol: {fileID: 1771224930}
+  linkedConversationMovement: {fileID: 0}
+  availabilityCondition: {fileID: 0}
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -40944,6 +41089,7 @@ MonoBehaviour:
   player: {fileID: 432565506}
   playerMovementScript: {fileID: 432565503}
   playerAnimator: {fileID: 432565507}
+  cinemachineReturnTimeout: 8
 --- !u!4 &2098592226
 Transform:
   m_ObjectHideFlags: 0
@@ -41799,6 +41945,345 @@ Transform:
   m_Children: []
   m_Father: {fileID: 683920640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2300000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789395900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_investigate_pili
+    requiredStageId: gather_information
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:questioned_maria_nene
+    expectedStoryFlagValue: 0
+    appearance: 1
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973718972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_investigate_pili
+    requiredStageId: gather_information
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_kardo
+    expectedStoryFlagValue: 0
+    appearance: 1
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990274568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_investigate_pili
+    requiredStageId: gather_information
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_nardo
+    expectedStoryFlagValue: 0
+    appearance: 1
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732385626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_investigate_pili
+    requiredStageId: gather_information
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:nena
+    expectedStoryFlagValue: 0
+    appearance: 1
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220955098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_investigate_pili
+    requiredStageId: gather_information
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:toto
+    expectedStoryFlagValue: 0
+    appearance: 1
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377387055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_investigate_pili
+    requiredStageId: gather_information
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_iko
+    expectedStoryFlagValue: 0
+    appearance: 1
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801965139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_investigate_pili
+    requiredStageId: gather_information
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_tibo
+    expectedStoryFlagValue: 0
+    appearance: 1
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758248275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: aling_ika_errand
+    requiredStageId: 
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: aling_ika_payment_received
+    expectedStoryFlagValue: 1
+    appearance: 3
+    hideWhenTaskCompleted: 1
+  - taskId: aling_ika_errand
+    requiredStageId: 
+    minimumStageId: 
+    taskState: 1
+    requiredStoryFlagId: aling_ika_started
+    expectedStoryFlagValue: 0
+    appearance: 2
+    hideWhenTaskCompleted: 1
+  - taskId: aling_ika_errand
+    requiredStageId: 
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: aling_ika_payment_received
+    expectedStoryFlagValue: 0
+    appearance: 4
+    hideWhenTaskCompleted: 1
+--- !u!114 &2300000009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535944417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.5, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: aling_ika_errand
+    requiredStageId: 
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: aling_ika_payment_received
+    expectedStoryFlagValue: 0
+    appearance: 3
+    hideWhenTaskCompleted: 1
+  - taskId: aling_ika_errand
+    requiredStageId: 
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: aling_ika_payment_received
+    expectedStoryFlagValue: 1
+    appearance: 5
+    hideWhenTaskCompleted: 1
 --- !u!1001 &1449241785884285321
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41846,6 +42331,10 @@ PrefabInstance:
     - target: {fileID: 3744170062784308339, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4539478978178648670, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
+      propertyPath: taskDefinitions.Array.data[1].stages.Array.data[4].objectiveText
+      value: Hanapin si Anday sa dulo ng Bayan.
       objectReference: {fileID: 0}
     - target: {fileID: 6492435229044996695, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
       propertyPath: m_Name

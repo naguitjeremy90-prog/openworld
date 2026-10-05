@@ -84,6 +84,24 @@ public class ReconstructionObservations : MonoBehaviour
         return unlockedObservationIDs.Contains(observationID);
     }
 
+#if UNITY_EDITOR
+    internal bool SetObservationUnlockedForDevelopmentTesting(
+        string observationID, bool unlocked)
+    {
+        if (FindObservation(observationID) == null)
+            return false;
+
+        if (unlocked)
+            unlockedObservationIDs.Add(observationID);
+        else
+            unlockedObservationIDs.Remove(observationID);
+
+        SessionStoryState.SetFlag(UnlockFlagPrefix + observationID, unlocked);
+        RefreshList();
+        return true;
+    }
+#endif
+
     public void UnlockTestObservation()
     {
         UnlockObservation(testObservationID);

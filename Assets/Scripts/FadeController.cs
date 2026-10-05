@@ -9,6 +9,7 @@ public class FadeController : MonoBehaviour
 
     [Header("Start Behaviour")]
     [SerializeField] private bool fadeInOnStart = true;
+    private bool holdBlackForSequence;
 
     private void Awake()
     {
@@ -33,8 +34,16 @@ public class FadeController : MonoBehaviour
         if (fadeCanvasGroup == null)
             return;
 
-        if (fadeInOnStart)
+        if (fadeInOnStart && !holdBlackForSequence)
             StartCoroutine(FadeFromBlack());
+    }
+
+    /// <summary>Keeps the existing fade canvas black for a scene-local authored sequence.</summary>
+    public void HoldBlackForSequence()
+    {
+        holdBlackForSequence = true;
+        if (fadeCanvasGroup != null)
+            fadeCanvasGroup.alpha = 1f;
     }
 
     public IEnumerator FadeToBlack()
@@ -77,6 +86,24 @@ public class FadeController : MonoBehaviour
                 time / fadeDuration
             );
 
+            yield return null;
+        }
+
+        fadeCanvasGroup.alpha = 0f;
+    }
+
+    public IEnumerator FadeFromBlack(float duration)
+    {
+        if (fadeCanvasGroup == null)
+            yield break;
+
+        fadeCanvasGroup.alpha = 1f;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            fadeCanvasGroup.alpha = Mathf.Lerp(1f, 0f, time / duration);
             yield return null;
         }
 

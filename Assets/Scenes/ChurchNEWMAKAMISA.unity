@@ -1617,11 +1617,11 @@ PrefabInstance:
     - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
       propertyPath: OptionImage
       value: 
-      objectReference: {fileID: 21300000, guid: 2157221d5a60b7e4fa7cf9f4501281e3, type: 3}
+      objectReference: {fileID: 21300000, guid: bf566e80557acbc45b9a695fcaa25327, type: 3}
     - target: {fileID: 3900108755196472086, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
       propertyPath: BackgroundImage
       value: 
-      objectReference: {fileID: 21300000, guid: 2157221d5a60b7e4fa7cf9f4501281e3, type: 3}
+      objectReference: {fileID: 21300000, guid: bf566e80557acbc45b9a695fcaa25327, type: 3}
     - target: {fileID: 3900108755196472087, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4042,6 +4042,7 @@ Transform:
   - {fileID: 1373499117}
   - {fileID: 477780379}
   - {fileID: 1038118660}
+  - {fileID: 943350506}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &294150919
@@ -6738,6 +6739,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       insertIndex: -1
       addedObject: {fileID: 454897940}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 454897942}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 454897941}
   m_SourcePrefab: {fileID: 100100000, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
 --- !u!4 &454897932 stripped
 Transform:
@@ -7021,6 +7028,127 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &454897941
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 454897933}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &454897942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 454897933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c980cf549ad7884d9a21f930c6daec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementAudio
+  movementAudioSource: {fileID: 454897941}
+  runningSequenceAudioSource: {fileID: 454897941}
+  walkingFootsteps:
+  - {fileID: 8300000, guid: b3e9cdac26b78934197456d8199e30bc, type: 3}
+  runningFootsteps:
+  - {fileID: 8300000, guid: 05bffc1466b85b747aee4c35e6f65258, type: 3}
+  walkingFootstepVolume: 0.399
+  runningFootstepVolume: 1
+  jumpSound: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+  landingSound: {fileID: 8300000, guid: 98e005e2d5100484b88927d0803cb395, type: 3}
+  jumpVolume: 1
+  landingVolume: 1
 --- !u!134 &468150451
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -7701,10 +7829,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Ang
-    sabi, nakapagbayad na raw.","parentUIDs":[],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":180,"yPos":0},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Nakapagbayad
-    na? Bakit tinanggihan pa rin?","parentUIDs":[0],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":360,"yPos":0},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Iyon
-    nga ang hindi maintindihan ng mga tao.","parentUIDs":[1],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":-6.599991,"yPos":99.59999},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Naku!
+    Kung anu-ano na ang sinasabi ng mga tao...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":268.599182,"yPos":196.399963},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Huwag
+    tayong manghusga, mga ineng.","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":450.199646,"yPos":72.39998},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Jusko!
+    Ano na ang nangyayari sa Pili...","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: ...
   DefaultSprite: {fileID: 0}
@@ -8722,6 +8850,7 @@ MonoBehaviour:
   introDirector: {fileID: 408561722}
   eyelidCanvas: {fileID: 976695222}
   eyelidImage: {fileID: 853446819}
+  eyelidController: {fileID: 853446822}
   churchDeparture: {fileID: 1916767379}
   padreDeparture: {fileID: 1213790806}
   initialBlackDuration: 1
@@ -8733,8 +8862,6 @@ MonoBehaviour:
   blinkDuration: 0.35
   finalOpeningDuration: 1
   awakeHoldDuration: 1
-  eyelidFeather: 0.022
-  eyelidCurvature: 0.32
   headMovementStrength: 1
   headTiltDegrees: 1.53
   headSwayDegrees: 1.32
@@ -11315,6 +11442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   player: {fileID: 454897932}
+  movementToHoldDuringReturn: {fileID: 0}
 --- !u!1 &853446818
 GameObject:
   m_ObjectHideFlags: 0
@@ -11326,6 +11454,7 @@ GameObject:
   - component: {fileID: 853446821}
   - component: {fileID: 853446820}
   - component: {fileID: 853446819}
+  - component: {fileID: 853446822}
   m_Layer: 0
   m_Name: SoftCurvedEyelids
   m_TagString: Untagged
@@ -11390,6 +11519,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &853446822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853446818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890793da6f45a2d4a894e96367f7e854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftCurvedEyelidController
+  eyelidImage: {fileID: 853446819}
+  eyelidFeather: 0.022
+  eyelidCurvature: 0.32
 --- !u!1 &862618154
 GameObject:
   m_ObjectHideFlags: 0
@@ -13443,8 +13587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":124.600014,"yPos":74.00001},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"May
-    tinanggihan ang pari? may pinag-uusapan sila...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":74.9999847,"yPos":123.600006},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Sino?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: Miguel
   DefaultSprite: {fileID: 0}
@@ -13609,6 +13752,80 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1001 &943350505
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 291926818}
+    m_Modifications:
+    - target: {fileID: 1754954135834508, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_Name
+      value: Bld_Common_Window_A
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4994493
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.49944934
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.4994493
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.1939954
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.60232407
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.30361524
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7607336
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.00000001662636
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6490643
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.000000014185752
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 80.942
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+--- !u!4 &943350506 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4525794273110438, guid: 1adcf757e7b5d744088a789fed03674d, type: 3}
+  m_PrefabInstance: {fileID: 943350505}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &948644313
 GameObject:
   m_ObjectHideFlags: 0
@@ -13828,6 +14045,213 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!1 &987650001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 987650002}
+  - component: {fileID: 987650003}
+  - component: {fileID: 987650004}
+  - component: {fileID: 987650005}
+  m_Layer: 5
+  m_Name: FadeImageCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &987650002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 987650007}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!223 &987650003
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650001}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 32100
+  m_TargetDisplay: 0
+--- !u!114 &987650004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!114 &987650005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!1 &987650006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 987650007}
+  - component: {fileID: 987650008}
+  - component: {fileID: 987650009}
+  - component: {fileID: 987650010}
+  - component: {fileID: 987650011}
+  m_Layer: 5
+  m_Name: FadeImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &987650007
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650006}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 987650002}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &987650008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f4e89a5917eda74cb316e427d12cfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  fadeCanvasGroup: {fileID: 987650009}
+  fadeDuration: 0.5
+  fadeInOnStart: 1
+--- !u!225 &987650009
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650006}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &987650010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &987650011
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987650006}
+  m_CullTransparentMesh: 1
 --- !u!1 &992899216
 GameObject:
   m_ObjectHideFlags: 0
@@ -17283,6 +17707,7 @@ MonoBehaviour:
   detailName: {fileID: 1065514763}
   detailDescription: {fileID: 1333985650}
   gameplayBehavioursToDisable: []
+  inventoryAudioSource: {fileID: 0}
 --- !u!224 &1263283359
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19324,10 +19749,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Hindi
-    lang iyon. May tinanggihan daw siya kanina.","parentUIDs":[],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":180,"yPos":0},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Talaga?
-    Ano naman kaya ang dahilan?","parentUIDs":[0],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":360,"yPos":0},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Hindi
-    ko rin alam. Ang dami ngang nagtatanong.","parentUIDs":[1],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":-77.8,"yPos":104.399994},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Iba
+    ang kilos niya kanina.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":139.799988,"yPos":96.39998},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Talaga
+    ba? Jusko, Inday! Bakit kaya?","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":347.0006,"yPos":54.7999878},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Hindi
+    ko pa siya nakitang ganoon.","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: ...
   DefaultSprite: {fileID: 0}
@@ -20405,7 +20830,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.09998894}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 324, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1510252387
 MonoBehaviour:
@@ -20644,6 +21069,135 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1514851978}
   m_CullTransparentMesh: 1
+--- !u!1 &1525881074
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1525881076}
+  - component: {fileID: 1525881075}
+  m_Layer: 0
+  m_Name: BGMusic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1525881075
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525881074}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 2c3c63fea6f5450419d4bfc31cc3e8ca, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.246
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1525881076
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525881074}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 58.38126, y: 0, z: -74.86099}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1535911088
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20884,8 +21438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":59.8000031,"yPos":62.80001},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Hindi
-    talaga ito ang simbahan...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":75,"yPos":85.2},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: Miguel
   DefaultSprite: {fileID: 0}
@@ -21421,7 +21974,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -125.6}
-  m_SizeDelta: {x: 250, y: 60}
+  m_SizeDelta: {x: 360, y: 60}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1599878048
 MonoBehaviour:
@@ -21440,6 +21993,7 @@ MonoBehaviour:
   detailText: {fileID: 1510252387}
   fadeDuration: 0.25
   visibleDuration: 2.75
+  taskNotificationAudioSource: {fileID: 0}
 --- !u!114 &1599878049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21706,8 +22260,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":62.1999969,"yPos":87.60001},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"A-anong
-    nangyari?...\nHindi ito ang simbahan ah?...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":24.59999,"yPos":66.00001},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"a-
+    anong nangyari...?\n","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: Miguel
   DefaultSprite: {fileID: 0}
@@ -22050,7 +22604,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: INVENTORY
+  m_text: IMBENTARYO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}
   m_sharedMaterial: {fileID: 577780636}
@@ -23018,9 +23572,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"May
-    bayad na, pero tumanggi pa rin siya... Kailangan kong malaman kung ano talaga
-    ang nangyari.","parentUIDs":[],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":86.99999,"yPos":75.6000061},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Pili?
+    Pero hindi ito ang simbahan ah...\n","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: Miguel
   DefaultSprite: {fileID: 0}
@@ -24007,9 +24560,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":0,"yPos":0},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Napansin
-    mo ba kung paano umalis si Padre pagkatapos ng misa?","parentUIDs":[],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":180,"yPos":0},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Oo.
-    Parang masama ang loob niya.","parentUIDs":[0],"SpeechUID":-1,"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"TimeUntilAdvance":0,"Volume":0}]}'
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Napansin
+    mo ba siya?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":375.800018,"yPos":4.399994},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Oo.
+    Parang may bumabagabag sa kanya.","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"...","OptionUIDs":null,"SpeechUID":-1,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: ...
   DefaultSprite: {fileID: 0}
@@ -24972,6 +25525,7 @@ MonoBehaviour:
   peopleTabVisual: {fileID: 2003174907}
   fragmentsTabVisual: {fileID: 1697658048}
   reflectionsTabVisual: {fileID: 1351937783}
+  journalAudioSource: {fileID: 0}
 --- !u!114 &1956083623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27285,3 +27839,5 @@ SceneRoots:
   - {fileID: 1362919203}
   - {fileID: 849712816}
   - {fileID: 268595312}
+  - {fileID: 1525881076}
+  - {fileID: 987650002}

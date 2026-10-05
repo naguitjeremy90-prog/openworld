@@ -90,7 +90,7 @@ MonoBehaviour:
       requiredCount: 0
       allowedProgressIds: []
     - stageId: find_anday
-      objectiveText: Hanapin si Anday.
+      objectiveText: Hanapin si Anday sa dulo ng Bayan.
       requiredCount: 0
       allowedProgressIds: []
     - stageId: find_kutsero
@@ -107,5 +107,18 @@ MonoBehaviour:
       allowedProgressIds: []
     - stageId: return_to_anday
       objectiveText: Bumalik kay Anday.
+      requiredCount: 0
+      allowedProgressIds: []
+  - taskId: side_kutsero_pasabi
+    title: Pasabi ng Kutsero
+    startingObjective: Ipaabot ang mensahe ng kutsero sa tindera.
+    taskType: 1
+    stages:
+    - stageId: deliver_message
+      objectiveText: Ipaabot ang mensahe ng kutsero sa tindera.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: return_to_kutsero
+      objectiveText: Bumalik sa kutsero.
       requiredCount: 0
       allowedProgressIds: []

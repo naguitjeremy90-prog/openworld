@@ -381,6 +381,23 @@ public sealed class TaskManager : MonoBehaviour
             string.Equals(currentStageId, stageId.Trim(), StringComparison.Ordinal);
     }
 
+    public bool IsCurrentStageAtOrAfter(string taskId, string earliestStageId)
+    {
+        if (!TryGetDefinition(taskId, out TaskData task) ||
+            string.IsNullOrWhiteSpace(earliestStageId) ||
+            !currentStageByTaskId.TryGetValue(taskId.Trim(), out string currentStageId) ||
+            task.Stages == null)
+        {
+            return false;
+        }
+
+        int earliestIndex = Array.FindIndex(task.Stages, stage => stage != null &&
+            string.Equals(stage.StageId?.Trim(), earliestStageId.Trim(), StringComparison.Ordinal));
+        int currentIndex = Array.FindIndex(task.Stages, stage => stage != null &&
+            string.Equals(stage.StageId?.Trim(), currentStageId, StringComparison.Ordinal));
+        return earliestIndex >= 0 && currentIndex >= earliestIndex;
+    }
+
     public void RegisterNotificationUI(TaskNotificationUI ui)
     {
         if (ui != null)

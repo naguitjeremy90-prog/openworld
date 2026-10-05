@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public sealed class InventoryUI : MonoBehaviour
 {
     private const int FullInterfaceSortingOrder = 300;
+    private const string InventoryAudioConfigResourcePath = "InventoryAudioConfig";
     private enum InventoryFilter
     {
         All,
@@ -49,6 +50,9 @@ public sealed class InventoryUI : MonoBehaviour
     [Tooltip("Assign only gameplay input behaviours (movement, camera look, interaction) that should be disabled while this menu is open.")]
     [SerializeField] private MonoBehaviour[] gameplayBehavioursToDisable = new MonoBehaviour[0];
 
+    [Header("Inventory UI Audio")]
+    [SerializeField] private AudioSource inventoryAudioSource;
+
     private readonly List<InventorySlotUI> spawnedSlots = new List<InventorySlotUI>();
     private readonly List<InventoryItemData> filteredItems = new List<InventoryItemData>();
 
@@ -63,6 +67,8 @@ public sealed class InventoryUI : MonoBehaviour
     private bool previousCursorVisible;
     private bool inputIsBlocked;
     private InventoryFilter currentFilter = InventoryFilter.All;
+    private InventoryAudioConfig inventoryAudioConfig;
+    private AudioClip lastTabSwitchClip;
 
     public bool IsOpen { get; private set; }
 
@@ -90,6 +96,9 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        inventoryAudioConfig = Resources.Load<InventoryAudioConfig>(InventoryAudioConfigResourcePath);
+        ConfigureInventoryAudioSource();
+
         Canvas inventoryCanvas = GetComponentInParent<Canvas>();
         if (inventoryCanvas != null)
         {
@@ -216,6 +225,8 @@ public sealed class InventoryUI : MonoBehaviour
             return;
 
         IsOpen = true;
+        PlayInventorySound(
+            inventoryAudioConfig != null ? inventoryAudioConfig.InventoryOpenSound : null);
         BindToManager();
         Refresh();
         SetGameplayInputBlocked(true);
@@ -230,6 +241,8 @@ public sealed class InventoryUI : MonoBehaviour
             return;
 
         IsOpen = false;
+        PlayInventorySound(
+            inventoryAudioConfig != null ? inventoryAudioConfig.InventoryCloseSound : null);
         SetGameplayInputBlocked(false);
         FadeTo(0f, true);
         if (GameplaySystemTutorialManager.HasInstance)
@@ -406,11 +419,60 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void SetFilter(InventoryFilter filter)
     {
+        bool filterChanged = filter != currentFilter;
         currentFilter = filter;
         UpdateTabVisuals();
 
+        if (filterChanged && IsOpen)
+            PlayRandomTabSwitchSound();
+
         if (IsOpen)
             Refresh();
+    }
+
+    private void ConfigureInventoryAudioSource()
+    {
+        if (inventoryAudioSource == null)
+            inventoryAudioSource = gameObject.AddComponent<AudioSource>();
+
+        inventoryAudioSource.spatialBlend = 0f;
+        inventoryAudioSource.playOnAwake = false;
+        inventoryAudioSource.loop = false;
+        inventoryAudioSource.volume = 1f;
+        inventoryAudioSource.clip = null;
+    }
+
+    private void PlayRandomTabSwitchSound()
+    {
+        if (inventoryAudioConfig == null || inventoryAudioConfig.TabSwitchSounds == null)
+            return;
+
+        List<AudioClip> validClips = new List<AudioClip>();
+        AudioClip[] configuredClips = inventoryAudioConfig.TabSwitchSounds;
+        for (int i = 0; i < configuredClips.Length; i++)
+        {
+            AudioClip clip = configuredClips[i];
+            if (clip != null && !validClips.Contains(clip))
+                validClips.Add(clip);
+        }
+
+        if (validClips.Count == 0)
+            return;
+
+        if (validClips.Count > 1)
+            validClips.Remove(lastTabSwitchClip);
+
+        AudioClip selectedClip = validClips[UnityEngine.Random.Range(0, validClips.Count)];
+        lastTabSwitchClip = selectedClip;
+        PlayInventorySound(selectedClip);
+    }
+
+    private void PlayInventorySound(AudioClip clip)
+    {
+        if (clip == null || inventoryAudioSource == null || inventoryAudioConfig == null)
+            return;
+
+        inventoryAudioSource.PlayOneShot(clip, Mathf.Clamp01(inventoryAudioConfig.UIVolume));
     }
 
     private bool MatchesCurrentFilter(InventoryItemData item)

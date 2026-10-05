@@ -7,8 +7,16 @@ using UnityEngine.Video;
 /// <summary>Plays a cinematic bridge and hands its story presentation to the destination intro.</summary>
 public sealed class TransportationSceneController : MonoBehaviour
 {
+    private const string TransportDestinationStateId = "makamisa_transport_destination";
+    private const string Part1PosadaDestination = "posada_part1";
+    private const string Part1PosadaSceneName = "PosadaRoom";
+
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private PlayableDirector cinematicDirector;
+    [SerializeField] private AudioClip miguelShoutClip;
+    [SerializeField, Min(0f)] private float miguelShoutDelay = 1.5f;
+    [SerializeField, Min(1)] private int miguelShoutCount = 3;
+    [SerializeField, Min(0f)] private float miguelShoutPause = 0.5f;
     [SerializeField, Min(0.1f)] private float prepareWaitTimeout = 2f;
     [SerializeField] private string destinationSceneName = "ChurchNEWMAKAMISA";
     [SerializeField] private string destinationIntroDirectorName = "Introtimeline";
@@ -16,10 +24,14 @@ public sealed class TransportationSceneController : MonoBehaviour
     private StorySequenceToken transportToken;
     private StorySequenceToken destinationIntroToken;
     private PlayableDirector destinationIntroDirector;
+    private AudioSource miguelShoutAudioSource;
     private bool videoPrepared;
     private bool videoFailed;
     private bool cinematicStarted;
+    private bool miguelShoutSequenceStarted;
     private bool leavingScene;
+    private bool part1PosadaRoute;
+    private string activeDestinationSceneName;
     private float playbackStartedAt;
 
     private void Awake()
@@ -27,6 +39,15 @@ public sealed class TransportationSceneController : MonoBehaviour
         transportToken = StorySequenceCoordinator.Acquire(this);
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += HandleSceneLoaded;
+
+        GameObject shoutAudioObject = new GameObject("MiguelShoutAudio");
+        miguelShoutAudioSource = shoutAudioObject.AddComponent<AudioSource>();
+
+        miguelShoutAudioSource.playOnAwake = false;
+        miguelShoutAudioSource.loop = false;
+        miguelShoutAudioSource.volume = 1f;
+        miguelShoutAudioSource.spatialBlend = 0f;
+        miguelShoutAudioSource.clip = null;
 
         if (videoPlayer == null)
             videoPlayer = FindAnyObjectByType<VideoPlayer>();
@@ -144,6 +165,46 @@ public sealed class TransportationSceneController : MonoBehaviour
         cinematicStarted = true;
         cinematicDirector.time = 0d;
         cinematicDirector.Play();
+        if (!miguelShoutSequenceStarted)
+        {
+            miguelShoutSequenceStarted = true;
+            StartCoroutine(PlayMiguelShoutsAfterDelay());
+        }
+    }
+
+    private IEnumerator PlayMiguelShoutsAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(Mathf.Max(0f, miguelShoutDelay));
+
+        if (miguelShoutClip == null || miguelShoutAudioSource == null)
+        {
+            yield break;
+        }
+
+        int shoutCount = Mathf.Max(1, miguelShoutCount);
+        for (int shoutIndex = 0; shoutIndex < shoutCount; shoutIndex++)
+        {
+            if (leavingScene)
+                yield break;
+
+            miguelShoutAudioSource.PlayOneShot(miguelShoutClip);
+
+            if (shoutIndex >= shoutCount - 1)
+                yield break;
+
+            while (miguelShoutAudioSource.isPlaying)
+            {
+                if (leavingScene)
+                    yield break;
+
+                yield return null;
+            }
+
+            if (leavingScene)
+                yield break;
+
+            yield return new WaitForSecondsRealtime(Mathf.Max(0f, miguelShoutPause));
+        }
     }
 
     private void FinishVideo()
@@ -159,10 +220,18 @@ public sealed class TransportationSceneController : MonoBehaviour
         if (iris == null)
             iris = new GameObject("IrisTransitionController").AddComponent<IrisTransitionController>();
 
-        if (iris.TransitionToScene(destinationSceneName, transportToken) == null)
+        part1PosadaRoute = SessionStoryState.GetString(TransportDestinationStateId) ==
+                           Part1PosadaDestination;
+        activeDestinationSceneName = part1PosadaRoute
+            ? Part1PosadaSceneName
+            : destinationSceneName;
+
+        if (iris.TransitionToScene(activeDestinationSceneName, transportToken) == null)
         {
             Debug.LogError("Transportation scene could not start the destination transition.", this);
             leavingScene = false;
+            part1PosadaRoute = false;
+            activeDestinationSceneName = null;
             return;
         }
 
@@ -178,8 +247,17 @@ public sealed class TransportationSceneController : MonoBehaviour
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (!leavingScene || scene.name != destinationSceneName)
+        if (!leavingScene || scene.name != activeDestinationSceneName)
             return;
+
+        // PosadaRoom's scene-local arrival controller claims its own story token
+        // in Awake, before this sceneLoaded callback and before the iris releases
+        // the transport token. It owns the sequence instead of an intro Timeline.
+        if (part1PosadaRoute)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         PlayableDirector[] directors = FindObjectsByType<PlayableDirector>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (PlayableDirector director in directors)

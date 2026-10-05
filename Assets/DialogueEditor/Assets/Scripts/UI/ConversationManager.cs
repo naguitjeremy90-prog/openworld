@@ -76,6 +76,7 @@ namespace DialogueEditor
         private Conversation m_conversation;
         private SpeechNode m_currentSpeech;
         private OptionNode m_selectedOption;
+        private DialogueTypingAudio m_dialogueTypingAudio;
 
         // Selection options
         private List<UIConversationButton> m_uiOptions;
@@ -96,6 +97,7 @@ namespace DialogueEditor
             Instance = this;
 
             m_uiOptions = new List<UIConversationButton>();
+            m_dialogueTypingAudio = GetComponent<DialogueTypingAudio>();
 
             NpcIcon.sprite = BlankSprite;
             DialogueText.text = "";
@@ -351,12 +353,17 @@ namespace DialogueEditor
             {
                 m_elapsedScrollTime = 0f;
 
+                int previousVisibleCharacters = DialogueText.maxVisibleCharacters;
                 DialogueText.maxVisibleCharacters = m_scrollIndex;
+                NotifyTypingAudioOfNewlyVisibleCharacters(
+                    previousVisibleCharacters,
+                    DialogueText.maxVisibleCharacters);
                 m_scrollIndex++;
 
                 // Finished?
                 if (m_scrollIndex >= m_targetScrollTextCount)
                 {
+                    m_dialogueTypingAudio?.EndLine();
                     SetState(eState.TransitioningOptionsOn);
                 }
             }
@@ -527,6 +534,16 @@ namespace DialogueEditor
                 }
             }
 
+            // Ensure TMP's parsed characterInfo is available to the reveal-audio
+            // bridge before the first maxVisibleCharacters step is processed.
+            if (ScrollText)
+                DialogueText.ForceMeshUpdate();
+
+            if (ScrollText)
+                m_dialogueTypingAudio?.BeginLine();
+            else
+                m_dialogueTypingAudio?.EndLine();
+
             // Call the event
             if (speech.Event != null)
                 speech.Event.Invoke();
@@ -549,6 +566,22 @@ namespace DialogueEditor
             {
                 SetState(eState.TransitioningOptionsOn);
             }            
+        }
+
+        private void NotifyTypingAudioOfNewlyVisibleCharacters(int previousCount, int currentCount)
+        {
+            if (m_dialogueTypingAudio == null || currentCount <= previousCount)
+                return;
+
+            TMPro.TMP_TextInfo textInfo = DialogueText.textInfo;
+            int startIndex = Mathf.Max(0, previousCount);
+            int endIndex = Mathf.Min(currentCount, textInfo.characterCount);
+
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                TMPro.TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
+                m_dialogueTypingAudio.OnCharacterRevealed(characterInfo.character);
+            }
         }
 
 

@@ -10,12 +10,14 @@ public sealed class TaskStageConversationSelector : MonoBehaviour
     private sealed class StageEntry
     {
         [SerializeField] private string requiredStageId;
+        [SerializeField] private string taskId;
         [SerializeField] private NPCConversation conversation;
         [SerializeField] private string nextStageId;
         [SerializeField] private InventoryItemData itemToGive;
         [SerializeField] private string itemToRemoveId;
 
         public string RequiredStageId => requiredStageId;
+        public string TaskId => taskId;
         public NPCConversation Conversation => conversation;
         public string NextStageId => nextStageId;
         public InventoryItemData ItemToGive => itemToGive;
@@ -57,15 +59,20 @@ public sealed class TaskStageConversationSelector : MonoBehaviour
         selectedEntry = null;
         legacyStageConversationStarted = false;
         TaskManager manager = TaskManager.Instance;
-        if (manager == null || manager.GetTaskState(taskId) != TaskState.Active)
+        if (manager == null)
             return null;
 
         if (additionalStages != null)
         {
             foreach (StageEntry entry in additionalStages)
             {
-                if (entry == null || entry.Conversation == null ||
-                    !manager.IsCurrentStage(taskId, entry.RequiredStageId))
+                if (entry == null)
+                    continue;
+
+                string entryTaskId = GetTaskId(entry);
+                if (entry.Conversation == null ||
+                    manager.GetTaskState(entryTaskId) != TaskState.Active ||
+                    !manager.IsCurrentStage(entryTaskId, entry.RequiredStageId))
                     continue;
 
                 if (!string.IsNullOrWhiteSpace(entry.ItemToRemoveId) &&
@@ -77,6 +84,9 @@ public sealed class TaskStageConversationSelector : MonoBehaviour
                 return entry.Conversation;
             }
         }
+
+        if (manager.GetTaskState(taskId) != TaskState.Active)
+            return null;
 
         legacyStageConversationStarted = stageConversation != null &&
             manager.IsCurrentStage(taskId, requiredStageId);
@@ -93,10 +103,12 @@ public sealed class TaskStageConversationSelector : MonoBehaviour
             return;
 
         TaskManager manager = TaskManager.Instance;
+        string currentTaskId = completedEntry != null
+            ? GetTaskId(completedEntry) : taskId;
         string currentStageId = completedEntry != null
             ? completedEntry.RequiredStageId : requiredStageId;
-        if (manager == null || manager.GetTaskState(taskId) != TaskState.Active ||
-            !manager.IsCurrentStage(taskId, currentStageId))
+        if (manager == null || manager.GetTaskState(currentTaskId) != TaskState.Active ||
+            !manager.IsCurrentStage(currentTaskId, currentStageId))
             return;
 
         if (completedEntry != null)
@@ -124,7 +136,12 @@ public sealed class TaskStageConversationSelector : MonoBehaviour
             }
         }
 
-        manager.AdvanceTaskStage(taskId,
+        manager.AdvanceTaskStage(currentTaskId,
             completedEntry != null ? completedEntry.NextStageId : nextStageId);
+    }
+
+    private string GetTaskId(StageEntry entry)
+    {
+        return string.IsNullOrWhiteSpace(entry.TaskId) ? taskId : entry.TaskId.Trim();
     }
 }

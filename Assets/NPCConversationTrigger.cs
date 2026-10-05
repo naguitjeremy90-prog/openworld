@@ -49,6 +49,7 @@ public class NPCConversationTrigger : MonoBehaviour
     private bool playerNear = false;
     private bool isTalking = false;
     private bool hasCompletedFirstConversation = false;
+    private bool currentConversationCountsAsFirst;
     private INPCConversationMovement pausedMovement;
     private StoryConversationSelector storyConversationSelector;
     private TaskStageConversationSelector taskStageConversationSelector;
@@ -57,6 +58,10 @@ public class NPCConversationTrigger : MonoBehaviour
     private Coroutine turnCoroutine;
     private StorySequenceToken storySequenceToken;
     private readonly UnityEvent storyFocusFinishedEvent = new UnityEvent();
+
+    /// <summary>The most recent conversation started through this trigger.</summary>
+    public NPCConversation LastStartedConversation { get; private set; }
+    public bool IsTalking => isTalking;
 
     private void Awake()
     {
@@ -161,8 +166,47 @@ public class NPCConversationTrigger : MonoBehaviour
 
     private void StartConversation()
     {
+        NPCConversation conversation =
+            taskStageConversationSelector != null
+                ? taskStageConversationSelector.GetCurrentConversation()
+                : null;
+
+        if (conversation == null)
+            conversation = storyConversationSelector != null
+                ? storyConversationSelector.GetCurrentConversation()
+                : null;
+
+        if (conversation == null)
+        {
+            conversation =
+                HasCompletedFirstConversation() && repeatConversation != null
+                    ? repeatConversation
+                    : firstConversation;
+        }
+
+        BeginConversation(conversation, true);
+    }
+
+    /// <summary>Starts a specified follow-up conversation through this NPC's normal presentation.</summary>
+    public bool StartConversationProgrammatically(NPCConversation conversation)
+    {
+        ConversationManager manager = ConversationManager.Instance;
+        if (conversation == null || !isActiveAndEnabled || isTalking ||
+            activeConversationTrigger != null || manager == null ||
+            manager.IsConversationActive)
+        {
+            return false;
+        }
+
+        BeginConversation(conversation, false);
+        return true;
+    }
+
+    private void BeginConversation(NPCConversation conversation, bool countsAsFirstConversation)
+    {
         isTalking = true;
         activeConversationTrigger = this;
+        currentConversationCountsAsFirst = countsAsFirstConversation;
 
         if (treatAsStorySequence)
             storySequenceToken = StorySequenceCoordinator.Acquire(this);
@@ -185,23 +229,7 @@ public class NPCConversationTrigger : MonoBehaviour
         if (focusManager != null && focusPoint != null)
             focusManager.FocusOn(focusPoint, storyFocusFinishedEvent);
 
-        NPCConversation conversation =
-            taskStageConversationSelector != null
-                ? taskStageConversationSelector.GetCurrentConversation()
-                : null;
-
-        if (conversation == null)
-            conversation = storyConversationSelector != null
-                ? storyConversationSelector.GetCurrentConversation()
-                : null;
-
-        if (conversation == null)
-        {
-            conversation =
-                HasCompletedFirstConversation() && repeatConversation != null
-                    ? repeatConversation
-                    : firstConversation;
-        }
+        LastStartedConversation = conversation;
 
         ConversationManager.Instance.StartConversation(conversation);
 
@@ -339,7 +367,9 @@ public class NPCConversationTrigger : MonoBehaviour
 
         isTalking = false;
 
-        bool finishedFirstConversation = !HasCompletedFirstConversation();
+        bool finishedFirstConversation = currentConversationCountsAsFirst &&
+            !HasCompletedFirstConversation();
+        currentConversationCountsAsFirst = false;
         if (finishedFirstConversation)
         {
             hasCompletedFirstConversation = true;

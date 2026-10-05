@@ -15,6 +15,7 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
     [SerializeField] private PlayableDirector introDirector;
     [SerializeField] private Canvas eyelidCanvas;
     [SerializeField] private Image eyelidImage;
+    [SerializeField] private SoftCurvedEyelidController eyelidController;
     [SerializeField] private ChurchNPCDepartureController churchDeparture;
     [SerializeField] private OneWayNPCDeparture padreDeparture;
 
@@ -29,21 +30,12 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
     [SerializeField, Min(0.01f)] private float finalOpeningDuration = 0.95f;
     [SerializeField, Min(0f)] private float awakeHoldDuration = 1.00f;
 
-    [Header("Eye shape")]
-    [SerializeField, Range(0.001f, 0.08f)] private float eyelidFeather = 0.022f;
-    [SerializeField, Range(0f, 0.8f)] private float eyelidCurvature = 0.32f;
-
     [Header("Head movement (degrees)")]
     [SerializeField, Range(0f, 2f)] private float headMovementStrength = 1f;
     [SerializeField, Range(0f, 3f)] private float headTiltDegrees = 0.9f;
     [SerializeField, Range(0f, 3f)] private float headSwayDegrees = 1.1f;
     [SerializeField, Range(0.5f, 4f)] private float headSettlingPower = 2f;
 
-    private static readonly int OpenId = Shader.PropertyToID("_Open");
-    private static readonly int FeatherId = Shader.PropertyToID("_Feather");
-    private static readonly int CurvatureId = Shader.PropertyToID("_Curvature");
-
-    private Material eyelidMaterial;
     private StorySequenceToken storyToken;
     private float elapsed;
     private bool introStarted;
@@ -81,30 +73,21 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
         // It also overlaps the transportation token and the complete intro.
         storyToken = StorySequenceCoordinator.Acquire(this);
 
+        if (eyelidController == null && eyelidImage != null)
+            eyelidImage.TryGetComponent(out eyelidController);
+
         if (povCamera == null || headPivot == null || introDirector == null ||
-            eyelidCanvas == null || eyelidImage == null)
+            eyelidCanvas == null || eyelidImage == null || eyelidController == null)
         {
             Debug.LogError("Miguel wake-up sequence has missing scene references.", this);
             enabled = false;
             return;
         }
 
-        Shader shader = Resources.Load<Shader>("Clarity/MiguelWakeUpEyelids");
-        if (shader == null)
-        {
-            Debug.LogError("Miguel wake-up eyelid shader is missing.", this);
-            enabled = false;
-            return;
-        }
-
-        eyelidMaterial = new Material(shader) { name = "Miguel Wake-Up Eyelids (Runtime)" };
-        eyelidImage.material = eyelidMaterial;
-        eyelidImage.color = Color.white;
-        eyelidImage.raycastTarget = true;
         eyelidCanvas.enabled = true;
+        eyelidController.SetClosedImmediately();
         headPivot.localRotation = Quaternion.identity;
         povCamera.Priority = 100;
-        SetEyeOpening(0f);
     }
 
     private IEnumerator Start()
@@ -121,17 +104,17 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
         while (iris != null && iris.IsCovered)
             yield return null;
 
-        yield return AnimateEyes(0f, firstOpeningAmount, firstOpeningDuration);
-        yield return AnimateEyes(firstOpeningAmount, 0f, firstClosingDuration);
-        yield return AnimateEyes(0f, secondOpeningAmount, secondOpeningDuration);
-        yield return AnimateEyes(secondOpeningAmount, 0f, blinkDuration * 0.43f);
-        yield return AnimateEyes(0f, secondOpeningAmount, blinkDuration * 0.57f);
-        yield return AnimateEyes(secondOpeningAmount, 1f, finalOpeningDuration);
+        yield return eyelidController.AnimateTo(firstOpeningAmount, firstOpeningDuration);
+        yield return eyelidController.AnimateTo(0f, firstClosingDuration);
+        yield return eyelidController.AnimateTo(secondOpeningAmount, secondOpeningDuration);
+        yield return eyelidController.AnimateTo(0f, blinkDuration * 0.43f);
+        yield return eyelidController.AnimateTo(secondOpeningAmount, blinkDuration * 0.57f);
+        yield return eyelidController.AnimateTo(1f, finalOpeningDuration);
         yield return Wait(awakeHoldDuration);
 
         // Restore the approved world-space framing before the Timeline takes over.
         headPivot.localRotation = Quaternion.identity;
-        SetEyeOpening(1f);
+        eyelidController.SetOpenImmediately();
         introDirector.stopped += HandleIntroStopped;
         introDirector.time = 0d;
         introDirector.Play();
@@ -164,19 +147,6 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
         headPivot.localRotation = Quaternion.Euler(pitch, yaw, roll);
     }
 
-    private IEnumerator AnimateEyes(float from, float to, float duration)
-    {
-        float time = 0f;
-        while (time < duration)
-        {
-            time += Time.unscaledDeltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(time / duration));
-            SetEyeOpening(Mathf.Lerp(from, to, t));
-            yield return null;
-        }
-        SetEyeOpening(to);
-    }
-
     private IEnumerator Wait(float duration)
     {
         float time = 0f;
@@ -185,13 +155,6 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
             time += Time.unscaledDeltaTime;
             yield return null;
         }
-    }
-
-    private void SetEyeOpening(float amount)
-    {
-        eyelidMaterial.SetFloat(OpenId, Mathf.Clamp01(amount));
-        eyelidMaterial.SetFloat(FeatherId, eyelidFeather);
-        eyelidMaterial.SetFloat(CurvatureId, eyelidCurvature);
     }
 
     private void HandleIntroStopped(PlayableDirector director)
@@ -210,7 +173,5 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
             introDirector.stopped -= HandleIntroStopped;
         storyToken?.Release();
         storyToken = null;
-        if (eyelidMaterial != null)
-            Destroy(eyelidMaterial);
     }
 }

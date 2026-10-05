@@ -24,8 +24,16 @@ namespace Supercyan.FreeSample
         [SerializeField] private float m_turnSpeed = 200;
         [SerializeField] private float m_jumpForce = 4;
 
+        // Small downhill contact recovery for the Rigidbody capsule. Keep this
+        // deliberately shorter than a typical stair riser or ledge.
+        private const float GroundProbeStartOffset = 0.02f;
+        private const float MaxGroundSnapDistance = 0.1f;
+        private const float GroundSnapVerticalVelocityLimit = 0.1f;
+        private const float GroundNormalThreshold = 0.5f;
+
         [SerializeField] private Animator m_animator = null;
         [SerializeField] private Rigidbody m_rigidBody = null;
+        private CapsuleCollider m_capsuleCollider;
 
         [SerializeField] private ControlMode m_controlMode = ControlMode.Direct;
 
@@ -35,6 +43,7 @@ namespace Supercyan.FreeSample
         private float m_currentH = 0;
 
         private readonly float m_interpolation = 10;
+        private const float LocomotionStateMovementThreshold = 0.05f;
 
         // Normal movement is walking.
         // Holding Shift allows full running speed.
@@ -50,7 +59,9 @@ namespace Supercyan.FreeSample
         private bool m_jumpInput = false;
 
         private bool m_isGrounded;
+        private bool m_hasGroundContact;
         private bool m_wasStorySequenceActive;
+        private readonly RaycastHit[] m_groundProbeHits = new RaycastHit[12];
 
         // Prevent tiny bumps from immediately triggering the jump animation.
         private float m_airborneTime = 0f;
@@ -60,12 +71,21 @@ namespace Supercyan.FreeSample
 
         // True only when the jump/fall animation has actually started.
         private bool m_isAirborneAnimating = false;
+        private bool m_intentionalJumpInProgress;
+
+        private global::PlayerMovementAudio m_playerMovementAudio;
 
         private List<Collider> m_collisions = new List<Collider>();
 
         // Read-only diagnostics for temporary development instrumentation.
         public bool DebugIsGrounded => m_isGrounded;
         public int DebugGroundContactCount => m_collisions.Count;
+
+        // Read-only locomotion state for systems that need gameplay intent rather than
+        // the Animator's temporarily blended child motions.
+        public bool IsMoving { get; private set; }
+        public bool IsRunning { get; private set; }
+        public bool IsGrounded => m_isGrounded && !m_isAirborneAnimating;
 
         private void Awake()
         {
@@ -78,6 +98,10 @@ namespace Supercyan.FreeSample
             {
                 m_rigidBody = GetComponent<Rigidbody>();
             }
+
+            m_capsuleCollider = GetComponent<CapsuleCollider>();
+
+            m_playerMovementAudio = GetComponent<global::PlayerMovementAudio>();
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -86,7 +110,7 @@ namespace Supercyan.FreeSample
 
             for (int i = 0; i < contactPoints.Length; i++)
             {
-                if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
+                if (IsWalkableGroundNormal(contactPoints[i].normal))
                 {
                     if (!m_collisions.Contains(collision.collider))
                     {
@@ -94,6 +118,7 @@ namespace Supercyan.FreeSample
                     }
 
                     m_isGrounded = true;
+                    m_hasGroundContact = true;
                 }
             }
         }
@@ -106,7 +131,7 @@ namespace Supercyan.FreeSample
 
             for (int i = 0; i < contactPoints.Length; i++)
             {
-                if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
+                if (IsWalkableGroundNormal(contactPoints[i].normal))
                 {
                     validSurfaceNormal = true;
                     break;
@@ -116,6 +141,7 @@ namespace Supercyan.FreeSample
             if (validSurfaceNormal)
             {
                 m_isGrounded = true;
+                m_hasGroundContact = true;
 
                 if (!m_collisions.Contains(collision.collider))
                 {
@@ -174,6 +200,8 @@ namespace Supercyan.FreeSample
                 m_currentH = 0f;
                 m_currentDirection = Vector3.zero;
                 m_jumpInput = false;
+                IsMoving = false;
+                IsRunning = false;
 
                 if (m_animator)
                 {
@@ -256,6 +284,9 @@ namespace Supercyan.FreeSample
                 Time.deltaTime * m_interpolation
             );
 
+            IsMoving = Mathf.Abs(m_currentV) >= LocomotionStateMovementThreshold;
+            IsRunning = IsMoving && !walk;
+
             transform.position +=
                 transform.forward *
                 m_currentV *
@@ -288,6 +319,8 @@ namespace Supercyan.FreeSample
 
             if (Camera.main == null)
             {
+                IsMoving = false;
+                IsRunning = false;
                 return;
             }
 
@@ -318,6 +351,9 @@ namespace Supercyan.FreeSample
                 camera.right * m_currentH;
 
             float directionLength = direction.magnitude;
+
+            IsMoving = directionLength >= LocomotionStateMovementThreshold;
+            IsRunning = IsMoving && Input.GetKey(KeyCode.LeftShift);
 
             direction.y = 0;
 
@@ -362,6 +398,11 @@ namespace Supercyan.FreeSample
 
         private void JumpingAndLanding()
         {
+            if (!m_isGrounded)
+            {
+                TryApplyGroundAdhesion();
+            }
+
             bool jumpCooldownOver =
                 (Time.time - m_jumpTimeStamp) >=
                 m_minJumpInterval;
@@ -375,6 +416,7 @@ namespace Supercyan.FreeSample
                 m_jumpInput)
             {
                 m_jumpTimeStamp = Time.time;
+                m_intentionalJumpInProgress = true;
 
                 if (m_rigidBody)
                 {
@@ -382,6 +424,8 @@ namespace Supercyan.FreeSample
                         Vector3.up * m_jumpForce,
                         ForceMode.Impulse
                     );
+
+                    m_playerMovementAudio?.PlayJumpSound();
                 }
 
                 // Jump animation starts immediately
@@ -442,6 +486,11 @@ namespace Supercyan.FreeSample
             else
             {
                 m_airborneTime = 0f;
+                if (m_rigidBody == null ||
+                    m_rigidBody.linearVelocity.y <= GroundSnapVerticalVelocityLimit)
+                {
+                    m_intentionalJumpInProgress = false;
+                }
 
                 if (m_isAirborneAnimating)
                 {
@@ -456,6 +505,8 @@ namespace Supercyan.FreeSample
                             "Land"
                         );
                     }
+
+                    m_playerMovementAudio?.PlayLandingSound();
 
                     m_isAirborneAnimating = false;
                 }
@@ -472,6 +523,81 @@ namespace Supercyan.FreeSample
                     }
                 }
             }
+        }
+
+        private void TryApplyGroundAdhesion()
+        {
+            if (m_rigidBody == null || m_capsuleCollider == null ||
+                m_intentionalJumpInProgress || m_jumpInput || !IsMoving ||
+                (!m_wasGrounded &&
+                 (!m_hasGroundContact || m_airborneTime > m_airborneThreshold)) ||
+                m_rigidBody.linearVelocity.y > GroundSnapVerticalVelocityLimit)
+            {
+                return;
+            }
+
+            float scaleY = Mathf.Abs(m_capsuleCollider.transform.lossyScale.y);
+            float scaleRadius = Mathf.Max(
+                Mathf.Abs(m_capsuleCollider.transform.lossyScale.x),
+                Mathf.Abs(m_capsuleCollider.transform.lossyScale.z));
+            float radius = m_capsuleCollider.radius * scaleRadius;
+            float halfHeight = Mathf.Max(
+                m_capsuleCollider.height * scaleY * 0.5f,
+                radius);
+            Vector3 capsuleCenter = m_capsuleCollider.transform.TransformPoint(
+                m_capsuleCollider.center);
+            Vector3 lowerHemisphereCenter = capsuleCenter -
+                Vector3.up * (halfHeight - radius);
+            Vector3 origin = lowerHemisphereCenter +
+                Vector3.up * GroundProbeStartOffset;
+
+            int hitCount = Physics.SphereCastNonAlloc(
+                origin,
+                radius,
+                Vector3.down,
+                m_groundProbeHits,
+                GroundProbeStartOffset + MaxGroundSnapDistance,
+                Physics.DefaultRaycastLayers,
+                QueryTriggerInteraction.Ignore);
+
+            float closestDistance = float.PositiveInfinity;
+            for (int i = 0; i < hitCount; i++)
+            {
+                RaycastHit hit = m_groundProbeHits[i];
+                if (hit.collider == null ||
+                    hit.collider.attachedRigidbody == m_rigidBody ||
+                    !IsWalkableGroundNormal(hit.normal))
+                {
+                    continue;
+                }
+
+                if (hit.distance < closestDistance)
+                {
+                    closestDistance = hit.distance;
+                }
+            }
+
+            if (float.IsPositiveInfinity(closestDistance))
+            {
+                return;
+            }
+
+            float snapDistance = closestDistance - GroundProbeStartOffset;
+            if (snapDistance <= 0f || snapDistance > MaxGroundSnapDistance)
+            {
+                return;
+            }
+
+            // Correct only the small vertical gap. Horizontal input and the
+            // configured walking/running speed remain unchanged.
+            m_rigidBody.position = transform.position + Vector3.down * snapDistance;
+            m_isGrounded = true;
+            m_hasGroundContact = true;
+        }
+
+        private static bool IsWalkableGroundNormal(Vector3 normal)
+        {
+            return Vector3.Dot(normal, Vector3.up) > GroundNormalThreshold;
         }
     }
 }

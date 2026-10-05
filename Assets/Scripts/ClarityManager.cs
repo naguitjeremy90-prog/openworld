@@ -34,11 +34,14 @@ public class ClarityManager : MonoBehaviour
     private static ClarityManager instance;
 
     private ClarityVignetteEffect vignetteEffect;
+    private AudioSource pagsusuriAudioSource;
+    private PagsusuriAudioConfig pagsusuriAudioConfig;
     private bool createdVignetteEffect;
     private float currentStrength;
     private bool clarityUnlocked;
     private float originalClarityIconAlpha = 1f;
     private bool capturedClarityIconAlpha;
+    private AudioClip lastDiscoveryClip;
 
     public bool IsClarityActive { get; private set; }
     public bool IsDocumentMode { get; private set; }
@@ -56,6 +59,7 @@ public class ClarityManager : MonoBehaviour
         }
 
         instance = this;
+        ResolvePagsusuriAudio();
         clarityUnlocked = GameplaySystemState.IsUnlocked(
             GameplaySystemId.Clarity);
         ResolveClarityIconCanvasGroup();
@@ -98,14 +102,28 @@ public class ClarityManager : MonoBehaviour
     private void Update()
     {
         bool wasActive = IsClarityActive;
-        if (StorySequenceCoordinator.IsStorySequenceActive ||
+        bool storySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
+        if (storySequenceActive ||
             !clarityUnlocked)
             IsClarityActive = false;
         else
             IsClarityActive = Input.GetKey(clarityKey);
 
         if (IsClarityActive && !wasActive)
+        {
+            PlayConfiguredSound(pagsusuriAudioConfig != null
+                ? pagsusuriAudioConfig.ActivationSound
+                : null);
             Activated?.Invoke(IsDocumentMode);
+        }
+        else if (wasActive && !IsClarityActive &&
+                 !storySequenceActive && clarityUnlocked &&
+                 !Input.GetKey(clarityKey))
+        {
+            PlayConfiguredSound(pagsusuriAudioConfig != null
+                ? pagsusuriAudioConfig.DeactivationSound
+                : null);
+        }
 
         float targetStrength = IsClarityActive ? 1f : 0f;
         float nextStrength;
@@ -254,6 +272,62 @@ public class ClarityManager : MonoBehaviour
 
         IsDocumentMode = false;
         ApplyVisualStrength(currentStrength);
+    }
+
+    public void PlayDiscoverySound()
+    {
+        if (pagsusuriAudioConfig == null)
+            return;
+
+        AudioClip[] configuredClips = pagsusuriAudioConfig.DiscoverySounds;
+        if (configuredClips == null || configuredClips.Length == 0)
+            return;
+
+        List<AudioClip> validClips = new List<AudioClip>(configuredClips.Length);
+        HashSet<AudioClip> distinctClips = new HashSet<AudioClip>();
+        for (int i = 0; i < configuredClips.Length; i++)
+        {
+            AudioClip clip = configuredClips[i];
+            if (clip != null && distinctClips.Add(clip))
+                validClips.Add(clip);
+        }
+
+        if (validClips.Count == 0)
+            return;
+
+        int choiceCount = validClips.Count;
+        if (choiceCount > 1 && lastDiscoveryClip != null)
+            validClips.Remove(lastDiscoveryClip);
+
+        AudioClip selectedClip = validClips[UnityEngine.Random.Range(0, validClips.Count)];
+        lastDiscoveryClip = selectedClip;
+        PlayConfiguredSound(selectedClip);
+    }
+
+    private void ResolvePagsusuriAudio()
+    {
+        pagsusuriAudioConfig = Resources.Load<PagsusuriAudioConfig>(
+            "PagsusuriAudioConfig");
+
+        pagsusuriAudioSource = GetComponent<AudioSource>();
+        if (pagsusuriAudioSource == null)
+            pagsusuriAudioSource = gameObject.AddComponent<AudioSource>();
+
+        pagsusuriAudioSource.spatialBlend = 0f;
+        pagsusuriAudioSource.playOnAwake = false;
+        pagsusuriAudioSource.loop = false;
+        pagsusuriAudioSource.volume = 1f;
+    }
+
+    private void PlayConfiguredSound(AudioClip clip)
+    {
+        if (clip == null || pagsusuriAudioSource == null)
+            return;
+
+        float volume = pagsusuriAudioConfig != null
+            ? Mathf.Clamp01(pagsusuriAudioConfig.UIVolume)
+            : 1f;
+        pagsusuriAudioSource.PlayOneShot(clip, volume);
     }
 
     private void SetupVignette()

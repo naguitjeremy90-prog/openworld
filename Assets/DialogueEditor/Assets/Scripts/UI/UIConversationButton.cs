@@ -187,14 +187,14 @@ namespace DialogueEditor
 
                 case eButtonType.Speech:
                     {
-                        TextMesh.text = "Continue.";
+                        TextMesh.text = "Patuloy.";
                         TextMesh.font = continueFont;
                     }
                     break;
 
                 case eButtonType.End:
                     {
-                        TextMesh.text = "End.";
+                        TextMesh.text = "Tapos.";
                         TextMesh.font = endFont;
                     }
                     break;

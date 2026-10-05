@@ -528,6 +528,7 @@ public sealed class ClarityDocumentViewer : MonoBehaviour
 
     private void HandleRegionInvestigated(ClarityDocumentRegion region)
     {
+        clarityManager?.PlayDiscoverySound();
         OnRegionInvestigated?.Invoke(region);
         onRegionInvestigated?.Invoke(region);
 

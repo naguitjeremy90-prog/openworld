@@ -30,6 +30,8 @@ public static class GameplaySystemTutorialState
     public static bool ClarityDocumentSeen =>
         SessionStoryState.GetFlag(ClarityDocumentSeenFlag);
 
+    public static string ClarityDocumentSeenFlagId => ClarityDocumentSeenFlag;
+
     public static void SetClarityDocumentSeen(bool seen)
     {
         SessionStoryState.SetFlag(ClarityDocumentSeenFlag, seen);

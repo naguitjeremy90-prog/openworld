@@ -21,6 +21,7 @@ public static class GameplaySystemTutorialDevelopmentTools
     {
         foreach (GameplaySystemId system in System.Enum.GetValues(typeof(GameplaySystemId)))
             GameplaySystemTutorialState.SetSeen(system, false);
+        GameplaySystemTutorialState.SetClarityDocumentSeen(false);
         GameplaySystemState.SetDevelopmentUnlocks(false, false, false);
         Debug.Log("Tutorial test: reset session-only system unlock and tutorial flags.");
     }

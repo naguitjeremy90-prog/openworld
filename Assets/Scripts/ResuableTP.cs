@@ -17,6 +17,7 @@ public class SceneEntrance : MonoBehaviour
     [SerializeField, Min(0f)] private float highlightIntensity = 1.5f;
 
     private bool playerNear = false;
+    private bool transitionInProgress = false;
     private Material[] highlightMaterials;
     private Color[] originalBaseColors;
     private Color[] originalEmissionColors;
@@ -147,6 +148,9 @@ public class SceneEntrance : MonoBehaviour
 
     private void TryEnter()
     {
+        if (transitionInProgress)
+            return;
+
         if (!string.IsNullOrEmpty(requiredStoryFlagId) &&
             !SessionStoryState.GetFlag(requiredStoryFlagId))
         {
@@ -154,6 +158,7 @@ public class SceneEntrance : MonoBehaviour
             return;
         }
 
+        transitionInProgress = true;
         StartCoroutine(TransitionScene());
     }
 

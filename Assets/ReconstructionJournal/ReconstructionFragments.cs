@@ -135,6 +135,35 @@ public class ReconstructionFragments : MonoBehaviour
         return unlockedFragmentIDs.Contains(fragmentID);
     }
 
+#if UNITY_EDITOR
+    internal bool SetFragmentUnlockedForDevelopmentTesting(
+        string fragmentID, bool unlocked)
+    {
+        FragmentData fragment = FindFragment(fragmentID);
+        if (fragment == null)
+            return false;
+
+        if (unlocked)
+        {
+            if (unlockedFragmentIDs.Add(fragmentID))
+                currentStages[fragmentID] = 0;
+            SessionStoryState.SetFlag(UnlockFlagPrefix + fragmentID, true);
+            SessionStoryState.SetInt(StageValuePrefix + fragmentID,
+                currentStages.TryGetValue(fragmentID, out int stage) ? stage : 0);
+        }
+        else
+        {
+            unlockedFragmentIDs.Remove(fragmentID);
+            currentStages.Remove(fragmentID);
+            SessionStoryState.SetFlag(UnlockFlagPrefix + fragmentID, false);
+            SessionStoryState.SetInt(StageValuePrefix + fragmentID, 0);
+        }
+
+        RefreshList();
+        return true;
+    }
+#endif
+
     public int GetFragmentStage(string fragmentID)
     {
         int stageIndex;

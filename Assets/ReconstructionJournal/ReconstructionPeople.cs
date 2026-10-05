@@ -134,6 +134,34 @@ public class ReconstructionPeople : MonoBehaviour
         return unlockedPersonIDs.Contains(personID);
     }
 
+#if UNITY_EDITOR
+    internal bool SetPersonUnlockedForDevelopmentTesting(string personID, bool unlocked)
+    {
+        PersonData person = FindPerson(personID);
+        if (person == null)
+            return false;
+
+        if (unlocked)
+        {
+            if (unlockedPersonIDs.Add(personID))
+                currentStages[personID] = 0;
+            SessionStoryState.SetFlag(UnlockFlagPrefix + personID, true);
+            SessionStoryState.SetInt(StageValuePrefix + personID,
+                currentStages.TryGetValue(personID, out int stage) ? stage : 0);
+        }
+        else
+        {
+            unlockedPersonIDs.Remove(personID);
+            currentStages.Remove(personID);
+            SessionStoryState.SetFlag(UnlockFlagPrefix + personID, false);
+            SessionStoryState.SetInt(StageValuePrefix + personID, 0);
+        }
+
+        RefreshList();
+        return true;
+    }
+#endif
+
     public int GetPersonStage(string personID)
     {
         int stageIndex;
