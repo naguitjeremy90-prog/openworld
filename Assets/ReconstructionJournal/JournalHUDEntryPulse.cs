@@ -13,6 +13,8 @@ public sealed class JournalHUDEntryPulse : MonoBehaviour
     private bool capturedScale;
     private Coroutine pulseRoutine;
 
+    public bool IsPulsing => pulseRoutine != null;
+
     private void Awake()
     {
         Configure(transform as RectTransform);
@@ -72,13 +74,16 @@ public sealed class JournalHUDEntryPulse : MonoBehaviour
         target.localScale = to;
     }
 
-    private void OnDisable()
+    public void CancelPulse()
     {
-        if (pulseRoutine != null)
-            StopCoroutine(pulseRoutine);
+        // An idle pulse must never restore scale over the unlock reveal.
+        if (pulseRoutine == null) return;
+        StopCoroutine(pulseRoutine);
         pulseRoutine = null;
 
         if (target != null && capturedScale)
             target.localScale = normalScale;
     }
+
+    private void OnDisable() { CancelPulse(); }
 }

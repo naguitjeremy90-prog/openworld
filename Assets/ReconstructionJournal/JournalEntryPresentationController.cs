@@ -87,11 +87,6 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
         if (!IsPresentationSafe()) { presentationRoutine = null; yield break; }
         notificationView.Show(entry);
         notificationView.SetVisibleAmount(0f);
-        if (!request.IconPulsePlayed)
-        {
-            request.IconPulsePlayed = true;
-            ReconstructionJournalManager.Instance?.PulseNewEntryIcon();
-        }
         bool interrupted = false;
         yield return AnimatePhase(notificationFadeDuration, t => notificationView.SetVisibleAmount(t), () => interrupted = true);
         if (!interrupted)
@@ -231,7 +226,6 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
     private sealed class PresentationRequest
     {
         public JournalEntryUnlockedInfo Entry { get; }
-        public bool IconPulsePlayed { get; set; }
         public PresentationRequest(JournalEntryUnlockedInfo entry) { Entry = entry; }
     }
 }

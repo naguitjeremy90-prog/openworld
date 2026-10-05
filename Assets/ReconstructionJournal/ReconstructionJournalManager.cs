@@ -52,7 +52,17 @@ public class ReconstructionJournalManager : MonoBehaviour
     [Header("Journal UI Audio")]
     [SerializeField] private AudioSource journalAudioSource;
 
+    [Header("Journal Entry Sparkle")]
+    [Tooltip("Offset of the complete Sparkle_ellow visual from the Journal button, in Canvas UI units.")]
+    [SerializeField] private Vector2 journalSparkleOffset = Vector2.zero;
+    [Tooltip("Uniform scale of the complete Sparkle_ellow visual.")]
+    [SerializeField, Min(0.01f)] private float journalSparkleScale = 1f;
+
+    public Vector2 JournalSparkleOffset => journalSparkleOffset;
+    public float JournalSparkleScale => journalSparkleScale;
+
     public bool IsOpen { get; private set; }
+    public bool AttentionRevealPending { get; private set; }
     public JournalTab CurrentTab { get; private set; } = JournalTab.Observations;
 
     private GameplayHUDUnlockReveal unlockReveal;
@@ -106,6 +116,9 @@ public class ReconstructionJournalManager : MonoBehaviour
             if (entryPulse == null)
                 entryPulse = openButton.gameObject.AddComponent<JournalHUDEntryPulse>();
             entryPulse.Configure(openButton.transform as RectTransform);
+            JournalHUDEntryAttention.Instance?.Configure(
+                this, openButton.transform as RectTransform, entryPulse,
+                journalSparkleOffset, journalSparkleScale);
 
             tutorialAnchor = GameplaySystemTutorialAnchor.AttachTo(
                 openButton.gameObject,
@@ -146,10 +159,58 @@ public class ReconstructionJournalManager : MonoBehaviour
             CloseJournal();
     }
 
+#if UNITY_EDITOR
+    [ContextMenu("TEST — Unlock Journal for Development")]
+    private void TestUnlockJournalForDevelopment()
+    {
+        if (!CanTestJournalHUD()) return;
+
+        // Suppress the unlock-event tutorial without consuming its completion flag.
+        GameplaySystemTutorialManager.Instance.SuppressTutorialForDevelopment(GameplaySystemId.Journal);
+        GameplaySystemState.SetUnlocked(GameplaySystemId.Journal, true);
+        // The lock view refreshes through UnlockChanged. Do not run the dream unlock,
+        // which also awards an entry and starts the normal reveal/tutorial sequence.
+    }
+
+    [ContextMenu("TEST — Journal New Entry Attention")]
+    private void TestJournalNewEntryAttention()
+    {
+        if (!CanTestJournalHUD()) return;
+        if (IsOpen)
+        {
+            Debug.Log("Close the Journal before testing its new-entry attention.", this);
+            return;
+        }
+
+        // Feed the production controller's existing session-state presentation path.
+        // Do not emit NewEntryUnlocked: that would also queue a Journal entry popup.
+        SessionStoryState.SetFlag(JournalHUDEntryAttention.UnseenFlag, true);
+        SessionStoryState.SetFlag("journal.pending_entry_attention", true);
+    }
+
+    [ContextMenu("TEST — Clear Journal Entry Attention")]
+    private void TestClearJournalEntryAttention()
+    {
+        if (!CanTestJournalHUD()) return;
+        JournalHUDEntryAttention.Instance.JournalOpened();
+    }
+
+    private bool CanTestJournalHUD()
+    {
+        if (Application.isPlaying && Instance == this && JournalHUDEntryAttention.Instance != null)
+            return true;
+
+        Debug.Log("Journal HUD development controls require Play Mode and the active ReconstructionJournalManager.", this);
+        return false;
+    }
+#endif
+
     public void OpenJournal()
     {
         if (!GameplaySystemState.IsUnlocked(GameplaySystemId.Journal) ||
-            StorySequenceCoordinator.IsStorySequenceActive)
+            StorySequenceCoordinator.IsStorySequenceActive || journalWindow == null ||
+            (journalWindow.transform.parent != null &&
+             !journalWindow.transform.parent.gameObject.activeInHierarchy))
             return;
 
         bool wasClosed = !IsOpen;
@@ -157,6 +218,8 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         if (journalWindow != null)
             journalWindow.SetActive(true);
+
+        JournalHUDEntryAttention.Instance?.JournalOpened();
 
         OpenObservationsTab(playTabSwitchSound: !wasClosed);
         if (wasClosed)
@@ -195,6 +258,8 @@ public class ReconstructionJournalManager : MonoBehaviour
             return false;
         }
 
+        AttentionRevealPending = true;
+        entryPulse?.CancelPulse();
         GameplaySystemState.SetUnlocked(GameplaySystemId.Journal, true);
         UnlockObservation(FirstDreamObservationId);
 
@@ -222,6 +287,7 @@ public class ReconstructionJournalManager : MonoBehaviour
     {
         if (unlockReveal == null || !unlockReveal.PlayReveal())
         {
+            AttentionRevealPending = false;
             Debug.LogWarning(
                 "Journal tutorial was not started because the existing Journal reveal could not play.");
         }
@@ -229,6 +295,7 @@ public class ReconstructionJournalManager : MonoBehaviour
 
     private void HandleUnlockRevealCompleted()
     {
+        AttentionRevealPending = false;
         GameplaySystemTutorialManager.Instance.NotifySystemRevealCompleted(
             GameplaySystemId.Journal);
     }
@@ -239,11 +306,6 @@ public class ReconstructionJournalManager : MonoBehaviour
     {
         if (system == GameplaySystemId.Journal && !unlocked && IsOpen)
             CloseJournal();
-    }
-
-    public bool PulseNewEntryIcon()
-    {
-        return entryPulse != null && entryPulse.PlayPulse();
     }
 
     private void SubscribeToEntryUnlocks()
