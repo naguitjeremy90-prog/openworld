@@ -27,16 +27,29 @@ public sealed class CharacterReactionController : MonoBehaviour
     [SerializeField] private float peakScale = 1.2f;
     [SerializeField] private float normalScale = 1f;
 
+    // The reference values define what Sprite Base Scale means: apparent size at
+    // a 10-unit perspective depth and 50-degree vertical FOV (or ortho size 5).
+    private const float ReferencePerspectiveDepth = 10f;
+    private const float ReferenceVerticalFov = 50f;
+    private const float ReferenceOrthographicSize = 5f;
+    private const float WorldScalePerBaseScale = 0.02088f;
+    private const float MinimumCameraDepth = 0.01f;
+    private const float MinimumParentScale = 0.00001f;
+    private const float MaximumWorldReactionScale = 1000f;
+    private const float ScaleSmoothingTime = 0.06f;
+
     [Header("Optional Audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip reactionAudioClip;
 
     private bool isReacting;
     private float visibleAlpha = 1f;
-    private Vector3 indicatorBaseScale = Vector3.one;
     private Transform reactionSpriteRoot;
     private SpriteRenderer reactionSpriteRenderer;
     private float spriteBaseScale = 0.05f;
+    private float animationScale = 1f;
+    private float currentCameraScaleFactor = 1f;
+    private float targetCameraScaleFactor = 1f;
 
     private static CharacterReactionConfig sharedConfig;
     private static bool configResolved;
@@ -97,10 +110,6 @@ public sealed class CharacterReactionController : MonoBehaviour
             }
         }
 
-        // Capture the authored scale once, before any reaction animation.
-        if (indicatorRoot != null)
-            indicatorBaseScale = indicatorRoot.localScale;
-
         HideIndicator();
     }
 
@@ -130,6 +139,8 @@ public sealed class CharacterReactionController : MonoBehaviour
         reactionSpriteRoot.gameObject.SetActive(true);
         reactionSpriteRenderer.enabled = true;
         SetSpriteAlpha(visibleAlpha);
+        animationScale = startScale;
+        InitializeCameraScale();
         SetIndicatorScale(startScale);
 
         if (audioSource != null && reactionAudioClip != null)
@@ -150,10 +161,22 @@ public sealed class CharacterReactionController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!isReacting || indicatorRoot == null || Camera.main == null)
+        if (!isReacting || indicatorRoot == null)
             return;
 
-        indicatorRoot.forward = Camera.main.transform.forward;
+        Camera outputCamera = Camera.main;
+        if (outputCamera != null)
+        {
+            indicatorRoot.forward = outputCamera.transform.forward;
+            targetCameraScaleFactor = CalculateCameraScaleFactor(outputCamera);
+
+            // Exponential smoothing is frame-rate independent and unaffected by timeScale.
+            float blend = 1f - Mathf.Exp(-Time.unscaledDeltaTime / ScaleSmoothingTime);
+            currentCameraScaleFactor = Mathf.Lerp(currentCameraScaleFactor, targetCameraScaleFactor, blend);
+        }
+
+        // With no Main Camera, retain the last valid compensation and orientation.
+        ApplyIndicatorScale();
     }
 
     private IEnumerator PopIndicator()
@@ -217,8 +240,73 @@ public sealed class CharacterReactionController : MonoBehaviour
 
     private void SetIndicatorScale(float scale)
     {
-        if (indicatorRoot != null)
-            indicatorRoot.localScale = indicatorBaseScale * (scale * spriteBaseScale);
+        animationScale = scale;
+        ApplyIndicatorScale();
+    }
+
+    private void InitializeCameraScale()
+    {
+        Camera outputCamera = Camera.main;
+        if (outputCamera != null)
+        {
+            targetCameraScaleFactor = CalculateCameraScaleFactor(outputCamera);
+            currentCameraScaleFactor = targetCameraScaleFactor;
+            indicatorRoot.forward = outputCamera.transform.forward;
+        }
+        else if (!IsFinite(currentCameraScaleFactor) || currentCameraScaleFactor <= 0f)
+        {
+            currentCameraScaleFactor = 1f;
+            targetCameraScaleFactor = 1f;
+        }
+    }
+
+    private float CalculateCameraScaleFactor(Camera outputCamera)
+    {
+        if (outputCamera.orthographic)
+        {
+            float orthoSize = Mathf.Max(MinimumCameraDepth, outputCamera.orthographicSize);
+            return Mathf.Clamp(orthoSize / ReferenceOrthographicSize, 0.001f, 1000f);
+        }
+
+        float depth = Vector3.Dot(indicatorRoot.position - outputCamera.transform.position,
+            outputCamera.transform.forward);
+        depth = Mathf.Max(MinimumCameraDepth, IsFinite(depth) ? depth : MinimumCameraDepth);
+
+        float fov = Mathf.Clamp(outputCamera.fieldOfView, 0.1f, 179f);
+        float currentProjectionFactor = depth * Mathf.Tan(0.5f * fov * Mathf.Deg2Rad);
+        float referenceProjectionFactor = ReferencePerspectiveDepth *
+            Mathf.Tan(0.5f * ReferenceVerticalFov * Mathf.Deg2Rad);
+        float factor = currentProjectionFactor / referenceProjectionFactor;
+        return Mathf.Clamp(IsFinite(factor) ? factor : 1f, 0.001f, 1000f);
+    }
+
+    private void ApplyIndicatorScale()
+    {
+        if (indicatorRoot == null)
+            return;
+
+        float desiredWorldScale = Mathf.Clamp(
+            WorldScalePerBaseScale * spriteBaseScale * currentCameraScaleFactor * animationScale,
+            0f, MaximumWorldReactionScale);
+
+        Transform parent = indicatorRoot.parent;
+        Vector3 parentScale = parent != null ? parent.lossyScale : Vector3.one;
+        indicatorRoot.localScale = new Vector3(
+            desiredWorldScale / SafeScaleMagnitude(parentScale.x),
+            desiredWorldScale / SafeScaleMagnitude(parentScale.y),
+            desiredWorldScale / SafeScaleMagnitude(parentScale.z));
+    }
+
+    private static float SafeScaleMagnitude(float value)
+    {
+        if (!IsFinite(value))
+            return 1f;
+        return Mathf.Max(MinimumParentScale, Mathf.Abs(value));
+    }
+
+    private static bool IsFinite(float value)
+    {
+        return !float.IsNaN(value) && !float.IsInfinity(value);
     }
 
     private void SetSpriteAlpha(float alpha)

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: CharacterReactionConfig
   m_EditorClassIdentifier: 
   reactionSprite: {fileID: 21300000, guid: 81ea6762a2f5c0946ab9f4d84762e295, type: 3}
-  spriteBaseScale: 1.5
+  spriteBaseScale: 0.5

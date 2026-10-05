@@ -6867,8 +6867,8 @@ MonoBehaviour:
   lingerDuration: 1
   fadeDuration: 0.25
   startScale: 0
-  peakScale: 1.2
-  normalScale: 1
+  peakScale: 30
+  normalScale: 20
   audioSource: {fileID: 454897940}
   reactionAudioClip: {fileID: 8300000, guid: 4847ec9870584df4ca0096269699114e, type: 3}
 --- !u!114 &454897939

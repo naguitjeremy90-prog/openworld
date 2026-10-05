@@ -1508,7 +1508,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 107042415}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
@@ -1601,7 +1601,7 @@ Transform:
   m_GameObject: {fileID: 107042415}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0031534338, y: -0.9999109, z: 0.011338397, w: 0.006313942}
-  m_LocalPosition: {x: 268.1, y: 4.77, z: 55.43}
+  m_LocalPosition: {x: 268.08, y: 4.74, z: 53.93}
   m_LocalScale: {x: 0.93023324, y: 0.9302318, z: 0.9302328}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16447,6 +16447,7 @@ MonoBehaviour:
   detailText: {fileID: 502801141}
   fadeDuration: 0.25
   visibleDuration: 2.75
+  taskNotificationAudioSource: {fileID: 0}
 --- !u!114 &1578272101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20545,6 +20546,7 @@ MonoBehaviour:
   detailName: {fileID: 1932497616}
   detailDescription: {fileID: 368929759}
   gameplayBehavioursToDisable: []
+  inventoryAudioSource: {fileID: 0}
 --- !u!1 &1932497614
 GameObject:
   m_ObjectHideFlags: 0

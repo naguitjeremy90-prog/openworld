@@ -3254,6 +3254,7 @@ MonoBehaviour:
   detailName: {fileID: 1544591408}
   detailDescription: {fileID: 1174249923}
   gameplayBehavioursToDisable: []
+  inventoryAudioSource: {fileID: 0}
 --- !u!1 &132029503
 GameObject:
   m_ObjectHideFlags: 0
@@ -11095,8 +11096,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3900108755062758285, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1246209793}
   m_SourcePrefab: {fileID: 100100000, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+--- !u!1 &491072693 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3900108755062758285, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
+  m_PrefabInstance: {fileID: 491072692}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &499569764
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19070,6 +19079,7 @@ MonoBehaviour:
   detailText: {fileID: 1129244819}
   fadeDuration: 0.25
   visibleDuration: 2.75
+  taskNotificationAudioSource: {fileID: 0}
 --- !u!114 &928605631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25004,6 +25014,20 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3900108755196472087, guid: d9fa78e8c3c4f2b4b8f7f77ca8426cca, type: 3}
   m_PrefabInstance: {fileID: 491072692}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1246209793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 491072693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3b10855e36b6e4086f9c61c601bed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueMovementLock
+  playerMovementScript: {fileID: 432565503}
+  playerAnimator: {fileID: 432565507}
 --- !u!1 &1248385079
 GameObject:
   m_ObjectHideFlags: 0

@@ -10322,6 +10322,7 @@ MonoBehaviour:
   detailText: {fileID: 1076612503}
   fadeDuration: 0.25
   visibleDuration: 2.75
+  taskNotificationAudioSource: {fileID: 0}
 --- !u!114 &1025776093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14458,6 +14459,7 @@ MonoBehaviour:
   detailName: {fileID: 958598007}
   detailDescription: {fileID: 1369870005}
   gameplayBehavioursToDisable: []
+  inventoryAudioSource: {fileID: 0}
 --- !u!1 &1301375016
 GameObject:
   m_ObjectHideFlags: 0
@@ -21750,7 +21752,7 @@ MonoBehaviour:
   fadeDuration: 0.25
   startScale: 0
   peakScale: 20
-  normalScale: 30
+  normalScale: 15
   audioSource: {fileID: 2031429376}
   reactionAudioClip: {fileID: 8300000, guid: 4847ec9870584df4ca0096269699114e, type: 3}
 --- !u!82 &2031429376
