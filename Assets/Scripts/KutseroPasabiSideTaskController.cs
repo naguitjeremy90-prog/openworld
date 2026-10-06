@@ -284,6 +284,7 @@ public sealed class KutseroPasabiSideTaskController : MonoBehaviour
         kutseroRoot.SetPositionAndRotation(
             kutseroKalesaPosition.position,
             kutseroKalesaPosition.rotation);
+        Physics.SyncTransforms();
     }
 
 #if UNITY_EDITOR

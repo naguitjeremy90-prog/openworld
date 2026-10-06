@@ -198,17 +198,21 @@ namespace DialogueEditor
 
         public void AlertHover(UIConversationButton button)
         {
+            // Pointer hover controls presentation independently of logical selection.
             for (int i = 0; i < m_uiOptions.Count; i++)
             {
-                if (m_uiOptions[i] == button && m_currentSelectedIndex != i)
-                {
-                    SetSelectedOption(i);
-                    return;
-                }
+                m_uiOptions[i].SetHovering(m_uiOptions[i] == button);
             }
 
             if (button == null)
+            {
                 UnselectOption();
+                return;
+            }
+
+            int index = m_uiOptions.IndexOf(button);
+            if (index >= 0)
+                SetSelectedOption(index);
         }
 
         public void SetInt(string paramName, int value)
@@ -770,17 +774,14 @@ namespace DialogueEditor
             if (index > m_uiOptions.Count - 1)
                 index = m_uiOptions.Count - 1;
 
-            if (m_currentSelectedIndex >= 0)
-                m_uiOptions[m_currentSelectedIndex].SetHovering(false);
+            // Selection is used by navigation/pressing, not mouse-hover visuals.
             m_currentSelectedIndex = index;
-            m_uiOptions[index].SetHovering(true);
         }
 
         private void UnselectOption()
         {
             if (m_currentSelectedIndex < 0) { return; }
 
-            m_uiOptions[m_currentSelectedIndex].SetHovering(false);
             m_currentSelectedIndex = -1;
         }
 

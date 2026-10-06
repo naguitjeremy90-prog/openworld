@@ -3200,7 +3200,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &131607956
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10347,7 +10347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 146.18
+      value: 130.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10355,7 +10355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15.05
+      value: 15.36
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf6e229327286114e8a4c5f909bf5581, type: 3}
       propertyPath: m_LocalRotation.w
@@ -21463,7 +21463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1072042560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21508,7 +21508,7 @@ MonoBehaviour:
   playerRigidbody: {fileID: 432565504}
   playerAnimator: {fileID: 432565507}
   walkSpeed: 2
-  turnSpeed: 240
+  turnSpeed: 400
   arrivalThreshold: 0.05
 --- !u!114 &1072042562
 MonoBehaviour:
@@ -25003,7 +25003,7 @@ Transform:
   m_GameObject: {fileID: 1242855888}
   serializedVersion: 2
   m_LocalRotation: {x: 0.05260068, y: 0.0038210817, z: -0.0002012716, w: 0.99860835}
-  m_LocalPosition: {x: 146.18, y: 5.34, z: 0.05000019}
+  m_LocalPosition: {x: 130.4, y: 5.34, z: 0.35999966}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -29725,7 +29725,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.6999817}
+  m_AnchoredPosition: {x: 0, y: 0.6999512}
   m_SizeDelta: {x: 300, y: 70}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1479786655
@@ -33445,7 +33445,7 @@ MonoBehaviour:
   nightEnvironment: {fileID: 600333651}
   daySkyBox: {fileID: 2100000, guid: 59573b088aaea0442bf29e0a0e9d1339, type: 2}
   nightSkyBox: {fileID: 2100000, guid: 94caf2ba4ca5e46bfaba53afcc8778dd, type: 2}
-  forceDaytimeForTesting: 1
+  forceDaytimeForTesting: 0
 --- !u!4 &1719506767
 Transform:
   m_ObjectHideFlags: 0
@@ -37520,8 +37520,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f11e27fa1b560841b33df9f5b69b0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainInvestigationTaskController
-  forceMainTaskForTesting: 1
-  enableProgressTesting: 1
+  forceMainTaskForTesting: 0
+  enableProgressTesting: 0
 --- !u!114 &1906863334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38556,6 +38556,8 @@ GameObject:
   - component: {fileID: 1943288907}
   - component: {fileID: 1943288906}
   - component: {fileID: 1943288909}
+  - component: {fileID: 1943288910}
+  - component: {fileID: 1943288911}
   m_Layer: 5
   m_Name: InventoryButton
   m_TagString: Untagged
@@ -38695,6 +38697,34 @@ MonoBehaviour:
   - {fileID: 1943288906}
   hiddenWhenLocked: []
   lockedTint: {r: 0.14, g: 0.14, b: 0.14, a: 1}
+--- !u!225 &1943288910
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943288904}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &1943288911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943288904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ae5d8f6a5d74b819e1af4c9ef5b9202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayHUDTarget
+  canvasGroup: {fileID: 1943288910}
+  visualRoot: {fileID: 1943288904}
+  fadeDuration: 0.2
+  available: 1
 --- !u!4 &1944384228 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 850649989193942044, guid: ae358aa425fe140409d8a560f4492730, type: 3}

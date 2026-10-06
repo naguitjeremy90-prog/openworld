@@ -1691,6 +1691,8 @@ MonoBehaviour:
   fragmentsTabVisual: {fileID: 1252418412}
   reflectionsTabVisual: {fileID: 574175116}
   journalAudioSource: {fileID: 0}
+  journalSparkleOffset: {x: 0, y: 0}
+  journalSparkleScale: 1
 --- !u!114 &95769823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5061,7 +5063,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.6999817}
+  m_AnchoredPosition: {x: 0, y: 0.6999512}
   m_SizeDelta: {x: 300, y: 70}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &383042889
@@ -7458,6 +7460,7 @@ MonoBehaviour:
   detailText: {fileID: 1813566002}
   fadeDuration: 0.25
   visibleDuration: 2.75
+  taskNotificationAudioSource: {fileID: 0}
 --- !u!114 &546087717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9867,7 +9870,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 353.78541, y: -53.18267}
+  m_AnchoredPosition: {x: 353.7854, y: -53.18267}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &749582983
@@ -13931,8 +13934,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1764786152}
   - {fileID: 1430708364}
+  - {fileID: 1764786152}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -15860,7 +15863,7 @@ MonoBehaviour:
   playerRigidbody: {fileID: 1232423691}
   playerAnimator: {fileID: 1232423689}
   walkSpeed: 5
-  turnSpeed: 240
+  turnSpeed: 400
   arrivalThreshold: 0.05
 --- !u!1 &1260176611
 GameObject:
@@ -17492,7 +17495,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300.76515, y: -85.33333}
+  m_AnchoredPosition: {x: 300.76514, y: -85.33333}
   m_SizeDelta: {x: 72, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1430708365
@@ -21543,6 +21546,7 @@ MonoBehaviour:
   detailName: {fileID: 119920361}
   detailDescription: {fileID: 1291557464}
   gameplayBehavioursToDisable: []
+  inventoryAudioSource: {fileID: 0}
 --- !u!1 &1774048372
 GameObject:
   m_ObjectHideFlags: 0

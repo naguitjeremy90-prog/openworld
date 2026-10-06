@@ -936,7 +936,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 353.78541, y: -53.18267}
+  m_AnchoredPosition: {x: 353.7854, y: -53.18267}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &46217046
@@ -2665,7 +2665,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300.76515, y: -85.33333}
+  m_AnchoredPosition: {x: 300.76514, y: -85.33333}
   m_SizeDelta: {x: 72, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &302624964
@@ -13751,7 +13751,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.6999817}
+  m_AnchoredPosition: {x: 0, y: 0.6999512}
   m_SizeDelta: {x: 300, y: 70}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1386700352
@@ -19608,6 +19608,8 @@ MonoBehaviour:
   fragmentsTabVisual: {fileID: 1970465348}
   reflectionsTabVisual: {fileID: 1520884670}
   journalAudioSource: {fileID: 0}
+  journalSparkleOffset: {x: 0, y: 0}
+  journalSparkleScale: 1
 --- !u!114 &1864307038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19872,8 +19874,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1926337092}
   - {fileID: 302624963}
+  - {fileID: 1926337092}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

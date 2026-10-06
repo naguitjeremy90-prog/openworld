@@ -536,7 +536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 4
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":101.399994,"yPos":106},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Gumagabi
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":85.4000244,"yPos":92.3999939},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Gumagabi
     na... ang layo naman nitong Bayan ng Pili...","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
@@ -871,7 +871,7 @@ MonoBehaviour:
   narrationText: {fileID: 276649244}
   narrationCanvasGroup: {fileID: 276649241}
   narrationLines:
-  - Text: Anong oras na kaya ngayon. Hindi ko na namalayan ang oras.
+  - Text: Anong oras na kaya ngayon. Hindi ko na namalayan.
     HoldDuration: 5
     PauseAfter: 1
   - Text: Ito ang pangatlong nobela ni Rizal na gusto kong makilala at mabasa.
@@ -1847,7 +1847,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &907095252
