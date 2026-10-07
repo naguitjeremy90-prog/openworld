@@ -6918,6 +6918,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: e3b071fe5a0267c4a81c9f0c5fac9775, type: 2}
     - {fileID: 11400000, guid: 2caac67cd0994c745af48bef3fe374a1, type: 2}
     - {fileID: 11400000, guid: 81a235955bccf254f973c1fe0a2f9939, type: 2}
+    - {fileID: 11400000, guid: fa0f1c336decf864fa0fdaf587c0494b, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -6959,6 +6960,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 595847175}
+          m_TargetAssemblyTypeName: MiguelWakeUpSequence, Assembly-CSharp
+          m_MethodName: OnIntroTerminalReached
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName:
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument:
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!82 &454897940
@@ -7824,6 +7839,7 @@ MonoBehaviour:
   completionFlag: makamisa_church_overheard_3_complete
   taskId: main_investigate_pili
   taskObjective: Alamin ang Nangyari Pagkatapos ng Misa
+  completeCurrentObjectiveOnTaskUpdate: 1
   onSequenceCompleted:
     m_PersistentCalls:
       m_Calls: []
@@ -8883,6 +8899,10 @@ MonoBehaviour:
   eyelidController: {fileID: 853446822}
   churchDeparture: {fileID: 1916767379}
   padreDeparture: {fileID: 1213790806}
+  taskId: main_investigate_pili
+  requiredCurrentStageId: investigate_church_document
+  requiredCurrentObjective: Siyasatin ang lumang sulatin sa simbahan.
+  nextObjective: Maglibot at mangalap ng impormasyon.
   initialBlackDuration: 1
   firstOpeningDuration: 1.2
   firstOpeningAmount: 0.12

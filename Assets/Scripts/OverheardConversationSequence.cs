@@ -21,6 +21,8 @@ public sealed class OverheardConversationSequence : MonoBehaviour
     [Header("Optional task update")]
     [SerializeField] private string taskId;
     [SerializeField] private string taskObjective;
+    [Tooltip("Play the existing objective finish presentation before showing the configured task objective.")]
+    [SerializeField] private bool completeCurrentObjectiveOnTaskUpdate = false;
     [SerializeField] private UnityEvent onSequenceCompleted = new UnityEvent();
 
     private StorySequenceToken sequenceToken;
@@ -189,7 +191,12 @@ public sealed class OverheardConversationSequence : MonoBehaviour
             SessionStoryState.SetFlag(completionFlag, true);
 
         if (!string.IsNullOrEmpty(taskId) && !string.IsNullOrWhiteSpace(taskObjective))
-            TaskManager.Instance?.UpdateTask(taskId, taskObjective);
+        {
+            if (completeCurrentObjectiveOnTaskUpdate)
+                TaskManager.Instance?.CompleteCurrentObjectiveAndUpdate(taskId, taskObjective);
+            else
+                TaskManager.Instance?.UpdateTask(taskId, taskObjective);
+        }
 
         onSequenceCompleted.Invoke();
         ReleaseSequence();

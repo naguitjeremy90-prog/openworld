@@ -155,9 +155,7 @@ public sealed class JournalHUDEntryAttention : MonoBehaviour
     private bool IsAttentionSafe()
     {
         if (journal == null || button == null || journal.IsOpen || journal.AttentionRevealPending || !IsHUDVisible()) return false;
-        if (!GameplaySystemTutorialManager.HasInstance) return true;
-        var tutorial = GameplaySystemTutorialManager.Instance;
-        return !tutorial.HasActiveTutorial && !tutorial.IsPresentationVisible;
+        return true;
     }
 
     private bool IsHUDVisible()

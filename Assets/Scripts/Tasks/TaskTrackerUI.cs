@@ -1,7 +1,9 @@
-using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 
+[DefaultExecutionOrder(100)] // Apply tracker alpha after the HUD restoration fade.
 public sealed class TaskTrackerUI : MonoBehaviour
 {
     [SerializeField] private TaskType displayedTaskType = TaskType.Side;
@@ -22,9 +24,35 @@ public sealed class TaskTrackerUI : MonoBehaviour
     [SerializeField, Min(0f)] private float nextObjectiveFadeInDuration = 0.35f;
 
     private Color normalObjectiveColor = Color.white;
-    private Coroutine presentationRoutine;
-    private TaskPresentationChange queuedChange;
     private bool hasActiveTask;
+    private readonly Queue<CompletionPresentation> completions = new Queue<CompletionPresentation>();
+    private readonly Dictionary<string, string> titles = new Dictionary<string, string>();
+    // The manager's public lookup only returns active tasks. Cache definitions read-only.
+    private static readonly FieldInfo TaskDefinitionsField = typeof(TaskManager).GetField(
+        "taskDefinitions", BindingFlags.Instance | BindingFlags.NonPublic);
+    private TaskManager boundManager;
+    private bool progressPending;
+    private bool refreshPending;
+    private bool storyWasActive;
+    private float presentationAlpha;
+    private float phaseElapsed;
+    private Phase phase;
+    private enum Phase { Idle, ProgressUp, ProgressDown, Highlight, Hold, FadeOut, NextFadeIn }
+
+    private sealed class CompletionPresentation
+    {
+        public readonly string TaskId;
+        public readonly string Title;
+        public readonly string Objective;
+        public readonly bool TaskCompleted;
+        public CompletionPresentation(TaskPresentationChange change, string title)
+        {
+            TaskId = change.TaskId;
+            Title = title;
+            Objective = change.CompletedObjective;
+            TaskCompleted = change.TaskCompleted;
+        }
+    }
 
     private void Awake()
     {
@@ -46,33 +74,42 @@ public sealed class TaskTrackerUI : MonoBehaviour
     private void OnEnable()
     {
         Subscribe();
-        RefreshImmediate();
+        refreshPending = true;
+        ProcessPending();
     }
 
     private void Start()
     {
         Subscribe();
-        RefreshImmediate();
+        if (phase == Phase.Idle)
+        {
+            refreshPending = true;
+            ProcessPending();
+        }
     }
 
     private void OnDisable()
     {
-        if (TaskManager.Instance != null)
-            TaskManager.Instance.PresentationChanged -= HandlePresentationChange;
-
-        if (presentationRoutine != null)
-            StopCoroutine(presentationRoutine);
-        presentationRoutine = null;
-        queuedChange = null;
+        if (boundManager != null)
+            boundManager.PresentationChanged -= HandlePresentationChange;
+        boundManager = null;
+        completions.Clear();
+        titles.Clear();
+        phase = Phase.Idle;
+        progressPending = false;
+        refreshPending = true;
     }
 
     private void LateUpdate()
     {
-        // GameplayHUDTarget can restore a previously visible canvas after a
-        // story sequence. Keep an empty tracker hidden until a task exists.
-        if (!hasActiveTask && canvasGroup != null)
+        if (StorySequenceCoordinator.IsStorySequenceActive)
         {
-            canvasGroup.alpha = 0f;
+            SuppressPresentation();
+            return; // GameplayHUDTarget owns hiding while suppressed.
+        }
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = hasActiveTask ? presentationAlpha : 0f;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
         }
@@ -80,10 +117,23 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
     private void Subscribe()
     {
-        if (TaskManager.Instance != null)
-            TaskManager.Instance.PresentationChanged -= HandlePresentationChange;
-        if (TaskManager.Instance != null)
-            TaskManager.Instance.PresentationChanged += HandlePresentationChange;
+        TaskManager manager = TaskManager.Instance;
+        if (boundManager == manager)
+            return;
+        if (boundManager != null)
+            boundManager.PresentationChanged -= HandlePresentationChange;
+        boundManager = manager;
+        titles.Clear();
+        if (boundManager == null)
+            return;
+        if (TaskDefinitionsField?.GetValue(boundManager) is TaskData[] definitions)
+        {
+            foreach (TaskData definition in definitions)
+                if (definition != null && !string.IsNullOrWhiteSpace(definition.TaskId))
+                    titles[definition.TaskId.Trim()] = definition.Title;
+        }
+        boundManager.PresentationChanged += HandlePresentationChange;
+        refreshPending = true;
     }
 
     public void ShowTask(string objective)
@@ -96,8 +146,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
                 : string.Empty;
         if (objectiveText != null)
             objectiveText.text = objective;
-        if (canvasGroup != null)
-            canvasGroup.alpha = 1f;
+        SetPresentationAlpha(hasActiveTask ? 1f : 0f);
     }
 
     public void HideTask()
@@ -109,8 +158,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
             objectiveText.text = string.Empty;
         if (titleText != null)
             titleText.text = string.Empty;
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0f;
+        SetPresentationAlpha(0f);
     }
 
     private void Refresh()
@@ -146,56 +194,76 @@ public sealed class TaskTrackerUI : MonoBehaviour
         if (change == null || change.TaskType != displayedTaskType)
             return;
 
-        queuedChange = change;
-        if (presentationRoutine == null)
-            presentationRoutine = StartCoroutine(ProcessPresentationQueue());
-    }
-
-    private IEnumerator ProcessPresentationQueue()
-    {
-        while (queuedChange != null)
+        refreshPending = true;
+        if (change.StageChanged || change.TaskCompleted || change.ObjectiveCompleted)
         {
-            TaskPresentationChange change = queuedChange;
-            queuedChange = null;
-
-            if (change.StageChanged || change.TaskCompleted)
-                yield return PlayCompletion(change);
-            else if (change.ProgressIncreased)
-                yield return PlayProgressPulse(change);
-            else
-                ApplyObjective(change.NewObjective);
+            titles.TryGetValue(change.TaskId.Trim(), out string title);
+            completions.Enqueue(new CompletionPresentation(change, title ?? string.Empty));
         }
-
-        presentationRoutine = null;
+        else if (change.ProgressIncreased)
+            progressPending = true;
+        ProcessPending();
     }
 
-    private IEnumerator PlayProgressPulse(TaskPresentationChange change)
+    private void Update()
     {
-        ApplyObjective(change.NewObjective);
-        yield return LerpObjectiveColor(normalObjectiveColor, progressPulseColor, progressPulseDuration * 0.5f);
-        yield return LerpObjectiveColor(progressPulseColor, normalObjectiveColor, progressPulseDuration * 0.5f);
-    }
-
-    private IEnumerator PlayCompletion(TaskPresentationChange change)
-    {
-        ApplyObjective(change.CompletedObjective);
-        yield return LerpObjectiveColor(normalObjectiveColor, completionHighlightColor, completionColorDuration);
-
-        if (completionHoldDuration > 0f)
-            yield return new WaitForSecondsRealtime(completionHoldDuration);
-
-        yield return FadeCanvas(1f, 0f, completionFadeOutDuration);
-
-        if (change.TaskCompleted || string.IsNullOrEmpty(change.NewObjective))
+        Subscribe();
+        if (StorySequenceCoordinator.IsStorySequenceActive)
         {
-            HideTask();
-            yield break;
+            SuppressPresentation();
+            return;
         }
+        if (storyWasActive)
+        {
+            storyWasActive = false;
+            refreshPending = true;
+        }
+        if (phase == Phase.Idle)
+            ProcessPending();
+        else
+            AdvancePresentation();
+    }
 
-        ApplyObjective(change.NewObjective);
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0f;
-        yield return FadeCanvas(0f, 1f, nextObjectiveFadeInDuration);
+    private void SuppressPresentation()
+    {
+        storyWasActive = true;
+        refreshPending = true;
+        if (phase == Phase.ProgressUp || phase == Phase.ProgressDown)
+            progressPending = true;
+        // The front meaningful record is removed only after successful presentation.
+        phase = Phase.Idle;
+        phaseElapsed = 0f;
+    }
+
+    private void ProcessPending()
+    {
+        if (StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            SuppressPresentation();
+            return;
+        }
+        if (phase != Phase.Idle)
+            return;
+        if (refreshPending)
+        {
+            RefreshImmediate();
+            refreshPending = false;
+        }
+        if (completions.Count > 0)
+        {
+            CompletionPresentation completed = completions.Peek();
+            ApplyObjective(completed.Objective);
+            if (titleText != null)
+                titleText.text = completed.Title;
+            BeginPhase(Phase.Highlight);
+        }
+        else if (progressPending)
+        {
+            progressPending = false;
+            RefreshImmediate();
+            if (hasActiveTask)
+                BeginPhase(Phase.ProgressUp);
+        }
     }
 
     private void ApplyObjective(string objective)
@@ -212,8 +280,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
             objectiveText.color = normalObjectiveColor;
         }
 
-        if (canvasGroup != null)
-            canvasGroup.alpha = string.IsNullOrEmpty(objective) ? 0f : 1f;
+        SetPresentationAlpha(hasActiveTask ? 1f : 0f);
     }
 
     private void RefreshActiveTitle()
@@ -233,47 +300,82 @@ public sealed class TaskTrackerUI : MonoBehaviour
         titleText.text = definition.Title;
     }
 
-    private IEnumerator LerpObjectiveColor(Color from, Color to, float duration)
+    private void BeginPhase(Phase next)
     {
-        if (objectiveText == null)
-            yield break;
-
-        if (duration <= 0f)
-        {
-            objectiveText.color = to;
-            yield break;
-        }
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            objectiveText.color = Color.Lerp(from, to, elapsed / duration);
-            yield return null;
-        }
-
-        objectiveText.color = to;
+        phase = next;
+        phaseElapsed = 0f;
     }
 
-    private IEnumerator FadeCanvas(float from, float to, float duration)
+    private void AdvancePresentation()
     {
-        if (canvasGroup == null)
-            yield break;
-
-        if (duration <= 0f)
+        // Update calls this only without story ownership. No hidden realtime waits.
+        phaseElapsed += Time.unscaledDeltaTime;
+        float duration;
+        switch (phase)
         {
-            canvasGroup.alpha = to;
-            yield break;
+            case Phase.ProgressUp:
+            case Phase.ProgressDown: duration = progressPulseDuration * 0.5f; break;
+            case Phase.Highlight: duration = completionColorDuration; break;
+            case Phase.Hold: duration = completionHoldDuration; break;
+            case Phase.FadeOut: duration = completionFadeOutDuration; break;
+            default: duration = nextObjectiveFadeInDuration; break;
         }
-
-        float elapsed = 0f;
-        while (elapsed < duration)
+        float t = duration <= 0f ? 1f : Mathf.Clamp01(phaseElapsed / duration);
+        if (objectiveText != null)
         {
-            elapsed += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Lerp(from, to, elapsed / duration);
-            yield return null;
+            if (phase == Phase.ProgressUp)
+                objectiveText.color = Color.Lerp(normalObjectiveColor, progressPulseColor, t);
+            else if (phase == Phase.ProgressDown)
+                objectiveText.color = Color.Lerp(progressPulseColor, normalObjectiveColor, t);
+            else if (phase == Phase.Highlight)
+                objectiveText.color = Color.Lerp(normalObjectiveColor, completionHighlightColor, t);
         }
+        if (phase == Phase.FadeOut)
+            SetPresentationAlpha(1f - t);
+        else if (phase == Phase.NextFadeIn)
+            SetPresentationAlpha(t);
+        if (t < 1f)
+            return;
+        switch (phase)
+        {
+            case Phase.ProgressUp: BeginPhase(Phase.ProgressDown); break;
+            case Phase.Highlight: BeginPhase(Phase.Hold); break;
+            case Phase.Hold: BeginPhase(Phase.FadeOut); break;
+            case Phase.FadeOut:
+                bool taskCompleted = completions.Peek().TaskCompleted;
+                RefreshImmediate();
+                refreshPending = false;
+                if (!taskCompleted && hasActiveTask)
+                {
+                    SetPresentationAlpha(0f);
+                    BeginPhase(Phase.NextFadeIn);
+                }
+                else
+                    FinishCompletion();
+                break;
+            case Phase.NextFadeIn:
+                FinishCompletion();
+                break;
+            case Phase.ProgressDown:
+                BeginPhase(Phase.Idle);
+                refreshPending = true;
+                ProcessPending();
+                break;
+        }
+    }
 
-        canvasGroup.alpha = to;
+    private void FinishCompletion()
+    {
+        completions.Dequeue();
+        BeginPhase(Phase.Idle);
+        refreshPending = true;
+        ProcessPending();
+    }
+
+    private void SetPresentationAlpha(float amount)
+    {
+        presentationAlpha = amount;
+        if (canvasGroup != null && !StorySequenceCoordinator.IsStorySequenceActive)
+            canvasGroup.alpha = amount;
     }
 }

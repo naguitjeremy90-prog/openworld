@@ -6,6 +6,10 @@ Shader "UI/TransportationSideVignette"
         _Color ("Tint", Color) = (1,1,1,1)
         _Intensity ("Intensity", Range(0, 1)) = 0.82
         _Softness ("Softness", Range(0.1, 1)) = 0.72
+        [Toggle] _UseEllipticalMask ("Use Elliptical Mask", Float) = 0
+        _HorizontalOuterAxis ("Horizontal Outer Axis", Range(0.1, 1)) = 0.82
+        _VerticalOuterAxis ("Vertical Outer Axis", Range(0.1, 1)) = 0.86
+        _InnerClearThreshold ("Inner Clear Threshold", Range(0, 0.99)) = 0.70
         [HideInInspector] _StencilComp ("Stencil Comparison", Float) = 8
         [HideInInspector] _Stencil ("Stencil ID", Float) = 0
         [HideInInspector] _StencilOp ("Stencil Operation", Float) = 0
@@ -52,6 +56,10 @@ Shader "UI/TransportationSideVignette"
             fixed4 _Color;
             float _Intensity;
             float _Softness;
+            float _UseEllipticalMask;
+            float _HorizontalOuterAxis;
+            float _VerticalOuterAxis;
+            float _InnerClearThreshold;
 
             struct appdata_t
             {
@@ -84,6 +92,13 @@ Shader "UI/TransportationSideVignette"
                 float sideDistance = abs(screenUV.x * 2.0 - 1.0);
                 float innerEdge = 1.0 - _Softness;
                 float edgeFade = smoothstep(innerEdge, 1.0, sideDistance);
+                if (_UseEllipticalMask > 0.5)
+                {
+                    float2 centerDistance = screenUV * 2.0 - 1.0;
+                    float2 ellipseAxes = max(float2(_HorizontalOuterAxis, _VerticalOuterAxis), float2(0.0001, 0.0001));
+                    float ellipseDistance = length(centerDistance / ellipseAxes);
+                    edgeFade = smoothstep(_InnerClearThreshold, 1.0, ellipseDistance);
+                }
                 fixed4 textureColor = tex2D(_MainTex, input.uv) * input.color;
                 return fixed4(0, 0, 0, edgeFade * _Intensity * textureColor.a);
             }

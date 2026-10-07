@@ -6,6 +6,10 @@ public sealed class TransportationSideVignette : MonoBehaviour
 {
     [SerializeField, Range(0f, 1f)] private float intensity = 0.82f;
     [SerializeField, Range(0.1f, 1f)] private float softness = 0.72f;
+    [SerializeField] private bool useEllipticalMask;
+    [SerializeField, Range(0.1f, 1f)] private float horizontalOuterAxis = 0.82f;
+    [SerializeField, Range(0.1f, 1f)] private float verticalOuterAxis = 0.86f;
+    [SerializeField, Range(0f, 0.99f)] private float innerClearThreshold = 0.70f;
     [SerializeField, Range(0f, 1f), Tooltip("Maximum opacity of the added corner shadow layer.")]
     private float cornerShadowIntensity = 0.42f;
     [SerializeField, Range(0.1f, 1f), Tooltip("How far the corner shadows extend toward the center of the frame.")]
@@ -40,6 +44,10 @@ public sealed class TransportationSideVignette : MonoBehaviour
         };
         vignetteMaterial.SetFloat("_Intensity", intensity);
         vignetteMaterial.SetFloat("_Softness", softness);
+        vignetteMaterial.SetFloat("_UseEllipticalMask", useEllipticalMask ? 1f : 0f);
+        vignetteMaterial.SetFloat("_HorizontalOuterAxis", horizontalOuterAxis);
+        vignetteMaterial.SetFloat("_VerticalOuterAxis", verticalOuterAxis);
+        vignetteMaterial.SetFloat("_InnerClearThreshold", innerClearThreshold);
 
         overlayRoot = new GameObject("TransportationSideVignetteOverlay");
         Canvas canvas = overlayRoot.AddComponent<Canvas>();

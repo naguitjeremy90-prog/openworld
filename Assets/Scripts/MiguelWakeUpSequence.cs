@@ -19,6 +19,12 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
     [SerializeField] private ChurchNPCDepartureController churchDeparture;
     [SerializeField] private OneWayNPCDeparture padreDeparture;
 
+    [Header("Task objective handoff after intro completion")]
+    [SerializeField] private string taskId;
+    [SerializeField] private string requiredCurrentStageId;
+    [SerializeField] private string requiredCurrentObjective;
+    [SerializeField] private string nextObjective;
+
     [Header("Eye timing (seconds)")]
     [SerializeField, Min(0f)] private float initialBlackDuration = 0.75f;
     [SerializeField, Min(0.01f)] private float firstOpeningDuration = 0.85f;
@@ -39,6 +45,7 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
     private StorySequenceToken storyToken;
     private float elapsed;
     private bool introStarted;
+    private bool introReachedTerminalSignal;
 
     private float TotalDuration =>
         initialBlackDuration + firstOpeningDuration + firstClosingDuration +
@@ -115,6 +122,7 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
         // Restore the approved world-space framing before the Timeline takes over.
         headPivot.localRotation = Quaternion.identity;
         eyelidController.SetOpenImmediately();
+        introReachedTerminalSignal = false;
         introDirector.stopped += HandleIntroStopped;
         introDirector.time = 0d;
         introDirector.Play();
@@ -157,14 +165,41 @@ public sealed class MiguelWakeUpSequence : MonoBehaviour
         }
     }
 
+    public void OnIntroTerminalReached()
+    {
+        introReachedTerminalSignal = true;
+    }
+
     private void HandleIntroStopped(PlayableDirector director)
     {
         if (director != introDirector)
             return;
 
         introDirector.stopped -= HandleIntroStopped;
+        // A cancelled/early stop also raises stopped; require the terminal Timeline signal.
+        if (introStarted && isActiveAndEnabled && director.isActiveAndEnabled &&
+            storyToken != null && storyToken.IsValid && director.playableAsset != null &&
+            introReachedTerminalSignal)
+        {
+            CompleteIntroObjective();
+        }
         storyToken?.Release();
         storyToken = null;
+    }
+
+    private void CompleteIntroObjective()
+    {
+        TaskManager manager = TaskManager.Instance;
+        if (manager == null || string.IsNullOrWhiteSpace(taskId) ||
+            string.IsNullOrWhiteSpace(requiredCurrentStageId) ||
+            string.IsNullOrWhiteSpace(requiredCurrentObjective) ||
+            manager.GetTaskState(taskId) != TaskState.Active ||
+            !manager.IsCurrentStage(taskId, requiredCurrentStageId) ||
+            !manager.TryGetCurrentObjective(taskId, out string objective) ||
+            !string.Equals(objective, requiredCurrentObjective, System.StringComparison.Ordinal))
+            return;
+
+        manager.CompleteCurrentObjectiveAndUpdate(taskId, nextObjective);
     }
 
     private void OnDestroy()

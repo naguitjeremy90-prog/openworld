@@ -12,6 +12,7 @@ public sealed class TaskPresentationChange
     public bool StageChanged { get; }
     public bool TaskStarted { get; }
     public bool TaskCompleted { get; }
+    public bool ObjectiveCompleted { get; }
 
     public TaskPresentationChange(
         string taskId,
@@ -22,7 +23,8 @@ public sealed class TaskPresentationChange
         bool progressIncreased = false,
         bool stageChanged = false,
         bool taskStarted = false,
-        bool taskCompleted = false)
+        bool taskCompleted = false,
+        bool objectiveCompleted = false)
     {
         TaskId = taskId;
         TaskType = taskType;
@@ -33,5 +35,6 @@ public sealed class TaskPresentationChange
         StageChanged = stageChanged;
         TaskStarted = taskStarted;
         TaskCompleted = taskCompleted;
+        ObjectiveCompleted = objectiveCompleted;
     }
 }

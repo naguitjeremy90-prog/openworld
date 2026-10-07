@@ -347,15 +347,15 @@ namespace DialogueEditor
 
         private void ScrollingText_Update()
         {
-            const float charactersPerSecond = 1500;
+            const float charactersPerSecond = 3000;
             float timePerChar = (60.0f / charactersPerSecond);
             timePerChar *= ScrollSpeed;
 
             m_elapsedScrollTime += Time.deltaTime;
 
-            if (m_elapsedScrollTime > timePerChar)
+            while (m_elapsedScrollTime >= timePerChar)
             {
-                m_elapsedScrollTime = 0f;
+                m_elapsedScrollTime -= timePerChar;
 
                 int previousVisibleCharacters = DialogueText.maxVisibleCharacters;
                 DialogueText.maxVisibleCharacters = m_scrollIndex;
@@ -369,6 +369,7 @@ namespace DialogueEditor
                 {
                     m_dialogueTypingAudio?.EndLine();
                     SetState(eState.TransitioningOptionsOn);
+                    break;
                 }
             }
         }

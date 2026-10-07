@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 /// <summary>Speeds up only the current Grasshop text reveal after a double-click on its text.</summary>
 public sealed class DialogueTextAcceleration : MonoBehaviour, IPointerClickHandler
 {
-    private const float SpeedMultiplier = 3f;
+    private const float SpeedMultiplier = 4f;
 
     private ConversationManager manager;
     private TextMeshProUGUI dialogueText;

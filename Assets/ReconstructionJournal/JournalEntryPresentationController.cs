@@ -129,7 +129,7 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
         if (GameplaySystemTutorialManager.HasInstance)
         {
             GameplaySystemTutorialManager tutorial = GameplaySystemTutorialManager.Instance;
-            if (tutorial.HasActiveTutorial || tutorial.IsPresentationVisible) return true;
+            if (tutorial.IsPresentationVisible) return true;
         }
         if (ReconstructionJournalManager.Instance != null && ReconstructionJournalManager.Instance.IsOpen) return true;
         if (inventoryUI != null && inventoryUI.IsOpen) return true;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Owns the single optional gameplay-system tutorial presentation. It never changes
@@ -12,8 +13,20 @@ using UnityEngine.UI;
 public sealed class GameplaySystemTutorialManager : MonoBehaviour
 {
     private const float JournalPostRevealDelay = 0.5f;
+    private const string VisualResourcePath = "UI/GameplaySystemTutorialVisual";
 
     private static GameplaySystemTutorialManager instance;
+
+    [Header("Temporary Diagnostics")]
+    [SerializeField, Tooltip("Log tutorial presentation events and blockers during manual scene-transition testing. Observational only.")]
+    private bool tutorialPresentationDiagnostics = false;
+
+    // Diagnostic-only caches; never participate in tutorial decisions.
+    private string lastDiagnosticSnapshot;
+    private string lastDiagnosticScene;
+    private string lastDiagnosticVisualState;
+    private string lastDiagnosticSteps;
+    private int diagnosticActivationId;
 
     private readonly Dictionary<GameplaySystemId, GameplaySystemTutorialDefinition> definitions =
         new Dictionary<GameplaySystemId, GameplaySystemTutorialDefinition>();
@@ -22,6 +35,8 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     private readonly HashSet<GameplaySystemId> presentationReady =
         new HashSet<GameplaySystemId>();
 
+    private GameplaySystemTutorialVisual visual;
+    private bool presentationFailed;
     private Canvas overlayCanvas;
     private RectTransform canvasRect;
     private CanvasGroup presentationGroup;
@@ -52,6 +67,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     private bool journalOpen;
     private bool activeSystemTemporarilyHidden;
     private bool lastStorySequenceActive;
+    private bool lastEntryPresentationDeferred;
 #if UNITY_EDITOR
     private readonly HashSet<GameplaySystemId> developmentTutorialSuppressed =
         new HashSet<GameplaySystemId>();
@@ -105,7 +121,8 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
         RegisterJournalDefinition();
-        BuildOverlay();
+        if (!BuildOverlay())
+            return;
 
         GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
         SessionStoryState.FlagChanged += HandleFlagChanged;
@@ -128,15 +145,23 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (presentationFailed)
+            return;
+
         bool storySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
-        if (storySequenceActive != lastStorySequenceActive)
+        bool entryPresentationDeferred = ShouldDeferInitialPresentation();
+        if (storySequenceActive != lastStorySequenceActive ||
+            entryPresentationDeferred != lastEntryPresentationDeferred)
         {
             lastStorySequenceActive = storySequenceActive;
+            lastEntryPresentationDeferred = entryPresentationDeferred;
             RefreshPresentation();
         }
 
         if (!storySequenceActive)
             PositionVisibleCallout();
+
+        ObserveDiagnosticPresentationChanges();
     }
 
     public void RegisterAnchor(GameplaySystemTutorialAnchor anchor)
@@ -146,6 +171,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
         RemoveAnchorReferences(anchor);
         anchors[anchor.System] = anchor;
+        LogTutorialDiagnostics("Anchor registered: " + anchor.System + "/" + anchor.name);
         RefreshPresentation();
     }
 
@@ -155,6 +181,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             return;
 
         RemoveAnchorReferences(anchor);
+        LogTutorialDiagnostics("Anchor unregistered: " + anchor.System + "/" + anchor.name);
 
         RefreshPresentation();
     }
@@ -180,6 +207,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         journalTabs[1] = people;
         journalTabs[2] = fragments;
         journalTabs[3] = reflections;
+        LogTutorialDiagnostics("ConfigureJournal: window=" + (window != null ? window.name : "missing"));
         RefreshPresentation();
     }
 
@@ -187,6 +215,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     public void NotifySystemRevealCompleted(GameplaySystemId system)
     {
         presentationReady.Add(system);
+        LogTutorialDiagnostics("Reveal completed: " + system);
         if (IsDevelopmentTutorialSuppressed(system))
             return;
 
@@ -249,6 +278,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
         activeSystemTemporarilyHidden = true;
         HideAll();
+        LogTutorialDiagnostics("Hidden: active system opened");
     }
 
     public void NotifySystemClosed(GameplaySystemId system)
@@ -370,6 +400,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             flagId != seenFlagId)
             return;
 
+        LogTutorialDiagnostics("Completed/seen flag set: " + flagId);
         ClearActive();
     }
 
@@ -404,6 +435,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         {
             activeSystemTemporarilyHidden = true;
             HideAll();
+            LogTutorialDiagnostics("Hidden: unreadable document opened");
         }
     }
 
@@ -430,6 +462,9 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
     private void Activate(GameplaySystemId system)
     {
+        if (presentationFailed)
+            return;
+
         if (IsDevelopmentTutorialSuppressed(system))
             return;
 
@@ -440,11 +475,15 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         journalOpen = system == GameplaySystemId.Journal &&
             ReconstructionJournalManager.Instance != null &&
             ReconstructionJournalManager.Instance.IsOpen;
+        if (tutorialPresentationDiagnostics)
+            diagnosticActivationId++;
+        LogTutorialDiagnostics("ACTIVATED: Activate invoked for " + system);
         RefreshPresentation();
     }
 
     private void ClearActive()
     {
+        LogTutorialDiagnostics("ClearActive requested");
         CancelDelay();
         hasActiveTutorial = false;
         journalStep = 0;
@@ -456,6 +495,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         journalOpen = false;
         activeSystemTemporarilyHidden = false;
         HideAll();
+        LogTutorialDiagnostics("Active tutorial cleared");
     }
 
     private void StartDelayedPresentation(GameplaySystemId system)
@@ -466,6 +506,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             ? definition.PostRevealDelay
             : 0f;
         delayedPresentation = StartCoroutine(ShowAfterDelay(system, delay));
+        LogTutorialDiagnostics("Presentation delay began: " + system + ", seconds=" + delay);
     }
 
     private IEnumerator ShowAfterDelay(GameplaySystemId system, float delay)
@@ -482,18 +523,144 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         }
 
         delayedPresentation = null;
+        LogTutorialDiagnostics("Presentation delay finished: " + system);
         RefreshPresentation();
     }
 
     private void CancelDelay()
     {
         if (delayedPresentation != null)
+        {
+            LogTutorialDiagnostics("Presentation delay cancelled");
             StopCoroutine(delayedPresentation);
+        }
         delayedPresentation = null;
+    }
+
+    private bool ShouldDeferInitialPresentation()
+    {
+        // Guided interfaces and the document-specific instruction keep their
+        // existing ownership. Only initial/HUD callouts yield to queued entries.
+        if (!hasActiveTutorial ||
+            (activeSystem == GameplaySystemId.Journal && journalOpen && journalStep > 0) ||
+            (activeSystem == GameplaySystemId.Inventory && inventoryOpen &&
+                (inventoryStep == 1 || inventoryStep == 3 || inventoryStep == 4)) ||
+            (activeSystem == GameplaySystemId.Clarity && clarityStep == 1))
+            return false;
+
+        var entries = JournalEntryPresentationController.Instance;
+        return entries != null && (entries.PendingCount > 0 || entries.IsPresenting);
+    }
+
+    private string GetDiagnosticVisualState()
+    {
+        return (initialCallout != null && initialCallout.gameObject.activeSelf) + "/" +
+            (journalCallout != null && journalCallout.gameObject.activeSelf) + "/" +
+            (presentationGroup != null && presentationGroup.alpha > 0.01f) + "/" +
+            (presentationGroup != null && presentationGroup.interactable) + "/" +
+            (presentationGroup != null && presentationGroup.blocksRaycasts);
+    }
+
+    private void ObserveDiagnosticPresentationChanges()
+    {
+        if (!tutorialPresentationDiagnostics)
+            return;
+
+        // Observe scene changes and discrete visual changes, never each fade frame.
+        string scene = SceneManager.GetActiveScene().name;
+        string visualState = GetDiagnosticVisualState();
+        if (scene != lastDiagnosticScene || visualState != lastDiagnosticVisualState)
+            LogTutorialDiagnostics("Observed scene/visual state change");
+    }
+
+    private void LogTutorialDiagnostics(string eventName)
+    {
+        if (!tutorialPresentationDiagnostics)
+            return;
+
+        string scene = SceneManager.GetActiveScene().name;
+        string steps = activeSystem + "/" + journalStep + "/" + inventoryStep + "/" + clarityStep;
+        string changes = scene != lastDiagnosticScene ? " SCENE_CHANGED" : "";
+        if (lastDiagnosticSteps != null && steps != lastDiagnosticSteps)
+            changes += " SYSTEM_OR_STEP_CHANGED";
+
+        GameplaySystemTutorialAnchor anchor;
+        bool registered = anchors.TryGetValue(activeSystem, out anchor);
+        RectTransform target = anchor != null ? anchor.Target : null;
+        var entries = JournalEntryPresentationController.Instance;
+        int entryPending = entries != null ? entries.PendingCount : 0;
+        bool entryPresenting = entries != null && entries.IsPresenting;
+        bool storyActive = StorySequenceCoordinator.IsStorySequenceActive;
+        bool documentInstruction = activeSystem == GameplaySystemId.Clarity && clarityStep == 1;
+        bool seen = documentInstruction
+            ? GameplaySystemTutorialState.ClarityDocumentSeen
+            : GameplaySystemTutorialState.IsSeen(activeSystem);
+        bool guided = (activeSystem == GameplaySystemId.Journal && journalOpen && journalStep > 0) ||
+            (activeSystem == GameplaySystemId.Inventory && inventoryOpen &&
+                (inventoryStep == 1 || inventoryStep == 3 || inventoryStep == 4));
+        bool entryDeferred = hasActiveTutorial && !guided && !documentInstruction &&
+            (entryPending > 0 || entryPresenting);
+
+        // Mirror actual RefreshPresentation gates for reporting only.
+        // Inactive targets are observations, not a gate in the current manager.
+        var blockers = new List<string>();
+        if (presentationFailed) blockers.Add("presentation failed");
+        if (!hasActiveTutorial) blockers.Add("no active tutorial");
+        if (storyActive) blockers.Add("story sequence active");
+        if (seen) blockers.Add("tutorial already completed/seen");
+        if (!presentationReady.Contains(activeSystem)) blockers.Add("presentation not ready");
+        if (delayedPresentation != null) blockers.Add("presentation delay pending");
+        if (activeSystemTemporarilyHidden) blockers.Add("active system temporarily hidden");
+        if (!guided && !documentInstruction)
+        {
+            if (entryDeferred) blockers.Add("Journal entry presentation pending/presenting");
+            if (!definitions.ContainsKey(activeSystem)) blockers.Add("tutorial definition missing");
+            if (!registered || anchor == null) blockers.Add("required tutorial anchor missing");
+            else if (target == null) blockers.Add("target RectTransform missing");
+        }
+
+        string snapshot = "scene=" + scene + ", manager=" + GetInstanceID() +
+            ", activation=" + diagnosticActivationId + ", active=" + hasActiveTutorial +
+            ", system=" + activeSystem + ", steps[J/I/C]=" + journalStep + "/" + inventoryStep + "/" + clarityStep +
+            ", ready=" + presentationReady.Contains(activeSystem) + ", delay=" + (delayedPresentation != null) +
+            ", temporaryHidden=" + activeSystemTemporarilyHidden + ", failed=" + presentationFailed +
+            ", anchorRegistered=" + registered + ", anchor=" + (anchor != null ? anchor.name : "missing") +
+            ", target=" + (target != null ? target.name : "missing") +
+            ", targetActive=" + (target != null && target.gameObject.activeInHierarchy) +
+            ", story=" + storyActive + ", storyOwners=" + StorySequenceCoordinator.ActiveOwnerCount +
+            ", entryPending=" + entryPending + ", entryPresenting=" + entryPresenting +
+            ", entryDeferred=" + entryDeferred + ", seen=" + seen +
+            ", seenFlag=" + (documentInstruction ? GameplaySystemTutorialState.ClarityDocumentSeenFlagId :
+                GameplaySystemTutorialState.GetSeenFlagId(activeSystem)) +
+            ", inventoryFirstItemSeen=" + GameplaySystemTutorialState.InventoryFirstItemSeen +
+            ", windows[J/I]=" + journalOpen + "/" + inventoryOpen +
+            ", panels[system/guided]=" + (initialCallout != null && initialCallout.gameObject.activeSelf) + "/" +
+                (journalCallout != null && journalCallout.gameObject.activeSelf) +
+            ", alpha=" + (presentationGroup != null ? presentationGroup.alpha.ToString("0.###",
+                System.Globalization.CultureInfo.InvariantCulture) : "missing") +
+            ", interactable=" + (presentationGroup != null && presentationGroup.interactable) +
+            ", blocksRaycasts=" + (presentationGroup != null && presentationGroup.blocksRaycasts) +
+            ", " + (blockers.Count > 0 ? "BLOCKED: " + string.Join("; ", blockers) : "refresh gates clear");
+
+        string key = eventName + " | " + snapshot;
+        bool duplicate = key == lastDiagnosticSnapshot;
+        lastDiagnosticSnapshot = key;
+        lastDiagnosticScene = scene;
+        lastDiagnosticSteps = steps;
+        lastDiagnosticVisualState = GetDiagnosticVisualState();
+        if (!duplicate)
+            Debug.Log("[TutorialDiagnostics] " + eventName + changes + " | " + snapshot, this);
     }
 
     private void RefreshPresentation()
     {
+        if (presentationFailed)
+        {
+            LogTutorialDiagnostics("Refresh BLOCKED");
+            ClearActive();
+            return;
+        }
+
         HideAll();
         bool activeTutorialSeen = activeSystem == GameplaySystemId.Clarity && clarityStep == 1
             ? GameplaySystemTutorialState.ClarityDocumentSeen
@@ -502,11 +669,15 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             activeTutorialSeen ||
             !presentationReady.Contains(activeSystem) || delayedPresentation != null ||
             activeSystemTemporarilyHidden)
+        {
+            LogTutorialDiagnostics("Refresh BLOCKED");
             return;
+        }
 
         if (activeSystem == GameplaySystemId.Journal && journalOpen && journalStep > 0)
         {
             ShowJournalStep();
+            LogTutorialDiagnostics("Refresh SHOWN: Journal guided");
             return;
         }
 
@@ -515,6 +686,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             if (inventoryStep == 1 && inventoryOpen)
             {
                 ShowInventoryStep("Mga Detalye ng Gamit", "Pumili ng gamit para makita ang paglalarawan nito.");
+                LogTutorialDiagnostics("Refresh SHOWN: Inventory guided");
                 return;
             }
 
@@ -523,6 +695,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                 ShowInventoryStep(
                     "Mga Gamit sa Gawain",
                     "Maaaring alisin ang mga gamit sa gawain kapag hindi na kailangan.");
+                LogTutorialDiagnostics("Refresh SHOWN: Inventory guided");
                 return;
             }
 
@@ -531,6 +704,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                 ShowInventoryStep(
                     "Mahahalagang Gamit at mga Kasulatan",
                     "Dito makikita ang mahahalagang gamit at mga kasulatang dapat mong ingatan.");
+                LogTutorialDiagnostics("Refresh SHOWN: Inventory guided");
                 return;
             }
         }
@@ -543,15 +717,24 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             initialPointer.gameObject.SetActive(false);
             initialCallout.gameObject.SetActive(true);
             presentationGroup.alpha = 1f;
+            LogTutorialDiagnostics("Refresh SHOWN: Pagsusuri document");
             return;
         }
 
         GameplaySystemTutorialDefinition definition;
         GameplaySystemTutorialAnchor anchor;
+        if (ShouldDeferInitialPresentation())
+        {
+            LogTutorialDiagnostics("Refresh BLOCKED");
+            return;
+        }
         if (!definitions.TryGetValue(activeSystem, out definition) ||
             !anchors.TryGetValue(activeSystem, out anchor) || anchor == null ||
             anchor.Target == null)
+        {
+            LogTutorialDiagnostics("Refresh BLOCKED");
             return;
+        }
 
         initialTitle.text = definition.Title;
         initialBody.text = definition.Description;
@@ -563,6 +746,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         initialPointer.gameObject.SetActive(definition.ShowInitialPointer);
         initialCallout.gameObject.SetActive(true);
         presentationGroup.alpha = 1f;
+        LogTutorialDiagnostics("Refresh SHOWN: System Callout");
     }
 
     private void ShowJournalStep()
@@ -609,7 +793,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
         journalCallout.gameObject.SetActive(true);
         presentationGroup.alpha = 1f;
-        PositionCallout(journalCallout, target, journalStep == 1 ? Vector2.zero : new Vector2(0f, -105f));
+        PositionCallout(journalCallout, target, journalStep == 1 ? visual.JournalOverviewOffset : visual.JournalGuidedOffset);
     }
 
     private void ShowInventoryStep(string title, string body)
@@ -643,7 +827,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             if (itemDetailsStep)
                 PositionInventoryItemDetailsCallout(journalCallout, target);
             else
-                PositionCallout(journalCallout, target, Vector2.zero);
+                PositionCallout(journalCallout, target, visual.InventoryGeneralOffset);
         }
     }
 
@@ -683,8 +867,10 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             if (inventoryStep == 1)
             {
                 GameplaySystemTutorialState.SetInventoryFirstItemSeen(true);
+                LogTutorialDiagnostics("Inventory first-item teaching completed");
                 hasActiveTutorial = false;
                 HideAll();
+                LogTutorialDiagnostics("Inventory first-item presentation ended");
                 return;
             }
 
@@ -713,7 +899,18 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         {
             GameplaySystemTutorialAnchor anchor;
             if (anchors.TryGetValue(activeSystem, out anchor) && anchor != null)
-                PositionCallout(initialCallout, anchor.Target, new Vector2(0f, -100f));
+            {
+                Vector2 offset;
+                if (activeSystem == GameplaySystemId.Inventory)
+                    offset = visual.InventoryInitialTargetOffset;
+                else if (activeSystem == GameplaySystemId.Clarity)
+                    offset = clarityStep == 1
+                        ? visual.PagsusuriDocumentOffset
+                        : visual.PagsusuriInitialTargetOffset;
+                else
+                    offset = visual.JournalInitialTargetOffset;
+                PositionCallout(initialCallout, anchor.Target, offset);
+            }
         }
         else if (journalCallout.gameObject.activeSelf)
         {
@@ -739,7 +936,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                     if (inventoryStep == 1)
                         PositionInventoryItemDetailsCallout(journalCallout, target);
                     else
-                        PositionCallout(journalCallout, target, Vector2.zero);
+                        PositionCallout(journalCallout, target, visual.InventoryGeneralOffset);
                 }
             }
             else
@@ -748,7 +945,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
                     ? journalWindow
                     : GetTabTarget(Mathf.Clamp(journalStep - 2, 0, 3));
                 PositionCallout(journalCallout, target,
-                    journalStep == 1 ? Vector2.zero : new Vector2(0f, -105f));
+                    journalStep == 1 ? visual.JournalOverviewOffset : visual.JournalGuidedOffset);
             }
         }
     }
@@ -770,16 +967,49 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             return;
 
         Vector2 desired = localPoint + offset;
-        Vector2 half = callout.rect.size * 0.5f;
-        Rect bounds = canvasRect.rect;
-        desired.x = Mathf.Clamp(desired.x, bounds.xMin + half.x + 12f, bounds.xMax - half.x - 12f);
-        desired.y = Mathf.Clamp(desired.y, bounds.yMin + half.y + 12f, bounds.yMax - half.y - 12f);
+        Rect footprint = GetCalloutFootprint(callout);
+        desired = ClampCalloutPosition(desired, footprint, visual.ScreenClampMargin);
         callout.anchoredPosition = desired;
 
         if (callout == initialCallout)
             RotatePointerToTarget(initialPointer.rectTransform, target);
         else if (callout == journalCallout && journalPointer != null && journalPointer.gameObject.activeSelf)
             RotatePointerToTarget(journalPointer.rectTransform, target);
+    }
+
+    // Transformed panel corners in overlay space, relative to anchoredPosition.
+    // Compose the child-to-overlay transform directly so a serialized zero scale
+    // on the overlay root does not require inverting a singular world matrix.
+    private Rect GetCalloutFootprint(RectTransform callout)
+    {
+        Matrix4x4 toOverlay = Matrix4x4.identity;
+        for (Transform current = callout; current != canvasRect; current = current.parent)
+            toOverlay = Matrix4x4.TRS(current.localPosition, current.localRotation, current.localScale) * toOverlay;
+
+        Vector3[] corners = new Vector3[4];
+        callout.GetLocalCorners(corners);
+        Vector2 min = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+        Vector2 max = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+        for (int i = 0; i < corners.Length; i++)
+        {
+            Vector2 corner = (Vector2)toOverlay.MultiplyPoint3x4(corners[i]) - callout.anchoredPosition;
+            min = Vector2.Min(min, corner);
+            max = Vector2.Max(max, corner);
+        }
+        return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+    }
+
+    private Vector2 ClampCalloutPosition(Vector2 desired, Rect footprint, float margin)
+    {
+        Rect bounds = canvasRect.rect;
+        float minX = bounds.xMin + margin - footprint.xMin;
+        float maxX = bounds.xMax - margin - footprint.xMax;
+        float minY = bounds.yMin + margin - footprint.yMin;
+        float maxY = bounds.yMax - margin - footprint.yMax;
+        // Center only an axis whose authored footprint cannot fit.
+        desired.x = minX <= maxX ? Mathf.Clamp(desired.x, minX, maxX) : bounds.center.x - footprint.center.x;
+        desired.y = minY <= maxY ? Mathf.Clamp(desired.y, minY, maxY) : bounds.center.y - footprint.center.y;
+        return desired;
     }
 
     private bool IsDevelopmentTutorialSuppressed(GameplaySystemId system)
@@ -820,19 +1050,19 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             itemMax = Vector2.Max(itemMax, localPoint);
         }
 
-        const float gap = 12f;
-        const float margin = 12f;
-        Vector2 half = callout.rect.size * 0.5f;
+        float gap = visual.InventoryItemGap;
+        float margin = visual.InventoryEdgeMargin;
+        Rect footprint = GetCalloutFootprint(callout);
         Rect bounds = canvasRect.rect;
-        bool spaceBelow = itemMin.y - bounds.yMin >= callout.rect.height + gap + margin;
+        bool spaceBelow = itemMin.y - bounds.yMin >= footprint.height + gap + margin;
         Vector2 desired = new Vector2(
-            (itemMin.x + itemMax.x) * 0.5f,
+            (itemMin.x + itemMax.x) * 0.5f - footprint.center.x,
             spaceBelow
-                ? itemMin.y - gap - half.y
-                : itemMax.y + gap + half.y);
+                ? itemMin.y - gap - footprint.yMax
+                : itemMax.y + gap - footprint.yMin);
 
-        desired.x = Mathf.Clamp(desired.x, bounds.xMin + half.x + margin, bounds.xMax - half.x - margin);
-        desired.y = Mathf.Clamp(desired.y, bounds.yMin + half.y + margin, bounds.yMax - half.y - margin);
+        desired += visual.InventoryItemDetailsOffset;
+        desired = ClampCalloutPosition(desired, footprint, margin);
         callout.anchoredPosition = desired;
 
         // The approved item-details layout places the panel below the item and
@@ -845,14 +1075,14 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             {
                 pointer.anchorMin = pointer.anchorMax = new Vector2(0.5f, 1f);
                 pointer.pivot = new Vector2(0.5f, 0f);
-                pointer.anchoredPosition = new Vector2(0f, 4f);
+                pointer.anchoredPosition = visual.PointerBelowItemOffset;
                 pointer.localRotation = Quaternion.identity;
             }
             else
             {
                 pointer.anchorMin = pointer.anchorMax = new Vector2(0.5f, 0f);
                 pointer.pivot = new Vector2(0.5f, 1f);
-                pointer.anchoredPosition = new Vector2(0f, -4f);
+                pointer.anchoredPosition = visual.PointerAboveItemOffset;
                 pointer.localRotation = Quaternion.Euler(0f, 0f, 180f);
             }
         }
@@ -912,124 +1142,48 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         }
     }
 
-    private void BuildOverlay()
+    private bool BuildOverlay()
     {
-        overlayCanvas = gameObject.AddComponent<Canvas>();
-        overlayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        overlayCanvas.sortingOrder = 32000;
-        CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.matchWidthOrHeight = 0.5f;
-        gameObject.AddComponent<GraphicRaycaster>();
-        presentationGroup = gameObject.AddComponent<CanvasGroup>();
+        GameplaySystemTutorialVisual prefab =
+            Resources.Load<GameplaySystemTutorialVisual>(VisualResourcePath);
+        string error;
+        if (prefab == null)
+            return FailPresentation("Required prefab is missing at Resources/" + VisualResourcePath + ".");
+        if (!prefab.ValidateReferences(out error))
+            return FailPresentation(error);
+
+        visual = Instantiate(prefab, transform, false);
+        visual.name = "GameplaySystemTutorialVisual";
+        overlayCanvas = visual.RootCanvas;
+        canvasRect = overlayCanvas.transform as RectTransform;
+        presentationGroup = visual.PresentationGroup;
+        initialCallout = visual.InitialCallout;
+        initialTitle = visual.InitialTitle;
+        initialBody = visual.InitialBody;
+        initialPointer = visual.InitialPointer;
+        journalCallout = visual.GuidedCallout;
+        journalTitle = visual.GuidedTitle;
+        journalBody = visual.GuidedBody;
+        journalPointer = visual.GuidedPointer;
+        journalNextButton = visual.NextButton;
+        journalNextLabel = visual.NextLabel;
+
+        // Match the generated overlay's normal state before HUD suppression captures it.
+        presentationGroup.alpha = 1f;
         presentationGroup.interactable = true;
         presentationGroup.blocksRaycasts = true;
-        canvasRect = transform as RectTransform;
-        GameplayHUDTarget.AttachTo(gameObject);
-
-        initialCallout = CreateCallout("System Callout", new Vector2(390f, 132f), false,
-            out initialTitle, out initialBody, out initialPointer, out _, out _);
-        journalCallout = CreateCallout("Gabay sa Tala-arawan", new Vector2(510f, 146f), true,
-            out journalTitle, out journalBody, out journalPointer, out journalNextButton, out journalNextLabel);
+        GameplayHUDTarget.AttachTo(visual.gameObject);
         journalNextButton.onClick.AddListener(AdvanceActiveTutorial);
         HideAll();
+        return true;
     }
 
-    private RectTransform CreateCallout(
-        string name,
-        Vector2 size,
-        bool includeButton,
-        out TMP_Text title,
-        out TMP_Text body,
-        out TMP_Text pointer,
-        out Button actionButton,
-        out TMP_Text actionLabel)
+    private bool FailPresentation(string reason)
     {
-        GameObject panelObject = new GameObject(name, typeof(RectTransform), typeof(Image));
-        RectTransform panel = panelObject.GetComponent<RectTransform>();
-        panel.SetParent(transform, false);
-        panel.anchorMin = panel.anchorMax = new Vector2(0.5f, 0.5f);
-        panel.pivot = new Vector2(0.5f, 0.5f);
-        panel.sizeDelta = size;
-        Image background = panelObject.GetComponent<Image>();
-        background.color = new Color(0.105f, 0.09f, 0.075f, 0.94f);
-        background.raycastTarget = includeButton;
-
-        title = CreateText(panel, "Title", new Vector2(16f, -12f),
-            new Vector2(includeButton ? -105f : -16f, 31f), 20f, FontStyles.Bold);
-        body = CreateText(panel, "Body", new Vector2(16f, -43f),
-            new Vector2(includeButton ? -105f : -16f, -12f), 16f, FontStyles.Normal);
-
-        RectTransform titleRect = title.rectTransform;
-        titleRect.anchorMin = titleRect.anchorMax = new Vector2(0.5f, 1f);
-        titleRect.pivot = new Vector2(0.5f, 1f);
-        titleRect.sizeDelta = new Vector2(size.x - (includeButton ? 161f : 32f), 28f);
-        titleRect.anchoredPosition = new Vector2(includeButton ? -64.5f : 0f, -10f);
-
-        RectTransform bodyRect = body.rectTransform;
-        bodyRect.anchorMin = bodyRect.anchorMax = new Vector2(0.5f, 1f);
-        bodyRect.pivot = new Vector2(0.5f, 1f);
-        bodyRect.sizeDelta = new Vector2(size.x - (includeButton ? 161f : 32f), 88f);
-        bodyRect.anchoredPosition = new Vector2(includeButton ? -64.5f : 0f, -42f);
-
-        pointer = CreateText(
-            panel, "Pointer", Vector2.zero, Vector2.zero, 24f, FontStyles.Bold);
-        RectTransform pointerRect = pointer.rectTransform;
-        pointerRect.anchorMin = pointerRect.anchorMax = new Vector2(0.5f, 1f);
-        pointerRect.pivot = new Vector2(0.5f, 0f);
-        pointerRect.anchoredPosition = new Vector2(0f, 4f);
-        pointerRect.sizeDelta = new Vector2(36f, 28f);
-        pointer.alignment = TextAlignmentOptions.Center;
-        pointer.text = "▲";
-
-        actionButton = null;
-        actionLabel = null;
-        if (includeButton)
-        {
-            GameObject buttonObject = new GameObject("Next", typeof(RectTransform), typeof(Image), typeof(Button));
-            RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
-            buttonRect.SetParent(panel, false);
-            buttonRect.anchorMin = new Vector2(1f, 0.5f);
-            buttonRect.anchorMax = new Vector2(1f, 0.5f);
-            buttonRect.pivot = new Vector2(1f, 0.5f);
-            buttonRect.anchoredPosition = new Vector2(-14f, 0f);
-            buttonRect.sizeDelta = new Vector2(120f, 38f);
-            buttonObject.GetComponent<Image>().color = new Color(0.68f, 0.55f, 0.34f, 1f);
-            actionButton = buttonObject.GetComponent<Button>();
-            actionLabel = CreateText(buttonRect, "Label", Vector2.zero, Vector2.zero, 15f, FontStyles.Bold);
-            RectTransform labelRect = actionLabel.rectTransform;
-            labelRect.anchorMin = Vector2.zero;
-            labelRect.anchorMax = Vector2.one;
-            labelRect.offsetMin = labelRect.offsetMax = Vector2.zero;
-            actionLabel.alignment = TextAlignmentOptions.Center;
-            actionLabel.raycastTarget = false;
-        }
-
-        return panel;
-    }
-
-    private TMP_Text CreateText(
-        RectTransform parent,
-        string name,
-        Vector2 offsetMin,
-        Vector2 offsetMax,
-        float fontSize,
-        FontStyles style)
-    {
-        GameObject textObject = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
-        RectTransform rect = textObject.GetComponent<RectTransform>();
-        rect.SetParent(parent, false);
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = offsetMin;
-        rect.offsetMax = offsetMax;
-        TextMeshProUGUI text = textObject.GetComponent<TextMeshProUGUI>();
-        text.fontSize = fontSize;
-        text.fontStyle = style;
-        text.color = new Color(0.95f, 0.9f, 0.78f, 1f);
-        text.overflowMode = TextOverflowModes.Ellipsis;
-        text.raycastTarget = false;
-        return text;
+        presentationFailed = true;
+        ClearActive();
+        Debug.LogError("Gameplay system tutorial presentation unavailable: " + reason +
+            " No tutorial completion flags were changed.", this);
+        return false;
     }
 }

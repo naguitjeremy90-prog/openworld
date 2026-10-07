@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -13,8 +13,29 @@ public sealed class TaskNotificationUI : MonoBehaviour
 
     [SerializeField] private AudioSource taskNotificationAudioSource;
     private TaskAudioConfig taskAudioConfig;
-    private Coroutine notificationRoutine;
-    private int notificationVersion;
+    private readonly Queue<NotificationRequest> requests = new Queue<NotificationRequest>();
+    private bool isPresenting;
+    private PresentationPhase phase;
+    private float phaseElapsed;
+
+    private enum PresentationPhase { FadeIn, Hold, FadeOut }
+
+    private sealed class NotificationRequest
+    {
+        public readonly string Heading;
+        public readonly string Body;
+        public readonly AudioClip Sound;
+        public readonly Action OnFinished;
+        public bool SoundPlayed;
+
+        public NotificationRequest(string heading, string body, AudioClip sound, Action onFinished)
+        {
+            Heading = heading;
+            Body = body;
+            Sound = sound;
+            OnFinished = onFinished;
+        }
+    }
 
     private void Awake()
     {
@@ -47,15 +68,96 @@ public sealed class TaskNotificationUI : MonoBehaviour
 
     private void OnDisable()
     {
-        if (notificationRoutine != null)
+        InterruptPresentation();
+        TaskManager.Instance?.UnregisterNotificationUI(this);
+    }
+
+    private static bool IsPresentationSafe()
+    {
+        return !StorySequenceCoordinator.IsStorySequenceActive &&
+            (DialogueEditor.ConversationManager.Instance == null ||
+             !DialogueEditor.ConversationManager.Instance.IsConversationActive);
+    }
+
+    private void Update()
+    {
+        if (!IsPresentationSafe())
         {
-            StopCoroutine(notificationRoutine);
-            notificationRoutine = null;
+            InterruptPresentation();
+            return;
         }
 
-        notificationVersion++;
+        if (!isPresenting)
+        {
+            TryStartPresentation();
+            return;
+        }
+
+        phaseElapsed += Time.unscaledDeltaTime;
+        switch (phase)
+        {
+            case PresentationPhase.FadeIn:
+                SetVisibleAmount(fadeDuration <= 0f ? 1f : Mathf.Clamp01(phaseElapsed / fadeDuration));
+                if (phaseElapsed >= fadeDuration)
+                {
+                    phase = PresentationPhase.Hold;
+                    phaseElapsed = 0f;
+                }
+                break;
+            case PresentationPhase.Hold:
+                if (phaseElapsed >= visibleDuration)
+                {
+                    phase = PresentationPhase.FadeOut;
+                    phaseElapsed = 0f;
+                }
+                break;
+            case PresentationPhase.FadeOut:
+                SetVisibleAmount(fadeDuration <= 0f ? 0f : 1f - Mathf.Clamp01(phaseElapsed / fadeDuration));
+                if (phaseElapsed >= fadeDuration)
+                {
+                    // Remove only after successful presentation, before calling user code.
+                    NotificationRequest completed = requests.Dequeue();
+                    isPresenting = false;
+                    completed.OnFinished?.Invoke();
+                }
+                break;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        // Catch ownership acquired later in this frame before the canvas renders.
+        if (!IsPresentationSafe())
+            InterruptPresentation();
+    }
+
+    private void TryStartPresentation()
+    {
+        if (!isActiveAndEnabled || isPresenting || requests.Count == 0 || !IsPresentationSafe())
+            return;
+
+        NotificationRequest request = requests.Peek();
+        headingText.text = request.Heading;
+        detailText.text = request.Body;
+        phase = fadeDuration <= 0f ? PresentationPhase.Hold : PresentationPhase.FadeIn;
+        phaseElapsed = 0f;
+        isPresenting = true;
+        SetVisibleAmount(fadeDuration <= 0f ? 1f : 0f);
+        if (!request.SoundPlayed)
+        {
+            PlayNotificationSound(request.Sound);
+            request.SoundPlayed = true;
+        }
+    }
+
+    private void InterruptPresentation()
+    {
+        // Keep the front request pending. Retry its full authored duration later.
+        isPresenting = false;
+        phaseElapsed = 0f;
         SetVisibleAmount(0f);
-        TaskManager.Instance?.UnregisterNotificationUI(this);
+        if (taskNotificationAudioSource != null)
+            taskNotificationAudioSource.Stop();
     }
 
     private void BindToManager()
@@ -96,15 +198,8 @@ public sealed class TaskNotificationUI : MonoBehaviour
         AudioClip sound,
         Action onFinished)
     {
-        int version = ++notificationVersion;
-
-        if (notificationRoutine != null)
-            StopCoroutine(notificationRoutine);
-
-        headingText.text = heading;
-        detailText.text = string.Empty;
-        notificationRoutine = StartCoroutine(
-            ShowRoutine(version, sound, onFinished));
+        requests.Enqueue(new NotificationRequest(heading, string.Empty, sound, onFinished));
+        TryStartPresentation();
     }
 
     private static string GetHeading(TaskType taskType, string status)
@@ -119,23 +214,6 @@ public sealed class TaskNotificationUI : MonoBehaviour
         }
     }
 
-    private IEnumerator ShowRoutine(
-        int version,
-        AudioClip sound,
-        Action onFinished)
-    {
-        PlayNotificationSound(sound);
-        yield return Fade(0f, 1f);
-        yield return new WaitForSecondsRealtime(visibleDuration);
-        yield return Fade(1f, 0f);
-
-        if (version != notificationVersion)
-            yield break;
-
-        notificationRoutine = null;
-        onFinished?.Invoke();
-    }
-
     private void PlayNotificationSound(AudioClip clip)
     {
         if (clip == null || taskNotificationAudioSource == null ||
@@ -147,25 +225,6 @@ public sealed class TaskNotificationUI : MonoBehaviour
         taskNotificationAudioSource.PlayOneShot(
             clip,
             Mathf.Clamp01(taskAudioConfig.UIVolume));
-    }
-
-    private IEnumerator Fade(float from, float to)
-    {
-        if (fadeDuration <= 0f)
-        {
-            SetVisibleAmount(to);
-            yield break;
-        }
-
-        float elapsed = 0f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            SetVisibleAmount(Mathf.Lerp(from, to, elapsed / fadeDuration));
-            yield return null;
-        }
-
-        SetVisibleAmount(to);
     }
 
     private void SetVisibleAmount(float amount)

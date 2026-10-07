@@ -86,6 +86,17 @@ public sealed class TaskManager : MonoBehaviour
 
     public bool UpdateTask(string taskId, string objective)
     {
+        return UpdateTaskObjective(taskId, objective, false);
+    }
+
+    internal bool CompleteCurrentObjectiveAndUpdate(string taskId, string newObjective)
+    {
+        return !string.IsNullOrWhiteSpace(taskId) &&
+            UpdateTaskObjective(taskId.Trim(), newObjective, true);
+    }
+
+    private bool UpdateTaskObjective(string taskId, string objective, bool objectiveCompleted)
+    {
         if (!TryGetDefinition(taskId, out TaskData task) ||
             GetTaskState(taskId) != TaskState.Active ||
             string.IsNullOrWhiteSpace(objective))
@@ -100,6 +111,9 @@ public sealed class TaskManager : MonoBehaviour
             return false;
         }
 
+        if (objectiveCompleted && string.IsNullOrWhiteSpace(currentObjective))
+            return false;
+
         string previousObjective = objectivesById.TryGetValue(taskId, out string existingObjective)
             ? existingObjective
             : string.Empty;
@@ -107,7 +121,8 @@ public sealed class TaskManager : MonoBehaviour
         currentTaskId = taskId;
         TaskChanged?.Invoke();
         PresentationChanged?.Invoke(new TaskPresentationChange(
-            taskId, task.Type, previousObjective, previousObjective, normalizedObjective));
+            taskId, task.Type, previousObjective, previousObjective, normalizedObjective,
+            objectiveCompleted: objectiveCompleted));
 
         ShowNotificationThenTracker(
             taskId,

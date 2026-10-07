@@ -2,10 +2,12 @@ using UnityEngine;
 
 /// <summary>Registers a live HUD RectTransform as the pointer target for one gameplay system.</summary>
 [DisallowMultipleComponent]
-public sealed class GameplaySystemTutorialAnchor : MonoBehaviour
+public sealed class GameplaySystemTutorialAnchor : MonoBehaviour, ISerializationCallbackReceiver
 {
     [SerializeField] private GameplaySystemId system;
     [SerializeField] private RectTransform target;
+
+    [System.NonSerialized] private bool initialized;
 
     public GameplaySystemId System => system;
     public RectTransform Target => target != null ? target : transform as RectTransform;
@@ -24,6 +26,7 @@ public sealed class GameplaySystemTutorialAnchor : MonoBehaviour
 
         anchor.system = system;
         anchor.target = root.transform as RectTransform;
+        anchor.initialized = true;
         if (anchor.isActiveAndEnabled)
             GameplaySystemTutorialManager.Instance.RegisterAnchor(anchor);
         return anchor;
@@ -31,12 +34,24 @@ public sealed class GameplaySystemTutorialAnchor : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!initialized)
+            return;
+
         GameplaySystemTutorialManager.Instance.RegisterAnchor(this);
     }
 
     private void OnDisable()
     {
-        if (GameplaySystemTutorialManager.HasInstance)
+        if (initialized && GameplaySystemTutorialManager.HasInstance)
             GameplaySystemTutorialManager.Instance.UnregisterAnchor(this);
+    }
+
+    void ISerializationCallbackReceiver.OnBeforeSerialize() { }
+
+    void ISerializationCallbackReceiver.OnAfterDeserialize()
+    {
+        // Authored anchors already have their serialized configuration, including
+        // the supported null-target fallback. AddComponent has not configured one.
+        initialized = true;
     }
 }

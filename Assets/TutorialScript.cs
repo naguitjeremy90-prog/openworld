@@ -1,74 +1,102 @@
 using UnityEngine;
 using System.Collections;
+using DialogueEditor;
 
 public class TutorialStartDelay : MonoBehaviour
 {
     public CanvasGroup moveTextGroup;
+    public Transform player;
     public float delay = 5f;
     public float fadeSpeed = 2f;
 
-    private bool hasMoved = false;
-    private Coroutine currentRoutine;
+    private const string CompletionFlag = "draftworld_movement_tutorial_complete";
+    private const float MovementThreshold = 0.15f;
 
-    void Start()
+    private void Awake()
     {
-        moveTextGroup.alpha = 0f;
-        moveTextGroup.gameObject.SetActive(true);
-
-        Invoke(nameof(StartFadeIn), delay);
-    }
-
-    void Update()
-    {
-        if (!hasMoved && (Input.GetKey(KeyCode.W) ||
-                          Input.GetKey(KeyCode.A) ||
-                          Input.GetKey(KeyCode.S) ||
-                          Input.GetKey(KeyCode.D)))
+        HidePrompt();
+        if (moveTextGroup != null)
         {
-            hasMoved = true;
-
-            if (currentRoutine != null)
-                StopCoroutine(currentRoutine);
-
-            currentRoutine = StartCoroutine(FadeOut());
+            moveTextGroup.interactable = false;
+            moveTextGroup.blocksRaycasts = false;
         }
     }
 
-    void StartFadeIn()
+    private IEnumerator Start()
     {
-        if (currentRoutine != null)
-            StopCoroutine(currentRoutine);
+        if (moveTextGroup == null || player == null || SessionStoryState.GetFlag(CompletionFlag))
+            yield break;
 
-        currentRoutine = StartCoroutine(FadeIn());
-    }
+        // Let scene startup establish its story/dialogue ownership first.
+        yield return null;
 
-    IEnumerator FadeIn()
-    {
-        moveTextGroup.gameObject.SetActive(true);
-        moveTextGroup.alpha = 0f;
-
-        while (moveTextGroup.alpha < 1f)
+        float safeElapsed = 0f;
+        while (!IsGameplaySafe() || safeElapsed < Mathf.Max(0f, delay))
         {
-            moveTextGroup.alpha += Time.deltaTime * fadeSpeed;
+            safeElapsed = IsGameplaySafe() ? safeElapsed + Time.deltaTime : 0f;
             yield return null;
         }
 
-        moveTextGroup.alpha = 1f;
-        currentRoutine = null;
-    }
+        Vector3 startPosition = player.position;
+        moveTextGroup.gameObject.SetActive(true);
+        bool waitingForSafety = false;
 
-    IEnumerator FadeOut()
-    {
-        Debug.Log("FadeOut started");
-
-        while (moveTextGroup.alpha > 0.01f)
+        while (player != null)
         {
-            moveTextGroup.alpha -= Time.deltaTime * fadeSpeed;
+            if (!IsGameplaySafe())
+            {
+                HidePrompt();
+                waitingForSafety = true;
+                yield return null;
+                continue;
+            }
+
+            if (waitingForSafety)
+            {
+                // Movement during a story/dialogue must not finish onboarding.
+                startPosition = player.position;
+                moveTextGroup.gameObject.SetActive(true);
+                waitingForSafety = false;
+            }
+
+            Vector3 displacement = player.position - startPosition;
+            displacement.y = 0f;
+            if (displacement.sqrMagnitude >= MovementThreshold * MovementThreshold)
+            {
+                SessionStoryState.SetFlag(CompletionFlag, true);
+                break;
+            }
+
+            moveTextGroup.alpha = Mathf.MoveTowards(moveTextGroup.alpha, 1f,
+                Mathf.Max(0.01f, fadeSpeed) * Time.deltaTime);
             yield return null;
         }
+
+        while (moveTextGroup.alpha > 0f)
+        {
+            if (!IsGameplaySafe())
+                break;
+
+            moveTextGroup.alpha = Mathf.MoveTowards(moveTextGroup.alpha, 0f,
+                Mathf.Max(0.01f, fadeSpeed) * Time.deltaTime);
+            yield return null;
+        }
+
+        HidePrompt();
+    }
+
+    private static bool IsGameplaySafe()
+    {
+        return !StorySequenceCoordinator.IsStorySequenceActive &&
+               (ConversationManager.Instance == null || !ConversationManager.Instance.IsConversationActive);
+    }
+
+    private void HidePrompt()
+    {
+        if (moveTextGroup == null)
+            return;
 
         moveTextGroup.alpha = 0f;
         moveTextGroup.gameObject.SetActive(false);
-        currentRoutine = null;
     }
 }

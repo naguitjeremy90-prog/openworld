@@ -840,7 +840,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'PAGSUSURI [C]'
+  m_text: '[C]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}
   m_sharedMaterial: {fileID: -5251486555908989691, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}
