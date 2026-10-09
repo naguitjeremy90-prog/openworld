@@ -5,6 +5,8 @@ using System.Collections;
 
 public class SceneEntrance : MonoBehaviour
 {
+    public event System.Action EntranceAccepted;
+
     [SerializeField] private string sceneName;
     [SerializeField] private GameObject interactText;
     [SerializeField] private string returnSpawnPoint;
@@ -159,7 +161,20 @@ public class SceneEntrance : MonoBehaviour
         }
 
         transitionInProgress = true;
+        NotifyEntranceAccepted();
         StartCoroutine(TransitionScene());
+    }
+
+    private void NotifyEntranceAccepted()
+    {
+        var listeners = EntranceAccepted;
+        if (listeners == null)
+            return;
+        foreach (System.Action listener in listeners.GetInvocationList())
+        {
+            try { listener(); }
+            catch (System.Exception exception) { Debug.LogException(exception, this); }
+        }
     }
 
     private IEnumerator TransitionScene()

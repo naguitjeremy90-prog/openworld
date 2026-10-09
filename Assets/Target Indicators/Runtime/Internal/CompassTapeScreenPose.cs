@@ -6,33 +6,30 @@ namespace TargetIndicators
     {
         const float k_twoPi = Mathf.PI * 2f;
 
-        readonly ScreenData _screenData;
+        Vector3 _referencePosition;
+        Vector3 _referenceForward;
 
-        internal CompassTapeScreenPose(ScreenData screenData)
+        internal void UpdateReferenceState(in Vector3 position, in Vector3 forward)
         {
-            _screenData = screenData;
+            _referencePosition = position;
+            _referenceForward = forward;
         }
 
         internal Pose GetScreenPoseForCompassTape(Vector3 worldSpacePosition, out bool isOutsideBoundary)
         {
             isOutsideBoundary = false;
 
-            var cameraTransform = _screenData.Camera.transform;
-            var cameraPos = cameraTransform.position;
-            var cameraForward = cameraTransform.forward;
-
-            // Calculate 2D direction (X, Z), naturally ignoring the Y axis
-            var dx = worldSpacePosition.x - cameraPos.x;
-            var dz = worldSpacePosition.z - cameraPos.z;
+            var dx = worldSpacePosition.x - _referencePosition.x;
+            var dz = worldSpacePosition.z - _referencePosition.z;
 
             // Fast distance check without square roots
             if (dx * dx + dz * dz < 0.0001f)
                 return new Pose(new Vector3(0.5f, 0, 0), Quaternion.identity);
 
-            var cameraAngle = Mathf.Atan2(cameraForward.x, cameraForward.z);
+            var referenceAngle = Mathf.Atan2(_referenceForward.x, _referenceForward.z);
             var targetAngle = Mathf.Atan2(dx, dz);
 
-            var deltaAngle = targetAngle - cameraAngle;
+            var deltaAngle = targetAngle - referenceAngle;
 
             // Wrap the delta angle to [-PI, PI] range
             if (deltaAngle > Mathf.PI)

@@ -77,6 +77,8 @@ public sealed class TaskStageTimelineWaypointSequence : MonoBehaviour
         completedRuntimeSequences.Clear();
     }
 
+    public static void ResetForNewGame() => ResetRuntimeCompletions();
+
     private void Awake()
     {
         Collider trigger = GetComponent<Collider>();

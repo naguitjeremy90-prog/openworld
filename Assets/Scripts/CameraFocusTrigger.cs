@@ -4,6 +4,9 @@ using UnityEngine.Events;
 
 public class CameraFocusTrigger : MonoBehaviour
 {
+    public event System.Action FocusStarted;
+    private CameraFocusManager subscribedFocusManager;
+
     [SerializeField] private CameraFocusManager focusManager;
     [SerializeField] private CameraFocusPoint focusPoint;
 
@@ -35,6 +38,8 @@ public class CameraFocusTrigger : MonoBehaviour
         completedEventIds.Clear();
     }
 
+    public static void ResetForNewGame() => ResetCompletedEventIds();
+
     private void Reset()
     {
         AutoFindConversationSources();
@@ -54,6 +59,9 @@ public class CameraFocusTrigger : MonoBehaviour
 
     private void OnDisable()
     {
+        if (subscribedFocusManager != null)
+            subscribedFocusManager.FocusStarted -= HandleFocusStarted;
+        subscribedFocusManager = null;
         storyFocusFinishedEvent.RemoveListener(HandleFocusFinished);
         UnsubscribeFromConversationSources();
         focusLifecycleActive = false;
@@ -79,6 +87,16 @@ public class CameraFocusTrigger : MonoBehaviour
         if (!string.IsNullOrEmpty(eventId))
             completedEventIds.Add(eventId);
 
+        // Subscribe before requesting focus, which may start synchronously inside StartCoroutine.
+        if (subscribedFocusManager != focusManager)
+        {
+            if (subscribedFocusManager != null)
+                subscribedFocusManager.FocusStarted -= HandleFocusStarted;
+            subscribedFocusManager = focusManager;
+            if (subscribedFocusManager != null)
+                subscribedFocusManager.FocusStarted += HandleFocusStarted;
+        }
+
         bool focusStarted = focusManager != null &&
             focusPoint != null &&
             focusManager.TryFocusOn(focusPoint, storyFocusFinishedEvent);
@@ -88,6 +106,20 @@ public class CameraFocusTrigger : MonoBehaviour
 
         if (!focusStarted)
             ReleaseStorySequence();
+    }
+
+    private void HandleFocusStarted(CameraFocusPoint startedPoint, UnityEvent requestCallback)
+    {
+        if (!ReferenceEquals(requestCallback, storyFocusFinishedEvent) || startedPoint != focusPoint)
+            return;
+        var listeners = FocusStarted;
+        if (listeners == null)
+            return;
+        foreach (System.Action listener in listeners.GetInvocationList())
+        {
+            try { listener(); }
+            catch (System.Exception exception) { Debug.LogException(exception, this); }
+        }
     }
 
     private void AutoFindConversationSources()

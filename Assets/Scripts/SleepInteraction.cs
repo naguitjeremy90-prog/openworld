@@ -5,6 +5,16 @@ using Supercyan.FreeSample;
 
 public class SleepInteraction : MonoBehaviour
 {
+    public event System.Action SleepAccepted;
+    public bool HasSleepBeenAccepted => hasSlept || sleepSequenceRunning;
+    // Excludes interrupted sleeps observed by this implementation from the legacy fallback.
+    public static bool HasObservedSleepAttempt { get; private set; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetSleepObservation() => HasObservedSleepAttempt = false;
+
+    public static void ResetForNewGame() => ResetSleepObservation();
+
     [SerializeField] private GameObject interactText;
     [SerializeField] private TMP_Text sleepText;
 
@@ -24,6 +34,8 @@ public class SleepInteraction : MonoBehaviour
     private bool playerNear = false;  
     private bool hasSlept = false;
     private bool sleepSequenceRunning;
+    private bool wakeDialogueCompletedNormally;
+    private System.Action<DialogueEditor.NPCConversation, bool> wakeClosedListener;
     private StorySequenceToken storySequenceToken;
 
     private void Awake()
@@ -70,7 +82,9 @@ public class SleepInteraction : MonoBehaviour
 
         try
         {
+            HasObservedSleepAttempt = true;
             hasSlept = true;
+            NotifySleepAccepted();
             bool shouldPlayDream = !GameFlags.isMorning;
             bool movementWasEnabled = playerMovement != null && playerMovement.enabled;
 
@@ -123,7 +137,14 @@ public class SleepInteraction : MonoBehaviour
             RestorePlayerMovement(movementWasEnabled);
 
             if (ReconstructionJournalManager.Instance != null)
+            {
                 ReconstructionJournalManager.Instance.UnlockJournalForFirstDream();
+                // false from the unlock API can mean already unlocked, so verify its state.
+                // This is observational and deliberately outside interruption cleanup.
+                if (wakeDialogueCompletedNormally && isActiveAndEnabled &&
+                    GameplaySystemState.IsUnlocked(GameplaySystemId.Journal))
+                    SessionStoryState.SetFlag("posada_first_sleep_completed", true);
+            }
         }
         finally
         {
@@ -132,16 +153,39 @@ public class SleepInteraction : MonoBehaviour
         }
     }
 
+    private void NotifySleepAccepted()
+    {
+        var listeners = SleepAccepted;
+        if (listeners == null)
+            return;
+        foreach (System.Action listener in listeners.GetInvocationList())
+        {
+            try { listener(); }
+            catch (System.Exception exception) { Debug.LogException(exception, this); }
+        }
+    }
+
     private IEnumerator PlayWakeDialogue()
     {
+        wakeDialogueCompletedNormally = false;
+        DialogueEditor.NPCConversation wakeConversation = null;
+        System.Action<DialogueEditor.NPCConversation, bool> onClosed = (conversation, normal) =>
+        {
+            if (conversation == wakeConversation)
+                wakeDialogueCompletedNormally = normal;
+        };
         bool conversationFinished = false;
         System.Action onConversationFinished = () => conversationFinished = true;
 
         wakeSelfDialogue.ConversationFinished += onConversationFinished;
+        wakeClosedListener = onClosed;
+        DialogueEditor.ConversationManager.ConversationClosed += onClosed;
 
         try
         {
             wakeSelfDialogue.StartSelfDialogue();
+            if (DialogueEditor.ConversationManager.Instance != null)
+                wakeConversation = DialogueEditor.ConversationManager.Instance.ActiveConversation;
 
             while (!conversationFinished)
                 yield return null;
@@ -155,6 +199,8 @@ public class SleepInteraction : MonoBehaviour
         finally
         {
             wakeSelfDialogue.ConversationFinished -= onConversationFinished;
+            DialogueEditor.ConversationManager.ConversationClosed -= onClosed;
+            if (wakeClosedListener == onClosed) wakeClosedListener = null;
         }
     }
 
@@ -190,11 +236,16 @@ public class SleepInteraction : MonoBehaviour
 
     private void OnDisable()
     {
+        DialogueEditor.ConversationManager.ConversationClosed -= wakeClosedListener;
+        wakeClosedListener = null;
+        wakeDialogueCompletedNormally = false;
         ReleaseStorySequence();
     }
 
     private void OnDestroy()
     {
+        DialogueEditor.ConversationManager.ConversationClosed -= wakeClosedListener;
+        wakeClosedListener = null;
         ReleaseStorySequence();
     }
 }

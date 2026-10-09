@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0]
+
+### Added
+- Added [TargetIndicatorManager.CompassReferenceOverride](xref:TargetIndicators.TargetIndicatorManager.CompassForwardReferenceOverride) with a matching serialized field to allow overriding the forward reference vector for compass tapes as an alternative to the camera which is used by default.
+- Added [TargetIndicator.Distance](xref:TargetIndicators.TargetIndicator.Distance) property to provide the world-space distance from the reference point (Camera or Compass Override) to the tracked target.
+- Added [TargetIndicator.LookAtDot](xref:TargetIndicators.TargetIndicator.LookAtDot) property to provide the dot product between the reference forward vector and the target direction. This is useful for building "Look At" or focus-based UI mechanics such as showing the distance to the target when looking close to the target.
+- Added [TargetIndicatorManager.CalculateLookAtDot](xref:TargetIndicators.TargetIndicatorManager.CalculateLookAtDot) configuration setting to explicitly enable or disable the dot product calculation for each tracked target.
+- Added `DistanceLabelVisibility` enum (Never, Always, LookAt) to control when the distance text is rendered on a visual indicator.
+- Added `VisualIndicator.LookAtDotThreshold` with a matching serialized field to allow configuring a viewing cone for distance label visibility.
+- Added `VisualIndicator.DistanceLabelFadeTime` with a matching serialized field to support smooth, time-based opacity fading when targets enter or exit the player's focus cone.
+
+### Changed
+- Changed boundary visualizer to hide the line renderer component in the inspector to reduce clutter. To view hidden components, click the three-dot menu at the top right of the Inspector tab and selecting **Debug**.
+
+### Fixed
+- Fixed `TargetIndicatorBoundaryVisualizer` to correctly maintain and regenerate its rendering material across multiple undo and redo operations.
+- Fixed a "dangling component" Unity Editor warning with `TargetIndicatorBoundaryVisualizer` by registering the dynamically created `LineRenderer` directly with the Editor's Undo stack.
+
 ## [1.3.0] - 03/29/2026
 
 ### Added

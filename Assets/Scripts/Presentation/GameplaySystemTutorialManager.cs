@@ -57,9 +57,11 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     private bool hasActiveTutorial;
     private GameplaySystemId activeSystem;
     private int journalStep;
-    // Inventory has two story-timed teaching moments: the received item, then its return.
-    // The intermediate completion is persisted separately from inventory_tutorial_seen.
+    // Inventory introduction, item details, and payment return have independent session completion.
     private int inventoryStep;
+    private GameplaySystemTutorialState.InventoryPhase inventoryPhase;
+    private Vector2 inventoryPointerAnchorMin, inventoryPointerAnchorMax, inventoryPointerPivot, inventoryPointerPosition;
+    private Quaternion inventoryPointerRotation;
     private bool inventoryOpen;
     private int clarityStep;
     private bool unreadableDocumentOpen;
@@ -68,6 +70,9 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     private bool activeSystemTemporarilyHidden;
     private bool lastStorySequenceActive;
     private bool lastEntryPresentationDeferred;
+    private readonly List<SceneEntrance> inventorySceneEntrances = new List<SceneEntrance>();
+    private bool inventorySceneExiting;
+    private float inventoryPresentationAfter;
 #if UNITY_EDITOR
     private readonly HashSet<GameplaySystemId> developmentTutorialSuppressed =
         new HashSet<GameplaySystemId>();
@@ -130,10 +135,17 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         ClarityDocumentViewer.AnyDocumentOpened += HandleDocumentOpened;
         ClarityDocumentViewer.AnyDocumentClosed += HandleDocumentClosed;
         lastStorySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
+        SceneManager.sceneLoaded += HandleInventorySceneLoaded;
+        SceneManager.activeSceneChanged += HandleInventoryActiveSceneChanged;
+        BindInventorySceneEntrances();
+        RecoverInventoryRequest();
     }
 
     private void OnDestroy()
     {
+        SceneManager.sceneLoaded -= HandleInventorySceneLoaded;
+        SceneManager.activeSceneChanged -= HandleInventoryActiveSceneChanged;
+        UnbindInventorySceneEntrances();
         GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
         SessionStoryState.FlagChanged -= HandleFlagChanged;
         ClarityManager.Activated -= HandleClarityActivated;
@@ -147,6 +159,8 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     {
         if (presentationFailed)
             return;
+
+        UpdateInventoryTeaching();
 
         bool storySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
         bool entryPresentationDeferred = ShouldDeferInitialPresentation();
@@ -216,6 +230,12 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     {
         presentationReady.Add(system);
         LogTutorialDiagnostics("Reveal completed: " + system);
+        if (system == GameplaySystemId.Inventory)
+        {
+            GameplaySystemTutorialState.InventoryRevealReady = true;
+            QueueInventoryTeaching();
+            return;
+        }
         if (IsDevelopmentTutorialSuppressed(system))
             return;
 
@@ -261,17 +281,19 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     public void NotifySystemOpened(GameplaySystemId system)
     {
         if (!hasActiveTutorial || activeSystem != system ||
-            GameplaySystemTutorialState.IsSeen(system))
+            (system == GameplaySystemId.Inventory ? IsActiveInventoryPhaseSeen() : GameplaySystemTutorialState.IsSeen(system)))
             return;
 
         if (system == GameplaySystemId.Inventory)
         {
             inventoryOpen = true;
             CancelDelay();
-            if (inventoryStep == 0 && !GameplaySystemTutorialState.InventoryFirstItemSeen)
+            if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction && inventoryStep == 0)
                 inventoryStep = 1;
-            else if (inventoryStep == 2)
-                inventoryStep = 3;
+            else if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn)
+                inventoryStep = 3; // Opening the notification, or resuming the former final step.
+            SaveInventoryStep();
+            RestoreInventoryGuidedTab();
             RefreshPresentation();
             return;
         }
@@ -307,22 +329,19 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             GameplaySystemTutorialState.IsSeen(GameplaySystemId.Inventory))
             return;
 
-        inventoryStep = 2;
-        inventoryOpen = false;
-        if (!hasActiveTutorial || activeSystem != GameplaySystemId.Inventory)
-            Activate(GameplaySystemId.Inventory);
-        else
-        {
-            CancelDelay();
-            activeSystemTemporarilyHidden = false;
-            RefreshPresentation();
-        }
+        QueueInventoryTeaching(true);
     }
 
     public void CompleteActiveTutorial()
     {
         if (!hasActiveTutorial)
             return;
+
+        if (activeSystem == GameplaySystemId.Inventory)
+        {
+            AdvanceActiveTutorial();
+            return;
+        }
 
         GameplaySystemTutorialState.SetSeen(activeSystem, true);
     }
@@ -343,6 +362,12 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         if (definition != null)
             RegisterDefinition(definition);
         presentationReady.Add(system);
+        if (system == GameplaySystemId.Inventory)
+        {
+            GameplaySystemTutorialState.InventoryRevealReady = true;
+            QueueInventoryTeaching();
+            return;
+        }
         Activate(system);
         RefreshPresentation();
     }
@@ -382,6 +407,12 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         if (IsDevelopmentTutorialSuppressed(system))
             return;
 
+        if (system == GameplaySystemId.Inventory)
+        {
+            RecoverInventoryRequest();
+            return;
+        }
+
         if (!GameplaySystemTutorialState.IsSeen(system))
             Activate(system);
 
@@ -393,6 +424,11 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
     private void HandleFlagChanged(string flagId, bool value)
     {
+        if (hasActiveTutorial && activeSystem == GameplaySystemId.Inventory)
+        {
+            if (IsActiveInventoryPhaseSeen()) ClearActive();
+            return;
+        }
         string seenFlagId = activeSystem == GameplaySystemId.Clarity && clarityStep == 1
             ? GameplaySystemTutorialState.ClarityDocumentSeenFlagId
             : GameplaySystemTutorialState.GetSeenFlagId(activeSystem);
@@ -460,8 +496,233 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         }
     }
 
+    private static bool IsJournalTeachingUnfinished()
+    {
+        return GameplaySystemState.IsUnlocked(GameplaySystemId.Journal) &&
+            !GameplaySystemTutorialState.IsSeen(GameplaySystemId.Journal);
+    }
+
+    private void QueueInventoryTeaching(bool paymentReturned = false)
+    {
+        if (IsDevelopmentTutorialSuppressed(GameplaySystemId.Inventory) ||
+            !GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory)) return;
+        GameplaySystemTutorialState.RequestInventoryTeaching(paymentReturned);
+        // LateUpdate handles the handoff after the caller's conversation/flag callbacks finish.
+    }
+
+    private void RecoverInventoryRequest()
+    {
+        if (GameplaySystemTutorialState.InventoryRevealReady)
+            presentationReady.Add(GameplaySystemId.Inventory);
+        QueueInventoryTeaching(SessionStoryState.GetFlag("aling_ika_completed"));
+    }
+
+    public void NotifyInventoryItemsChanged() => QueueInventoryTeaching();
+
+    private bool IsActiveInventoryPhaseSeen() => GameplaySystemTutorialState.IsInventoryPhaseSeen(inventoryPhase);
+
+    private void SaveInventoryStep()
+    {
+        if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction)
+            GameplaySystemTutorialState.InventoryIntroStep = inventoryStep;
+        else if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn)
+            GameplaySystemTutorialState.InventoryPendingStep = inventoryStep;
+    }
+
+    private InventoryUI GetInventoryTutorialUI()
+    {
+        foreach (var ui in FindObjectsByType<InventoryUI>())
+            if (ui.IsTutorialUIAvailable) return ui;
+        return null;
+    }
+
+    private void RestoreInventoryGuidedTab()
+    {
+        if (inventoryPhase != GameplaySystemTutorialState.InventoryPhase.Introduction || inventoryStep < 2) return;
+        var ui = GetInventoryTutorialUI();
+        if (ui != null) ui.SelectTutorialTab(inventoryStep - 2);
+    }
+
+    private bool IsInventoryGuided => inventoryOpen &&
+        (inventoryPhase != GameplaySystemTutorialState.InventoryPhase.PaymentReturn || inventoryStep >= 3) &&
+        (inventoryPhase != GameplaySystemTutorialState.InventoryPhase.Introduction || inventoryStep > 0);
+
+    private bool TryGetInventoryGuidedTarget(out RectTransform target)
+    {
+        target = null;
+        var ui = GetInventoryTutorialUI();
+        if (ui == null || !ui.IsOpen || ui.IsWindowTransitioning) return false;
+        if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.ItemDetails)
+            return ui.TryGetTutorialItemTarget(out target);
+        if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction)
+        {
+            if (inventoryStep >= 2)
+            {
+                ui.SelectTutorialTab(inventoryStep - 2);
+                target = ui.GetTutorialTabTarget(inventoryStep - 2);
+            }
+            else target = ui.TutorialWindow;
+        }
+        else
+        {
+            GameplaySystemTutorialAnchor anchor;
+            if (anchors.TryGetValue(GameplaySystemId.Inventory, out anchor) && anchor != null)
+                target = anchor.Target;
+        }
+        return target != null && target.gameObject.activeInHierarchy;
+    }
+
+    private void UpdateInventoryTeaching()
+    {
+        if (IsDevelopmentTutorialSuppressed(GameplaySystemId.Inventory)) return;
+        bool pending = GameplaySystemTutorialState.InventoryTeachingPending &&
+            GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory);
+        if (hasActiveTutorial && activeSystem == GameplaySystemId.Inventory)
+        {
+            if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn &&
+                inventoryStep > 3 && !IsActiveInventoryPhaseSeen())
+            {
+                inventoryStep = 3;
+                SaveInventoryStep();
+            }
+            var activeUI = GetInventoryTutorialUI();
+            if (IsActiveInventoryPhaseSeen() || !pending || IsJournalTeachingUnfinished() ||
+                (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.ItemDetails &&
+                 (activeUI == null || !activeUI.HasTutorialItem)) ||
+                !IsInventoryPresentationEnvironmentSafe(true))
+                ClearActive(); // The session request and saved step remain intact.
+            else
+                RefreshPresentation();
+            return;
+        }
+
+        if (!pending || hasActiveTutorial || IsJournalTeachingUnfinished() ||
+            !GameplaySystemTutorialState.InventoryRevealReady ||
+            !IsInventoryPresentationEnvironmentSafe()) return;
+
+        var ui = GetInventoryTutorialUI();
+        if (!GameplaySystemTutorialState.TryGetNextInventoryPhase(ui != null && ui.HasTutorialItem, out inventoryPhase)) return;
+        if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction)
+        {
+            inventoryStep = Mathf.Clamp(GameplaySystemTutorialState.InventoryIntroStep, 0, 5);
+        }
+        else if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn)
+        {
+            inventoryStep = Mathf.Clamp(GameplaySystemTutorialState.InventoryPendingStep, 2, 3);
+            SaveInventoryStep(); // Canonicalize saved progress from the removed step without completing it.
+        }
+        else
+        {
+            inventoryStep = 1;
+        }
+        inventoryOpen = false;
+        presentationReady.Add(GameplaySystemId.Inventory);
+        inventoryPresentationAfter = Time.unscaledTime + JournalPostRevealDelay;
+        Activate(GameplaySystemId.Inventory);
+    }
+
+    // Also used by InventoryUI to retry its own reveal without changing unlock/access state.
+    public bool IsInventoryPresentationEnvironmentSafe(bool allowInventoryOpen = false)
+    {
+        if (!isActiveAndEnabled || presentationFailed || visual == null ||
+            !visual.gameObject.activeInHierarchy || overlayCanvas == null || !overlayCanvas.enabled ||
+            presentationGroup == null || !presentationGroup.isActiveAndEnabled ||
+            initialCallout == null || journalCallout == null || journalNextButton == null ||
+            inventorySceneExiting || !SceneManager.GetActiveScene().isLoaded || Time.timeScale <= 0f ||
+            !string.IsNullOrEmpty(SpawnData.spawnPointName) || StorySequenceCoordinator.IsStorySequenceActive)
+            return false;
+        if (DialogueEditor.ConversationManager.Instance != null &&
+            DialogueEditor.ConversationManager.Instance.IsConversationActive) return false;
+        if (IrisTransitionController.Instance != null && IrisTransitionController.Instance.IsCovered) return false;
+        var journal = ReconstructionJournalManager.Instance;
+        if (journal != null && (journal.IsOpen || journal.AttentionRevealPending)) return false;
+        var entries = JournalEntryPresentationController.Instance;
+        if (entries != null && (entries.PendingCount > 0 || entries.IsPresenting)) return false;
+        foreach (var focus in FindObjectsByType<CameraFocusManager>())
+            if (focus.IsFocusing) return false;
+        foreach (var fade in FindObjectsByType<FadeController>())
+            if (fade.isActiveAndEnabled && !fade.IncomingFadeCompleted) return false;
+        foreach (var pause in FindObjectsByType<AlaalaPauseMenuController>())
+            if (pause.IsOpen) return false;
+        foreach (var document in FindObjectsByType<ClarityDocumentViewer>())
+            if (document.IsOpen) return false;
+
+        bool inventoryAvailable = false;
+        foreach (var ui in FindObjectsByType<InventoryUI>())
+        {
+            if ((ui.IsOpen || ui.IsWindowTransitioning) && !allowInventoryOpen) return false;
+            inventoryAvailable |= ui.IsTutorialUIAvailable;
+        }
+        if (!inventoryAvailable || !definitions.ContainsKey(GameplaySystemId.Inventory)) return false;
+        GameplaySystemTutorialAnchor anchor;
+        if (!anchors.TryGetValue(GameplaySystemId.Inventory, out anchor) || anchor == null ||
+            !anchor.isActiveAndEnabled || anchor.Target == null || !anchor.Target.gameObject.activeInHierarchy)
+            return false;
+        var hudTarget = anchor.GetComponent<GameplayHUDTarget>();
+        if (hudTarget != null && !hudTarget.IsAvailable) return false;
+        var button = anchor.GetComponent<Selectable>();
+        if (button != null && (!button.enabled || !button.IsInteractable())) return false;
+        foreach (var canvas in anchor.Target.GetComponentsInParent<Canvas>())
+            if (!canvas.enabled) return false;
+
+        // Matches the existing Journal entry transition check, including iris closing before IsCovered.
+        foreach (var canvas in FindObjectsByType<Canvas>())
+        {
+            if (!canvas.enabled || canvas.sortingOrder < 32100) continue;
+            var groups = canvas.GetComponentsInChildren<CanvasGroup>(true);
+            foreach (var group in groups)
+                if (group.gameObject.activeInHierarchy && group.alpha > 0.01f) return false;
+            if (groups.Length != 0) continue;
+            foreach (var graphic in canvas.GetComponentsInChildren<Graphic>(true))
+                if (graphic.gameObject.activeInHierarchy && graphic.enabled && graphic.color.a > 0.01f)
+                    return false;
+        }
+        return true;
+    }
+
+    private void HandleInventorySceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        inventorySceneExiting = false;
+        BindInventorySceneEntrances();
+        RecoverInventoryRequest();
+    }
+
+    private void HandleInventoryActiveSceneChanged(Scene previous, Scene next)
+    {
+        inventorySceneExiting = false;
+        BindInventorySceneEntrances();
+    }
+
+    private void BindInventorySceneEntrances()
+    {
+        UnbindInventorySceneEntrances();
+        foreach (var entrance in FindObjectsByType<SceneEntrance>(FindObjectsInactive.Include))
+        {
+            inventorySceneEntrances.Add(entrance);
+            entrance.EntranceAccepted += HandleInventoryEntranceAccepted;
+        }
+    }
+
+    private void UnbindInventorySceneEntrances()
+    {
+        foreach (var entrance in inventorySceneEntrances)
+            if (entrance != null) entrance.EntranceAccepted -= HandleInventoryEntranceAccepted;
+        inventorySceneEntrances.Clear();
+    }
+
+    private void HandleInventoryEntranceAccepted() => inventorySceneExiting = true;
+
+    private void OnDisable()
+    {
+        if (hasActiveTutorial && activeSystem == GameplaySystemId.Inventory) ClearActive();
+    }
+
     private void Activate(GameplaySystemId system)
     {
+        // Inventory has its own deferred entry point; never let a direct request steal the slot.
+        if (system == GameplaySystemId.Inventory &&
+            (hasActiveTutorial || IsJournalTeachingUnfinished() ||
+             !IsInventoryPresentationEnvironmentSafe())) return;
         if (presentationFailed)
             return;
 
@@ -479,6 +740,38 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
             diagnosticActivationId++;
         LogTutorialDiagnostics("ACTIVATED: Activate invoked for " + system);
         RefreshPresentation();
+    }
+
+    /// <summary>Discards prior playthrough presentation without changing flags or live subscriptions.</summary>
+    public void ResetForNewGame()
+    {
+        StopAllCoroutines();
+        delayedPresentation = null;
+        ClearActive();
+        inventoryPhase = default;
+        presentationReady.Clear();
+        anchors.Clear();
+        journalWindow = null;
+        System.Array.Clear(journalTabs, 0, journalTabs.Length);
+        UnbindInventorySceneEntrances();
+        inventorySceneExiting = false;
+        inventoryPresentationAfter = 0f;
+        lastStorySequenceActive = false;
+        lastEntryPresentationDeferred = false;
+        lastDiagnosticSnapshot = lastDiagnosticScene = lastDiagnosticVisualState = lastDiagnosticSteps = null;
+        diagnosticActivationId = 0;
+#if UNITY_EDITOR
+        developmentTutorialSuppressed.Clear();
+#endif
+        if (journalPointer != null)
+        {
+            var pointer = journalPointer.rectTransform;
+            pointer.anchorMin = inventoryPointerAnchorMin;
+            pointer.anchorMax = inventoryPointerAnchorMax;
+            pointer.pivot = inventoryPointerPivot;
+            pointer.anchoredPosition = inventoryPointerPosition;
+            pointer.localRotation = inventoryPointerRotation;
+        }
     }
 
     private void ClearActive()
@@ -543,8 +836,7 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         // existing ownership. Only initial/HUD callouts yield to queued entries.
         if (!hasActiveTutorial ||
             (activeSystem == GameplaySystemId.Journal && journalOpen && journalStep > 0) ||
-            (activeSystem == GameplaySystemId.Inventory && inventoryOpen &&
-                (inventoryStep == 1 || inventoryStep == 3 || inventoryStep == 4)) ||
+            (activeSystem == GameplaySystemId.Inventory && IsInventoryGuided) ||
             (activeSystem == GameplaySystemId.Clarity && clarityStep == 1))
             return false;
 
@@ -594,10 +886,10 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         bool documentInstruction = activeSystem == GameplaySystemId.Clarity && clarityStep == 1;
         bool seen = documentInstruction
             ? GameplaySystemTutorialState.ClarityDocumentSeen
+            : activeSystem == GameplaySystemId.Inventory ? IsActiveInventoryPhaseSeen()
             : GameplaySystemTutorialState.IsSeen(activeSystem);
         bool guided = (activeSystem == GameplaySystemId.Journal && journalOpen && journalStep > 0) ||
-            (activeSystem == GameplaySystemId.Inventory && inventoryOpen &&
-                (inventoryStep == 1 || inventoryStep == 3 || inventoryStep == 4));
+            (activeSystem == GameplaySystemId.Inventory && IsInventoryGuided);
         bool entryDeferred = hasActiveTutorial && !guided && !documentInstruction &&
             (entryPending > 0 || entryPresenting);
 
@@ -662,8 +954,12 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         }
 
         HideAll();
+        if (hasActiveTutorial && activeSystem == GameplaySystemId.Inventory &&
+            (IsJournalTeachingUnfinished() || !IsInventoryPresentationEnvironmentSafe(true) ||
+             Time.unscaledTime < inventoryPresentationAfter)) return;
         bool activeTutorialSeen = activeSystem == GameplaySystemId.Clarity && clarityStep == 1
             ? GameplaySystemTutorialState.ClarityDocumentSeen
+            : activeSystem == GameplaySystemId.Inventory ? IsActiveInventoryPhaseSeen()
             : GameplaySystemTutorialState.IsSeen(activeSystem);
         if (!hasActiveTutorial || StorySequenceCoordinator.IsStorySequenceActive ||
             activeTutorialSeen ||
@@ -683,30 +979,21 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
         if (activeSystem == GameplaySystemId.Inventory)
         {
-            if (inventoryStep == 1 && inventoryOpen)
+            if (IsInventoryGuided)
             {
-                ShowInventoryStep("Mga Detalye ng Gamit", "Pumili ng gamit para makita ang paglalarawan nito.");
+                if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction)
+                    ShowInventoryIntroductionStep();
+                else if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.ItemDetails)
+                    ShowInventoryStep("Mga Detalye ng Gamit", "Pumili ng gamit para makita ang paglalarawan nito.");
+                else if (inventoryStep == 3)
+                    ShowInventoryStep("Mga Gamit sa Gawain", "Maaaring alisin ang mga gamit sa gawain kapag hindi na kailangan.");
                 LogTutorialDiagnostics("Refresh SHOWN: Inventory guided");
                 return;
             }
-
-            if (inventoryStep == 3 && inventoryOpen)
-            {
-                ShowInventoryStep(
-                    "Mga Gamit sa Gawain",
-                    "Maaaring alisin ang mga gamit sa gawain kapag hindi na kailangan.");
-                LogTutorialDiagnostics("Refresh SHOWN: Inventory guided");
-                return;
-            }
-
-            if (inventoryStep == 4 && inventoryOpen)
-            {
-                ShowInventoryStep(
-                    "Mahahalagang Gamit at mga Kasulatan",
-                    "Dito makikita ang mahahalagang gamit at mga kasulatang dapat mong ingatan.");
-                LogTutorialDiagnostics("Refresh SHOWN: Inventory guided");
-                return;
-            }
+            // Closing a guided lesson hides it without replaying the completed HUD introduction.
+            if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.ItemDetails ||
+                (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction && inventoryStep > 0) ||
+                (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn && inventoryStep > 2)) return;
         }
 
         if (activeSystem == GameplaySystemId.Clarity && clarityStep == 1)
@@ -738,7 +1025,8 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
 
         initialTitle.text = definition.Title;
         initialBody.text = definition.Description;
-        if (activeSystem == GameplaySystemId.Inventory && inventoryStep == 2)
+        if (activeSystem == GameplaySystemId.Inventory &&
+            inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn && inventoryStep == 2)
         {
             initialTitle.text = "May Bago sa Imbentaryo";
             initialBody.text = "Buksan ang Imbentaryo para makita kung ano ang nagbago.";
@@ -796,36 +1084,62 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         PositionCallout(journalCallout, target, journalStep == 1 ? visual.JournalOverviewOffset : visual.JournalGuidedOffset);
     }
 
+    private void ShowInventoryIntroductionStep()
+    {
+        switch (inventoryStep)
+        {
+            case 1:
+                ShowInventoryStep("Imbentaryo", "Dito makikita ang mga nakolektang gamit ni Miguel.");
+                break;
+            case 2:
+                ShowInventoryStep("Lahat", "Dito makikita ang lahat ng gamit na nakuha ni Miguel.");
+                break;
+            case 3:
+                ShowInventoryStep("Mga Gamit sa Gawain", "Dito makikita ang mga gamit na kailangan ni Miguel sa kaniyang mga gawain.");
+                break;
+            case 4:
+                ShowInventoryStep("Mahahalagang Gamit", "Dito makikita ang mahahalagang gamit na nakuha ni Miguel habang naglalakbay.");
+                break;
+            case 5:
+                ShowInventoryStep("Mga Kasulatan", "Dito makikita ang mga kasulatan at iba pang nakasulat na bagay na nakolekta ni Miguel.");
+                break;
+        }
+    }
+
     private void ShowInventoryStep(string title, string body)
     {
+        RectTransform target;
+        if (!TryGetInventoryGuidedTarget(out target)) return;
         journalTitle.text = title;
         journalBody.text = body;
-        journalNextLabel.text = inventoryStep >= 4 ? "Naintindihan ko" : "Susunod";
-        bool itemDetailsStep = inventoryStep == 1;
-        RectTransform target = null;
-        if (itemDetailsStep)
-        {
-            InventoryUI inventoryUI = Object.FindFirstObjectByType<InventoryUI>();
-            if (inventoryUI != null)
-                inventoryUI.TryGetItemSlot("aling_ika_payment", out target);
-        }
+        journalNextLabel.text = inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction && inventoryStep == 5
+            ? "Sige" : inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn && inventoryStep == 3
+            ? "Naintindihan ko" : "Susunod";
+        bool itemDetailsStep = inventoryPhase == GameplaySystemTutorialState.InventoryPhase.ItemDetails;
 
         if (journalPointer != null)
-            journalPointer.gameObject.SetActive(itemDetailsStep && target != null);
+        {
+            journalPointer.gameObject.SetActive(itemDetailsStep ||
+                (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction && inventoryStep >= 2));
+            if (!itemDetailsStep)
+            {
+                var pointer = journalPointer.rectTransform;
+                pointer.anchorMin = inventoryPointerAnchorMin;
+                pointer.anchorMax = inventoryPointerAnchorMax;
+                pointer.pivot = inventoryPointerPivot;
+                pointer.anchoredPosition = inventoryPointerPosition;
+                pointer.localRotation = inventoryPointerRotation;
+            }
+        }
         journalCallout.gameObject.SetActive(true);
         presentationGroup.alpha = 1f;
-
-        if (target == null)
-        {
-            GameplaySystemTutorialAnchor anchor;
-            if (anchors.TryGetValue(GameplaySystemId.Inventory, out anchor) && anchor != null)
-                target = anchor.Target;
-        }
 
         if (target != null)
         {
             if (itemDetailsStep)
                 PositionInventoryItemDetailsCallout(journalCallout, target);
+            else if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction)
+                PositionCallout(journalCallout, target, inventoryStep == 1 ? visual.JournalOverviewOffset : visual.JournalGuidedOffset);
             else
                 PositionCallout(journalCallout, target, visual.InventoryGeneralOffset);
         }
@@ -861,27 +1175,42 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
     {
         if (activeSystem == GameplaySystemId.Inventory)
         {
-            if (!hasActiveTutorial || !inventoryOpen)
+            if (!hasActiveTutorial || !inventoryOpen || IsJournalTeachingUnfinished() ||
+                !IsInventoryPresentationEnvironmentSafe(true) ||
+                Time.unscaledTime < inventoryPresentationAfter)
                 return;
 
-            if (inventoryStep == 1)
+            RectTransform target;
+            if (IsActiveInventoryPhaseSeen() || !TryGetInventoryGuidedTarget(out target)) return;
+
+            if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction)
+            {
+                if (inventoryStep < 1 || inventoryStep > 5) return;
+                if (inventoryStep == 5)
+                {
+                    GameplaySystemTutorialState.CompleteInventoryIntroduction();
+                    ClearActive();
+                }
+                else
+                {
+                    inventoryStep++;
+                    SaveInventoryStep();
+                    RestoreInventoryGuidedTab();
+                    RefreshPresentation();
+                }
+                return;
+            }
+
+            if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.ItemDetails)
             {
                 GameplaySystemTutorialState.SetInventoryFirstItemSeen(true);
                 LogTutorialDiagnostics("Inventory first-item teaching completed");
-                hasActiveTutorial = false;
-                HideAll();
+                ClearActive();
                 LogTutorialDiagnostics("Inventory first-item presentation ended");
                 return;
             }
 
-            if (inventoryStep == 3)
-            {
-                inventoryStep = 4;
-                RefreshPresentation();
-                return;
-            }
-
-            if (inventoryStep == 4)
+            if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.PaymentReturn && inventoryStep == 3)
             {
                 GameplaySystemTutorialState.SetSeen(GameplaySystemId.Inventory, true);
                 return;
@@ -916,25 +1245,19 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         {
             if (activeSystem == GameplaySystemId.Inventory)
             {
-                RectTransform target = null;
-                if (inventoryStep == 1)
+                RectTransform target;
+                if (!TryGetInventoryGuidedTarget(out target))
                 {
-                    InventoryUI inventoryUI = Object.FindFirstObjectByType<InventoryUI>();
-                    if (inventoryUI != null)
-                        inventoryUI.TryGetItemSlot("aling_ika_payment", out target);
-                }
-
-                if (target == null)
-                {
-                    GameplaySystemTutorialAnchor anchor;
-                    if (anchors.TryGetValue(GameplaySystemId.Inventory, out anchor) && anchor != null)
-                        target = anchor.Target;
+                    HideAll();
+                    return;
                 }
 
                 if (target != null)
                 {
-                    if (inventoryStep == 1)
+                    if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.ItemDetails)
                         PositionInventoryItemDetailsCallout(journalCallout, target);
+                    else if (inventoryPhase == GameplaySystemTutorialState.InventoryPhase.Introduction)
+                        PositionCallout(journalCallout, target, inventoryStep == 1 ? visual.JournalOverviewOffset : visual.JournalGuidedOffset);
                     else
                         PositionCallout(journalCallout, target, visual.InventoryGeneralOffset);
                 }
@@ -1165,6 +1488,11 @@ public sealed class GameplaySystemTutorialManager : MonoBehaviour
         journalTitle = visual.GuidedTitle;
         journalBody = visual.GuidedBody;
         journalPointer = visual.GuidedPointer;
+        inventoryPointerAnchorMin = journalPointer.rectTransform.anchorMin;
+        inventoryPointerAnchorMax = journalPointer.rectTransform.anchorMax;
+        inventoryPointerPivot = journalPointer.rectTransform.pivot;
+        inventoryPointerPosition = journalPointer.rectTransform.anchoredPosition;
+        inventoryPointerRotation = journalPointer.rectTransform.localRotation;
         journalNextButton = visual.NextButton;
         journalNextLabel = visual.NextLabel;
 

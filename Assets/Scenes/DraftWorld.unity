@@ -1135,6 +1135,120 @@ MonoBehaviour:
   npcObject: {fileID: 770233942}
   activeDuringDay: 1
   activeDuringNight: 0
+--- !u!1 &38822465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 38822466}
+  - component: {fileID: 38822469}
+  - component: {fileID: 38822468}
+  - component: {fileID: 38822467}
+  m_Layer: 0
+  m_Name: SideIkaNavigation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &38822466
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38822465}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1340666104}
+  m_Father: {fileID: 1017819677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &38822467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38822465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feca14efcb877a742aa46fc9e988dad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
+  taskId: aling_ika_errand
+  requiredStageId: 
+  useStoryFlagEligibility: 1
+  requiredStoryFlagId: aling_ika_payment_received
+  expectedStoryFlagValue: 1
+  target: {fileID: 758248276}
+  targetAnchor: {fileID: 2093293240}
+  indicatorPrefab: {fileID: 923181431234143598, guid: f987bef3970043cca857c1d9b02d554d, type: 3}
+  trackingManager: {fileID: 38822469}
+  visualManager: {fileID: 38822468}
+  presentationGroup: {fileID: 1340666105}
+  referencePadding: {x: 96, y: 96, z: 96, w: 96}
+  referenceResolution: {x: 1920, y: 1080}
+  fadeInDuration: 0.2
+  suppressDuringTransitions: 1
+  focusManager: {fileID: 2098592225}
+  fadeController: {fileID: 873497766}
+  sceneEntrances:
+  - {fileID: 1690817459}
+  - {fileID: 1691996428}
+  - {fileID: 627354731}
+  - {fileID: 726063025}
+  - {fileID: 1407356537}
+--- !u!114 &38822468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38822465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f6d05e68634d640939c64547e81ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators.Samples::TargetIndicators.Samples.VisualIndicatorManager
+  _defaultVisualIndicatorPrefab: {fileID: 923181431234143598, guid: f987bef3970043cca857c1d9b02d554d, type: 3}
+  _targetIndicatorManager: {fileID: 38822469}
+  _canvas: {fileID: 1017819679}
+  _content: {fileID: 1340666104}
+  _addIndicatorMode: 1
+--- !u!114 &38822469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38822465}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b75a29499e573c40902beef2c022b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators::TargetIndicators.TargetIndicatorManager
+  _camera: {fileID: 1458790219}
+  _compassForwardReferenceOverride: {fileID: 0}
+  _boundaryType: 0
+  _boundaryShape: 0
+  _topPadding: 96
+  _bottomPadding: 96
+  _leftPadding: 96
+  _rightPadding: 96
+  _width: 300
+  _height: 300
+  _calculateLookAtDot: 0
 --- !u!1001 &39813623
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1383,6 +1497,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5381386135662447605, guid: 21a364ddeffc797439f2a5721660b0e6, type: 3}
   m_PrefabInstance: {fileID: 832642750}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &51132180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 51132181}
+  m_Layer: 0
+  m_Name: ObjectiveNavigationAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &51132181
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51132180}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0000004134605, y: 0.58960277, z: -0.0000021470719}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1119240162}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &73048751
 GameObject:
   m_ObjectHideFlags: 0
@@ -2205,8 +2350,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 1
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":79,"yPos":48.4},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Puntahan
-    mo si Maestro Ben. Nasa tabi lang ng simbahan ang bahay niya.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":79,"yPos":48.4},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Salamat
+    muli, iho.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
     Ika","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
@@ -2712,7 +2857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.16981131, g: 0.16116054, b: 0.16116054, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5217,6 +5362,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201202544}
   m_CullTransparentMesh: 1
+--- !u!1 &203177838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 203177839}
+  m_Layer: 0
+  m_Name: SideTaskNavigationAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &203177839
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203177838}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0000012284754, y: 6.5, z: -0.0000143793295}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 180499890}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &214402315
 GameObject:
   m_ObjectHideFlags: 0
@@ -8208,14 +8384,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
   CurrentIDCounter: 4
-  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":183.000015,"yPos":114},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Narinig
-    mo ba? Pinag-uusapan na naman nila ang Makamisa.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
-    Nene","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":86.40001,"yPos":260.800018},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Hanggang
-    ngayon? Akala ko matagal nang natapos ang usapang iyon.","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
-    Maria","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":3}],"EditorInfo":{"isRoot":false,"xPos":281.6,"yPos":348},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Naku,
-    dito sa Pili? Parang hindi naman talaga nawawala ang kuwentong iyon.","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
-    Nene","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":48.8000031,"yPos":440},"ID":3,"ParamActions":[],"TMPFontGUID":null,"Text":"Basta
-    ako, hindi ako basta naniniwala sa lahat ng kuwento ng mga tao.","parentUIDs":[2],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":151.799988,"yPos":-24.40001},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Narinig
+    mo ba? Pinag-uusapan na naman nila ang Makamisa, ang nobela raw ni Rizal.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+    Nene","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":55.19998,"yPos":122.400009},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"May
+    bago na ba silang nalaman? Puro sabi-sabi lang ang naririnig ko.","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+    Maria","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":3}],"EditorInfo":{"isRoot":false,"xPos":250.399979,"yPos":213.600021},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Baka
+    may narinig si Erica tungkol diyan. Madalas din siyang makipag-usap sa mga tao
+    rito, lalo na diyan malapit sa simbahan.","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+    Nene","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":17.5999756,"yPos":303.199982},"ID":3,"ParamActions":[],"TMPFontGUID":null,"Text":"Kung
+    ganoon, siya ang tanungin. Pero huwag pa ring basta maniwala sa sabi-sabi.","parentUIDs":[2],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
     Maria","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
@@ -14580,6 +14757,8 @@ MonoBehaviour:
   alingIkaActiveConversation: {fileID: 1804470495}
   alingIkaPaymentConversation: {fileID: 982393756}
   alingIkaCompletedConversation: {fileID: 96404018}
+  maestroHouseFocus: {fileID: 1614907024}
+  houseFocusManager: {fileID: 2098592225}
   girlBeforeQuestConversation: {fileID: 2021037646}
   girlActiveConversation: {fileID: 1699037001}
   girlAfterPaymentConversation: {fileID: 1616575929}
@@ -16089,7 +16268,7 @@ MonoBehaviour:
   firstConversation: {fileID: 518797779}
   repeatConversation: {fileID: 1804470495}
   talkText: {fileID: 1381167494}
-  firstConversationCompletedFlagId: aling_ika_started
+  firstConversationCompletedFlagId: 
   focusManager: {fileID: 0}
   focusPoint: {fileID: 0}
   treatAsStorySequence: 0
@@ -19094,6 +19273,7 @@ MonoBehaviour:
   canvasGroup: {fileID: 928605633}
   headingText: {fileID: 1183270371}
   detailText: {fileID: 1129244819}
+  sideTaskAccentColor: {r: 0.29411766, g: 0.52156866, b: 0.7411765, a: 1}
   fadeDuration: 0.25
   visibleDuration: 2.75
   taskNotificationAudioSource: {fileID: 0}
@@ -20089,20 +20269,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
-  CurrentIDCounter: 7
+  CurrentIDCounter: 3
   json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":1}],"EditorInfo":{"isRoot":true,"xPos":143.799973,"yPos":-587.6},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Aling
     Ika, nakuha ko na po ang bayad.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":false,"xPos":423.8,"yPos":-447.6},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Ay,
     salamat! Malaking tulong ka talaga.","parentUIDs":[0],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
-    Ika","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":3}],"EditorInfo":{"isRoot":false,"xPos":143.799973,"yPos":-307.600128},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"May
-    maitutulong ba ako sa''yo bilang kapalit?","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
-    Ika","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":4}],"EditorInfo":{"isRoot":false,"xPos":423.8,"yPos":-167.600143},"ID":3,"ParamActions":[],"TMPFontGUID":null,"Text":"May
-    hinahanap po kasi akong impormasyon tungkol sa Pili.","parentUIDs":[2],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":5}],"EditorInfo":{"isRoot":false,"xPos":143.799973,"yPos":-27.6001282},"ID":4,"ParamActions":[],"TMPFontGUID":null,"Text":"Naku,
-    hindi ako ang tamang tanungin mo riyan. Magtinda, alam ko. Kasaysayan? Hindi
-    gaano.","parentUIDs":[3],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
-    Ika","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":6}],"EditorInfo":{"isRoot":false,"xPos":423.8,"yPos":112.399994},"ID":5,"ParamActions":[],"TMPFontGUID":null,"Text":"Puntahan
-    mo si Maestro Ben. Nasa bahay niya lang siya, sa tabi ng simbahan.","parentUIDs":[4],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
-    Ika","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":143.799973,"yPos":252.400055},"ID":6,"ParamActions":[],"TMPFontGUID":null,"Text":"Sige
-    po. Maraming salamat.","parentUIDs":[5],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Miguel","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
+    Ika","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":143.799973,"yPos":-307.600128},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Salamat,
+    iho.","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+    Ika","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
   DefaultSprite: {fileID: 0}
@@ -20323,6 +20496,96 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 850649989193942044, guid: ae358aa425fe140409d8a560f4492730, type: 3}
   m_PrefabInstance: {fileID: 78561624}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1017819676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1017819677}
+  - component: {fileID: 1017819679}
+  - component: {fileID: 1017819678}
+  m_Layer: 5
+  m_Name: ObjectiveNavigationCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1017819677
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017819676}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1412785761}
+  - {fileID: 1989365858}
+  - {fileID: 2400000101}
+  - {fileID: 2400000201}
+  - {fileID: 1969291328}
+  - {fileID: 38822466}
+  m_Father: {fileID: 1196562329}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &1017819678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017819676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.5
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &1017819679
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017819676}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 10
+  m_TargetDisplay: 0
 --- !u!134 &1019498663
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -21819,7 +22082,7 @@ MonoBehaviour:
   interactionsToBlock: []
   hiddenWhenLocked:
   - {fileID: 1219552810}
-  lockedTint: {r: 0.14, g: 0.14, b: 0.14, a: 1}
+  lockedTint: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1090205092
 GameObject:
   m_ObjectHideFlags: 0
@@ -22565,6 +22828,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 479976520824188790, guid: c7bb5e5cc281be14681ea507d7dd23d8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1690817458}
+    - targetCorrespondingSourceObject: {fileID: 479976520824188790, guid: c7bb5e5cc281be14681ea507d7dd23d8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 51132181}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7bb5e5cc281be14681ea507d7dd23d8, type: 3}
 --- !u!4 &1119240162 stripped
@@ -23904,6 +24170,118 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189224794}
   m_CullTransparentMesh: 1
+--- !u!1 &1196562325
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1196562329}
+  - component: {fileID: 1196562328}
+  - component: {fileID: 1196562327}
+  - component: {fileID: 1196562326}
+  m_Layer: 0
+  m_Name: ObjectiveNavigation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1196562326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196562325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a89a7d7ef087f0c4097a4498b4fe7d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArrivalNavigationController
+  movementTutorial: {fileID: 13668121}
+  arrivalDialogue: {fileID: 174521155}
+  signageFocus: {fileID: 1411860937}
+  focusManager: {fileID: 2098592225}
+  signageDialogue: {fileID: 1411860942}
+  destinationEntrance: {fileID: 1690817459}
+  otherEntrances:
+  - {fileID: 1691996428}
+  - {fileID: 627354731}
+  - {fileID: 726063025}
+  - {fileID: 1407356537}
+  dayNightManager: {fileID: 1719506766}
+  sessionStateId: draftworld_night_navigation_phase
+  forwardPrefab: {fileID: 1208034136613930332, guid: 515f7afbc4d168a43aaf8c6fa11b2c47, type: 3}
+  forwardContainer: {fileID: 1412785761}
+  forwardGroup: {fileID: 1412785760}
+  forwardPosition: {x: -96, y: 0}
+  destinationAnchor: {fileID: 51132181}
+  destinationPrefab: {fileID: 4274740127282644266, guid: bee774b4fcb1cc746bd8244156682952, type: 3}
+  trackingManager: {fileID: 1196562328}
+  visualManager: {fileID: 1196562327}
+  destinationGroup: {fileID: 1989365857}
+  referencePadding: {x: 96, y: 96, z: 96, w: 96}
+  referenceResolution: {x: 1920, y: 1080}
+  fadeInDuration: 0.2
+--- !u!114 &1196562327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196562325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f6d05e68634d640939c64547e81ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators.Samples::TargetIndicators.Samples.VisualIndicatorManager
+  _defaultVisualIndicatorPrefab: {fileID: 4274740127282644266, guid: bee774b4fcb1cc746bd8244156682952, type: 3}
+  _targetIndicatorManager: {fileID: 1196562328}
+  _canvas: {fileID: 1017819679}
+  _content: {fileID: 1989365858}
+  _addIndicatorMode: 1
+--- !u!114 &1196562328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196562325}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b75a29499e573c40902beef2c022b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators::TargetIndicators.TargetIndicatorManager
+  _camera: {fileID: 1458790219}
+  _compassForwardReferenceOverride: {fileID: 0}
+  _boundaryType: 0
+  _boundaryShape: 0
+  _topPadding: 96
+  _bottomPadding: 96
+  _leftPadding: 96
+  _rightPadding: 96
+  _width: 300
+  _height: 300
+  _calculateLookAtDot: 1
+--- !u!4 &1196562329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196562325}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1017819677}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1200929767
 GameObject:
   m_ObjectHideFlags: 0
@@ -23961,7 +24339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.92075473, b: 0.8584906, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25669,7 +26047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.92156863, b: 0.85882354, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -26330,6 +26708,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectViewer
   viewerPanel: {fileID: 1915363591}
   objectImage: {fileID: 1849891866}
+--- !u!1 &1340666103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1340666104}
+  - component: {fileID: 1340666105}
+  m_Layer: 0
+  m_Name: Indicators
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1340666104
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340666103}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 38822466}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1340666105
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340666103}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1343961266 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8001415a0c2d1ce44b31ddc0f7a7e8fa, type: 3}
@@ -26437,6 +26863,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: ef16405198ff7624fbf5eb9ab9f250a7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1535944418}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: ef16405198ff7624fbf5eb9ab9f250a7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 203177839}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ef16405198ff7624fbf5eb9ab9f250a7, type: 3}
       insertIndex: -1
@@ -28083,6 +28512,54 @@ MonoBehaviour:
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1412785759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1412785761}
+  - component: {fileID: 1412785760}
+  m_Layer: 5
+  m_Name: ForwardGuidance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!225 &1412785760
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412785759}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!224 &1412785761
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412785759}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1017819677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1415829474
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29762,6 +30239,7 @@ MonoBehaviour:
   typeLabel: {fileID: 1804818316}
   titleText: {fileID: 90057629}
   objectiveText: {fileID: 2052326487}
+  sideTaskAccentColor: {r: 0.29411766, g: 0.52156866, b: 0.7411765, a: 1}
   progressPulseColor: {r: 1, g: 1, b: 1, a: 1}
   progressPulseDuration: 0.45
   completionHighlightColor: {r: 1, g: 0.86, b: 0.45, a: 1}
@@ -38747,6 +39225,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 850649989193942044, guid: ae358aa425fe140409d8a560f4492730, type: 3}
   m_PrefabInstance: {fileID: 1168084666}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1948395152
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1948395153}
+  - component: {fileID: 1948395154}
+  m_Layer: 0
+  m_Name: Indicators
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1948395153
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948395152}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1969291328}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1948395154
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948395152}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1948848079
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38825,6 +39351,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3b0744e15927a1e4883971e64f9d3667, type: 3}
       insertIndex: -1
       addedObject: {fileID: 96404019}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3b0744e15927a1e4883971e64f9d3667, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2093293240}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3b0744e15927a1e4883971e64f9d3667, type: 3}
       insertIndex: -1
@@ -38875,7 +39404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   player: {fileID: 432565506}
-  movementToHoldDuringReturn: {fileID: 0}
+  movementToHoldDuringReturn: {fileID: 432565503}
 --- !u!1 &1958591831
 GameObject:
   m_ObjectHideFlags: 0
@@ -39131,6 +39660,120 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968711812}
   m_CullTransparentMesh: 1
+--- !u!1 &1969291327
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1969291328}
+  - component: {fileID: 1969291331}
+  - component: {fileID: 1969291330}
+  - component: {fileID: 1969291329}
+  m_Layer: 0
+  m_Name: SideGirlNavigation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1969291328
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969291327}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1948395153}
+  m_Father: {fileID: 1017819677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1969291329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969291327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feca14efcb877a742aa46fc9e988dad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
+  taskId: aling_ika_errand
+  requiredStageId: 
+  useStoryFlagEligibility: 1
+  requiredStoryFlagId: aling_ika_payment_received
+  expectedStoryFlagValue: 0
+  target: {fileID: 1535944418}
+  targetAnchor: {fileID: 203177839}
+  indicatorPrefab: {fileID: 923181431234143598, guid: f987bef3970043cca857c1d9b02d554d, type: 3}
+  trackingManager: {fileID: 1969291331}
+  visualManager: {fileID: 1969291330}
+  presentationGroup: {fileID: 1948395154}
+  referencePadding: {x: 96, y: 96, z: 96, w: 96}
+  referenceResolution: {x: 1920, y: 1080}
+  fadeInDuration: 0.2
+  suppressDuringTransitions: 1
+  focusManager: {fileID: 2098592225}
+  fadeController: {fileID: 873497766}
+  sceneEntrances:
+  - {fileID: 1690817459}
+  - {fileID: 1691996428}
+  - {fileID: 627354731}
+  - {fileID: 726063025}
+  - {fileID: 1407356537}
+--- !u!114 &1969291330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969291327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f6d05e68634d640939c64547e81ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators.Samples::TargetIndicators.Samples.VisualIndicatorManager
+  _defaultVisualIndicatorPrefab: {fileID: 923181431234143598, guid: f987bef3970043cca857c1d9b02d554d, type: 3}
+  _targetIndicatorManager: {fileID: 1969291331}
+  _canvas: {fileID: 1017819679}
+  _content: {fileID: 1948395153}
+  _addIndicatorMode: 1
+--- !u!114 &1969291331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969291327}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b75a29499e573c40902beef2c022b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators::TargetIndicators.TargetIndicatorManager
+  _camera: {fileID: 1458790219}
+  _compassForwardReferenceOverride: {fileID: 0}
+  _boundaryType: 0
+  _boundaryShape: 0
+  _topPadding: 96
+  _bottomPadding: 96
+  _leftPadding: 96
+  _rightPadding: 96
+  _width: 300
+  _height: 300
+  _calculateLookAtDot: 0
 --- !u!1 &1973718972
 GameObject:
   m_ObjectHideFlags: 0
@@ -39291,19 +39934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
   Event:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1614907024}
-        m_TargetAssemblyTypeName: CameraFocusTrigger, Assembly-CSharp
-        m_MethodName: TriggerFocus
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   NodeID: 6
   TMPFont: {fileID: 0}
   Icon: {fileID: 0}
@@ -39785,6 +40416,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1985719021}
   m_CullTransparentMesh: 1
+--- !u!1 &1989365856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1989365858}
+  - component: {fileID: 1989365857}
+  m_Layer: 5
+  m_Name: Markers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!225 &1989365857
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989365856}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!224 &1989365858
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989365856}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1017819677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1990274568
 GameObject:
   m_ObjectHideFlags: 0
@@ -41096,6 +41775,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 683920640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2093293239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2093293240}
+  m_Layer: 0
+  m_Name: SideTaskNavigationAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2093293240
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093293239}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 6.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 91391106}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2097650699
 GameObject:
   m_ObjectHideFlags: 0
@@ -41215,6 +41925,7 @@ MonoBehaviour:
   typeLabel: {fileID: 365169025}
   titleText: {fileID: 122997358}
   objectiveText: {fileID: 247382270}
+  sideTaskAccentColor: {r: 0.29411766, g: 0.52156866, b: 0.7411765, a: 1}
   progressPulseColor: {r: 1, g: 1, b: 1, a: 1}
   progressPulseDuration: 0.45
   completionHighlightColor: {r: 1, g: 0.86, b: 0.45, a: 1}
@@ -42051,8 +42762,12 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:questioned_maria_nene
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 1
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!114 &2300000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42086,8 +42801,12 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_kardo
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 1
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!114 &2300000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42121,8 +42840,12 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_nardo
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 1
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!114 &2300000004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42156,8 +42879,12 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:nena
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 1
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!114 &2300000005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42191,8 +42918,12 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:toto
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 1
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!114 &2300000006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42226,8 +42957,12 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_iko
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 1
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!114 &2300000007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42261,8 +42996,12 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: task_progress:main_investigate_pili:gather_information:mang_tibo
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 1
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!114 &2300000008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42290,12 +43029,24 @@ MonoBehaviour:
   faceGameplayCamera: 1
   showMarker: 1
   rules:
+  - taskId: main_investigate_pili
+    requiredStageId: ask_aling_ika_about_maestro
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: randomhouse_maestro_lead_received
+    expectedStoryFlagValue: 1
+    blockingStoryFlagId: maestro_ben_lead_received
+    appearance: 1
+    hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 1
+  secondaryRules:
   - taskId: aling_ika_errand
     requiredStageId: 
     minimumStageId: 
     taskState: 2
     requiredStoryFlagId: aling_ika_payment_received
     expectedStoryFlagValue: 1
+    blockingStoryFlagId: 
     appearance: 3
     hideWhenTaskCompleted: 1
   - taskId: aling_ika_errand
@@ -42304,6 +43055,7 @@ MonoBehaviour:
     taskState: 1
     requiredStoryFlagId: aling_ika_started
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 2
     hideWhenTaskCompleted: 1
   - taskId: aling_ika_errand
@@ -42312,8 +43064,10 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: aling_ika_payment_received
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 4
     hideWhenTaskCompleted: 1
+  dualMarkerGap: 0.15
 --- !u!114 &2300000009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42347,6 +43101,7 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: aling_ika_payment_received
     expectedStoryFlagValue: 0
+    blockingStoryFlagId: 
     appearance: 3
     hideWhenTaskCompleted: 1
   - taskId: aling_ika_errand
@@ -42355,8 +43110,298 @@ MonoBehaviour:
     taskState: 2
     requiredStoryFlagId: aling_ika_payment_received
     expectedStoryFlagValue: 1
+    blockingStoryFlagId: 
     appearance: 5
     hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
+--- !u!1 &2400000100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2400000101}
+  - component: {fileID: 2400000102}
+  - component: {fileID: 2400000103}
+  - component: {fileID: 2400000104}
+  - component: {fileID: 2400000105}
+  - component: {fileID: 2400000106}
+  m_Layer: 5
+  m_Name: Resident House Objective Navigation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2400000101
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000100}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1017819677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &2400000102
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000100}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &2400000103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feca14efcb877a742aa46fc9e988dad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
+  taskId: main_investigate_pili
+  requiredStageId: find_knowledgeable_person
+  useStoryFlagEligibility: 0
+  requiredStoryFlagId: 
+  expectedStoryFlagValue: 1
+  target: {fileID: 726063024}
+  targetAnchor: {fileID: 726063024}
+  indicatorPrefab: {fileID: 4274740127282644266, guid: e6415b753e4188145abfbbb559811e52, type: 3}
+  trackingManager: {fileID: 2400000105}
+  visualManager: {fileID: 2400000104}
+  presentationGroup: {fileID: 2400000102}
+  referencePadding: {x: 96, y: 96, z: 96, w: 96}
+  referenceResolution: {x: 1920, y: 1080}
+  fadeInDuration: 0.2
+  suppressDuringTransitions: 1
+  focusManager: {fileID: 2098592225}
+  fadeController: {fileID: 873497766}
+  sceneEntrances:
+  - {fileID: 1690817459}
+  - {fileID: 1691996428}
+  - {fileID: 627354731}
+  - {fileID: 726063025}
+  - {fileID: 1407356537}
+--- !u!114 &2400000104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f6d05e68634d640939c64547e81ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators.Samples::TargetIndicators.Samples.VisualIndicatorManager
+  _defaultVisualIndicatorPrefab: {fileID: 4274740127282644266, guid: e6415b753e4188145abfbbb559811e52, type: 3}
+  _targetIndicatorManager: {fileID: 2400000105}
+  _canvas: {fileID: 1017819679}
+  _content: {fileID: 2400000101}
+  _addIndicatorMode: 1
+--- !u!114 &2400000105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000100}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b75a29499e573c40902beef2c022b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators::TargetIndicators.TargetIndicatorManager
+  _camera: {fileID: 1458790219}
+  _compassForwardReferenceOverride: {fileID: 0}
+  _boundaryType: 0
+  _boundaryShape: 0
+  _topPadding: 96
+  _bottomPadding: 96
+  _leftPadding: 96
+  _rightPadding: 96
+  _width: 300
+  _height: 300
+  _calculateLookAtDot: 1
+--- !u!114 &2400000106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ae5d8f6a5d74b819e1af4c9ef5b9202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayHUDTarget
+  canvasGroup: {fileID: 2400000102}
+  visualRoot: {fileID: 2400000100}
+  fadeDuration: 0
+  available: 1
+--- !u!1 &2400000200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2400000201}
+  - component: {fileID: 2400000202}
+  - component: {fileID: 2400000203}
+  - component: {fileID: 2400000204}
+  - component: {fileID: 2400000205}
+  - component: {fileID: 2400000206}
+  m_Layer: 5
+  m_Name: Maestro Ben House Objective Navigation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2400000201
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000200}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1017819677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &2400000202
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000200}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &2400000203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feca14efcb877a742aa46fc9e988dad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
+  taskId: main_investigate_pili
+  requiredStageId: maestro_ben_lead
+  useStoryFlagEligibility: 0
+  requiredStoryFlagId: 
+  expectedStoryFlagValue: 1
+  target: {fileID: 627354730}
+  targetAnchor: {fileID: 627354730}
+  indicatorPrefab: {fileID: 4274740127282644266, guid: e6415b753e4188145abfbbb559811e52, type: 3}
+  trackingManager: {fileID: 2400000205}
+  visualManager: {fileID: 2400000204}
+  presentationGroup: {fileID: 2400000202}
+  referencePadding: {x: 96, y: 96, z: 96, w: 96}
+  referenceResolution: {x: 1920, y: 1080}
+  fadeInDuration: 0.2
+  suppressDuringTransitions: 1
+  focusManager: {fileID: 2098592225}
+  fadeController: {fileID: 873497766}
+  sceneEntrances:
+  - {fileID: 1690817459}
+  - {fileID: 1691996428}
+  - {fileID: 627354731}
+  - {fileID: 726063025}
+  - {fileID: 1407356537}
+--- !u!114 &2400000204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f6d05e68634d640939c64547e81ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators.Samples::TargetIndicators.Samples.VisualIndicatorManager
+  _defaultVisualIndicatorPrefab: {fileID: 4274740127282644266, guid: e6415b753e4188145abfbbb559811e52, type: 3}
+  _targetIndicatorManager: {fileID: 2400000205}
+  _canvas: {fileID: 1017819679}
+  _content: {fileID: 2400000201}
+  _addIndicatorMode: 1
+--- !u!114 &2400000205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000200}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b75a29499e573c40902beef2c022b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TargetIndicators::TargetIndicators.TargetIndicatorManager
+  _camera: {fileID: 1458790219}
+  _compassForwardReferenceOverride: {fileID: 0}
+  _boundaryType: 0
+  _boundaryShape: 0
+  _topPadding: 96
+  _bottomPadding: 96
+  _leftPadding: 96
+  _rightPadding: 96
+  _width: 300
+  _height: 300
+  _calculateLookAtDot: 1
+--- !u!114 &2400000206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2400000200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ae5d8f6a5d74b819e1af4c9ef5b9202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayHUDTarget
+  canvasGroup: {fileID: 2400000202}
+  visualRoot: {fileID: 2400000200}
+  fadeDuration: 0
+  available: 1
 --- !u!1001 &1449241785884285321
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42406,7 +43451,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4539478978178648670, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
-      propertyPath: taskDefinitions.Array.data[1].stages.Array.data[4].objectiveText
+      propertyPath: taskDefinitions.Array.data[1].stages.Array.data[5].objectiveText
       value: Hanapin si Anday sa dulo ng Bayan.
       objectReference: {fileID: 0}
     - target: {fileID: 6492435229044996695, guid: 64bc8a9589a0aa0468e9d44f1238191c, type: 3}
@@ -42445,3 +43490,4 @@ SceneRoots:
   - {fileID: 1449241785884285321}
   - {fileID: 414242182}
   - {fileID: 1072042566}
+  - {fileID: 1196562329}

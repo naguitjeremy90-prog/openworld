@@ -3,7 +3,8 @@
     "rootNamespace": "TargetIndicators.Samples",
     "references": [
         "TargetIndicators",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -32,6 +32,11 @@ namespace TargetIndicators
                                  "\"MainCamera\" and falls back to any camera in the scene.")]
         Camera _camera;
 
+        [SerializeField, Tooltip("An optional override for the compass forward vector. If null, falls back to the Camera. " +
+                                 "Useful for tracking targets relative to an independent object (like a vehicle hull) " +
+                                 "rather than a free-look camera.")]
+        Transform _compassForwardReferenceOverride;
+
         [Header("Settings")]
         [SerializeField, Tooltip("The type of boundary that target indicators will clamp to.")]
         BoundaryType _boundaryType;
@@ -64,6 +69,11 @@ namespace TargetIndicators
         [Tooltip("Absolute height of the boundary. This value is ignored if boundary type is not set to Absolute or WorldSpace.")]
         [SerializeField, Min(0)]
         float _height = 300f;
+
+        [Tooltip("Calculate the Dot Product between the reference forward vector and the target. Useful for " +
+                 "'Look At' UI mechanics. Disable if not needed for minor performance gain.")]
+        [SerializeField]
+        bool _calculateLookAtDot = true;
 
         /// <summary>
         /// Delegate that passes a <see cref="ReadOnlySpan{T}"/> of target indicators that were added or updated.
@@ -106,6 +116,17 @@ namespace TargetIndicators
 
                 _camera = value;
             }
+        }
+
+        /// <summary>
+        /// An optional transform used to override the forward reference vector when the <see cref="BoundaryType"/>
+        /// is set to <see cref="BoundaryType.CompassTape"/>. Useful for tracking targets relative to an independent
+        /// object (like a vehicle hull) rather than a free-look camera.
+        /// </summary>
+        public Transform CompassForwardReferenceOverride
+        {
+            get => _compassForwardReferenceOverride;
+            set => _compassForwardReferenceOverride = value;
         }
 
         /// <summary>
@@ -251,6 +272,17 @@ namespace TargetIndicators
         }
 
         /// <summary>
+        /// Gets or sets whether to calculate the dot product between the reference forward vector and the direction to
+        /// the target. Enable this to use <see cref="TargetIndicator.LookAtDot"/> for advanced UI mechanics.
+        /// Disable for a minor performance gain.
+        /// </summary>
+        public bool CalculateLookAtDot
+        {
+            get => _calculateLookAtDot;
+            set => _calculateLookAtDot = value;
+        }
+
+        /// <summary>
         /// The max number of targets that can be tracked.
         /// </summary>
         public int MaxTargets => k_maxTargets;
@@ -280,6 +312,7 @@ namespace TargetIndicators
         RectangleScreenPose _rectangleScreenPose;
         EllipseScreenPose _ellipseScreenPose;
         CompassTapeScreenPose _compassTapeScreenPose;
+        bool _isInitialized;
 
         void Reset()
         {
@@ -288,6 +321,14 @@ namespace TargetIndicators
 
         void Awake()
         {
+            EnsureInitialized();
+        }
+
+        void EnsureInitialized()
+        {
+            if (_isInitialized)
+                return;
+
             TryFindCamera();
             if (_camera == null)
             {
@@ -299,7 +340,9 @@ namespace TargetIndicators
             _screenData = new(this);
             _rectangleScreenPose = new(_screenData);
             _ellipseScreenPose = new(_screenData);
-            _compassTapeScreenPose = new(_screenData);
+            _compassTapeScreenPose = new();
+
+            _isInitialized = true;
         }
 
         void TryFindCamera()
@@ -327,40 +370,84 @@ namespace TargetIndicators
         void Update()
         {
             var hasCamera = _camera != null;
+            var useCompassForwardOverride = _boundaryType == BoundaryType.CompassTape && _compassForwardReferenceOverride != null;
+            var hasValidReference = hasCamera || useCompassForwardOverride;
 
+            var referencePosition = Vector3.zero;
+            var referenceForward = Vector3.forward;
+
+            if (useCompassForwardOverride)
+            {
+                referencePosition = _compassForwardReferenceOverride.position;
+                referenceForward = _compassForwardReferenceOverride.forward;
+            }
+            else if (hasCamera)
+            {
+                var cameraTransform = _camera.transform;
+                referencePosition = cameraTransform.position;
+                referenceForward = cameraTransform.forward;
+            }
+
+            if (_boundaryType == BoundaryType.CompassTape && hasValidReference)
+                _compassTapeScreenPose.UpdateReferenceState(referencePosition, referenceForward);
+
+            ProcessTargets(hasCamera, hasValidReference, referencePosition, referenceForward);
+            DispatchChangeEvents();
+        }
+
+        void ProcessTargets(bool hasCamera, bool hasValidReference, Vector3 referencePosition, Vector3 referenceForward)
+        {
             for (var i = _targetDataIndexById.Count - 1; i >= 0; i--)
             {
                 var targetData = _allTargetData[i];
-                switch (targetData.State)
+                if (targetData.Target == null)
                 {
-                    case State.Added:
-                        if (targetData.Target == null)
+                    RemoveTargetAtIndex(i);
+                    continue;
+                }
+
+                var targetPosition = targetData.Target.position;
+                var distance = 0f;
+                var lookAtDot = 0f;
+
+                if (hasValidReference)
+                {
+                    var vectorToTarget = targetPosition - referencePosition;
+                    var sqrMagnitude = vectorToTarget.sqrMagnitude;
+
+                    if (sqrMagnitude > 0.000001f)
+                    {
+                        distance = Mathf.Sqrt(sqrMagnitude);
+
+                        if (_calculateLookAtDot)
                         {
-                            RemoveTargetAtIndex(i);
-                            break;
+                            var normalizedDirection = vectorToTarget / distance;
+                            lookAtDot = Vector3.Dot(referenceForward, normalizedDirection);
                         }
+                    }
+                }
 
-                        _addedTargetIndicators[_addedSinceLastUpdate++] = hasCamera
-                            ? CreateTargetIndicator(targetData.Id, targetData.Target, true)
-                            : new TargetIndicator(targetData.Id, targetData.Target, Pose.identity, false);
+                if (targetData.State == State.Added)
+                {
+                    _addedTargetIndicators[_addedSinceLastUpdate++] = CreateTargetIndicator(
+                        targetData.Id,
+                        targetData.Target,
+                        distance,
+                        lookAtDot,
+                        hasCamera);
 
-                        _allTargetData[i].State = State.Updated;
-                        break;
-                    case State.Updated:
-                        if (targetData.Target == null)
-                        {
-                            RemoveTargetAtIndex(i);
-                            break;
-                        }
-
-                        _updatedTargetIndicators[_updatedSinceLastUpdate++] = hasCamera
-                            ? CreateTargetIndicator(targetData.Id, targetData.Target, true)
-                            : new TargetIndicator(targetData.Id, targetData.Target, Pose.identity, false);
-                        break;
+                    _allTargetData[i].State = State.Updated;
+                }
+                else
+                {
+                    _updatedTargetIndicators[_updatedSinceLastUpdate++] = CreateTargetIndicator(
+                        targetData.Id,
+                        targetData.Target,
+                        distance,
+                        lookAtDot,
+                        hasCamera);
                 }
             }
-
-            DispatchChangeEvents();
         }
 
         void SwapBackAndRemove(int index)
@@ -420,6 +507,7 @@ namespace TargetIndicators
         /// <returns><c>true</c> if the target was added, otherwise <c>false</c>.</returns>
         public bool TryAddTarget(Transform target, out TargetIndicator targetIndicator)
         {
+            EnsureInitialized();
             targetIndicator = TargetIndicator.Default;
 
             if (target == null)
@@ -447,7 +535,51 @@ namespace TargetIndicators
             _targetDataIndexById.Add(targetData.Id, TrackedTargetsCount);
             _idByTargetEntityId.Add(entityId, targetData.Id);
 
-            targetIndicator = CreateTargetIndicator(targetData.Id, targetData.Target, _camera != null);
+            var useCompassForwardOverride = _boundaryType == BoundaryType.CompassTape && _compassForwardReferenceOverride != null;
+            var hasCamera = _camera != null;
+            var hasValidReference = hasCamera || useCompassForwardOverride;
+
+            var referencePosition = Vector3.zero;
+            var referenceForward = Vector3.forward;
+
+            if (useCompassForwardOverride)
+            {
+                referencePosition = _compassForwardReferenceOverride.position;
+                referenceForward = _compassForwardReferenceOverride.forward;
+            }
+            else if (hasCamera)
+            {
+                referencePosition = _camera.transform.position;
+                referenceForward = _camera.transform.forward;
+            }
+
+            var distance = 0f;
+            var lookAtDot = 0f;
+
+            if (hasValidReference)
+            {
+                var vectorToTarget = target.position - referencePosition;
+                var sqrMagnitude = vectorToTarget.sqrMagnitude;
+
+                if (sqrMagnitude > 0.000001f)
+                {
+                    distance = Mathf.Sqrt(sqrMagnitude);
+
+                    if (_calculateLookAtDot)
+                    {
+                        var normalizedDirection = vectorToTarget / distance;
+                        lookAtDot = Vector3.Dot(referenceForward, normalizedDirection);
+                    }
+                }
+            }
+
+            targetIndicator = CreateTargetIndicator(
+                targetData.Id,
+                targetData.Target,
+                distance,
+                lookAtDot,
+                _camera != null);
+
             return true;
         }
 
@@ -462,6 +594,7 @@ namespace TargetIndicators
         /// <c>false</c>.</returns>
         public bool TryGetTargetIndicator(TargetIndicatorId targetIndicatorId, out TargetIndicator targetIndicator)
         {
+            EnsureInitialized();
             targetIndicator = TargetIndicator.Default;
 
             if (!_targetDataIndexById.TryGetValue(targetIndicatorId, out var index))
@@ -471,7 +604,51 @@ namespace TargetIndicators
             if (targetData.Target == null)
                 return false;
 
-            targetIndicator = CreateTargetIndicator(targetData.Id, targetData.Target, _camera != null);
+            var useCompassForwardOverride = _boundaryType == BoundaryType.CompassTape && _compassForwardReferenceOverride != null;
+            var hasCamera = _camera != null;
+            var hasValidReference = hasCamera || useCompassForwardOverride;
+
+            var referencePosition = Vector3.zero;
+            var referenceForward = Vector3.forward;
+
+            if (useCompassForwardOverride)
+            {
+                referencePosition = _compassForwardReferenceOverride.position;
+                referenceForward = _compassForwardReferenceOverride.forward;
+            }
+            else if (hasCamera)
+            {
+                referencePosition = _camera.transform.position;
+                referenceForward = _camera.transform.forward;
+            }
+
+            var distance = 0f;
+            var lookAtDot = 0f;
+
+            if (hasValidReference)
+            {
+                var vectorToTarget = targetData.Target.position - referencePosition;
+                var sqrMagnitude = vectorToTarget.sqrMagnitude;
+
+                if (sqrMagnitude > 0.000001f)
+                {
+                    distance = Mathf.Sqrt(sqrMagnitude);
+
+                    if (_calculateLookAtDot)
+                    {
+                        var normalizedDirection = vectorToTarget / distance;
+                        lookAtDot = Vector3.Dot(referenceForward, normalizedDirection);
+                    }
+                }
+            }
+
+            targetIndicator = CreateTargetIndicator(
+                targetData.Id,
+                targetData.Target,
+                distance,
+                lookAtDot,
+                _camera != null);
+
             return true;
         }
 
@@ -483,6 +660,7 @@ namespace TargetIndicators
         /// Otherwise <c>false</c>.</returns>
         public bool TryRemoveTarget(TargetIndicatorId targetIndicatorId)
         {
+            EnsureInitialized();
             if (!_targetDataIndexById.TryGetValue(targetIndicatorId, out var index))
                 return false;
 
@@ -495,6 +673,7 @@ namespace TargetIndicators
         /// </summary>
         public void RemoveAllTargets()
         {
+            EnsureInitialized();
             for (var i = _targetDataIndexById.Count - 1; i >= 0; i--)
             {
                 RemoveTargetAtIndex(i);
@@ -503,6 +682,7 @@ namespace TargetIndicators
 
         void RemoveTargetAtIndex(int index)
         {
+            EnsureInitialized();
             var targetData = _allTargetData[index];
             if (targetData.State == State.Updated)
                 _removedTargetIndicators[_removedSinceLastUpdate++] = targetData.Id;
@@ -521,6 +701,7 @@ namespace TargetIndicators
         /// <returns>The screen space pose of <paramref name="worldSpacePosition"/>.</returns>
         public Pose GetScreenPose(Vector3 worldSpacePosition, out bool isOutsideBoundary)
         {
+            EnsureInitialized();
             if (_camera == null)
             {
                 isOutsideBoundary = false;
@@ -553,6 +734,7 @@ namespace TargetIndicators
         /// Otherwise, <c>false</c>.</returns>
         public bool IsOutsideBoundary(Vector3 screenPoint)
         {
+            EnsureInitialized();
             if (_camera == null)
                 return false;
 
@@ -570,13 +752,13 @@ namespace TargetIndicators
             };
         }
 
-        TargetIndicator CreateTargetIndicator(TargetIndicatorId id, Transform target, bool hasCamera)
+        TargetIndicator CreateTargetIndicator(TargetIndicatorId id, Transform target, float distance, float lookAtDot, bool hasCamera)
         {
             if (!hasCamera)
-                return new TargetIndicator(id, target, Pose.identity, false);
+                return new TargetIndicator(id, target, Pose.identity, false, distance, lookAtDot);
 
             var screenPose = GetScreenPoseCore(target.position, out var isOutsideBoundary);
-            return new TargetIndicator(id, target, screenPose, isOutsideBoundary);
+            return new TargetIndicator(id, target, screenPose, isOutsideBoundary, distance, lookAtDot);
         }
 
         Pose GetPaddedScreenPose(Vector3 worldSpacePosition, out bool isOutsideBoundary)

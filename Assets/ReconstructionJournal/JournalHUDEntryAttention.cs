@@ -97,6 +97,21 @@ public sealed class JournalHUDEntryAttention : MonoBehaviour
         SessionStoryState.SetFlag(PendingFlag, true);
     }
 
+    /// <summary>Stops old attention without preserving or emitting pending requests.</summary>
+    public void ResetForNewGame()
+    {
+        StopAllCoroutines();
+        InterruptAttention(false);
+        StopVisual();
+        journal = null;
+        button = null;
+        pulse = null;
+        requestTime = 0f;
+        lastBurst = float.NegativeInfinity;
+        safeSince = -1f;
+        // SessionStoryState clears the unread/pending keys silently after presentation stops.
+    }
+
     public void JournalOpened()
     {
         SessionStoryState.SetFlag(UnseenFlag, false);

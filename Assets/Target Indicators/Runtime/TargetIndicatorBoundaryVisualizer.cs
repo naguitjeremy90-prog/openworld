@@ -10,7 +10,6 @@ namespace TargetIndicators
     [ExecuteAlways]
     [DisallowMultipleComponent]
     [RequireComponent(typeof(TargetIndicatorManager))]
-    [RequireComponent(typeof(LineRenderer))]
     [HelpURL("https://jakemanfre.github.io/target-indicators.github.io/manual/user_guide/target-indicator-manager.html#visualize-the-boundary")]
     public class TargetIndicatorBoundaryVisualizer : MonoBehaviour
     {
@@ -32,30 +31,47 @@ namespace TargetIndicators
         [SerializeField, HideInInspector]
         Camera _camera;
 
-        void Reset()
-        {
-            SetReferences();
-        }
+        [SerializeField, HideInInspector]
+        Material _lineMaterial;
 
-        void Awake()
+        void InitializeLineRenderer()
         {
-            SetReferences();
-        }
+#if UNITY_EDITOR
+            if (!TryGetComponent(out _lineRenderer))
+                _lineRenderer = UnityEditor.Undo.AddComponent<LineRenderer>(gameObject);
+#else
+            if (!TryGetComponent(out _lineRenderer))
+                _lineRenderer = gameObject.AddComponent<LineRenderer>();
+#endif
 
-        void SetReferences()
-        {
-            _targetIndicatorManager = GetComponent<TargetIndicatorManager>();
-            _lineRenderer = GetComponent<LineRenderer>();
-            _camera = _targetIndicatorManager.Camera;
-
-            _lineRenderer.material = new Material(Shader.Find("UI/Unlit/Detail"));
+            _lineRenderer.hideFlags = HideFlags.HideInInspector;
+            _lineRenderer.useWorldSpace = false;
+            _lineRenderer.loop = true;
             _lineRenderer.positionCount = 5;
+
+            if (_lineMaterial == null)
+                _lineMaterial = new Material(Shader.Find("UI/Unlit/Detail"));
+
+            _lineRenderer.sharedMaterial = _lineMaterial;
+            _camera = _targetIndicatorManager.Camera;
         }
 
         void LateUpdate()
         {
-            if (_targetIndicatorManager == null)
+            if (_targetIndicatorManager == null && !TryGetComponent(out _targetIndicatorManager))
                 return;
+
+            if (_lineRenderer == null)
+            {
+                InitializeLineRenderer();
+            }
+            else if (_lineMaterial == null || _lineRenderer.sharedMaterial == null)
+            {
+                if (_lineMaterial == null)
+                    _lineMaterial = new Material(Shader.Find("UI/Unlit/Detail"));
+
+                _lineRenderer.sharedMaterial = _lineMaterial;
+            }
 
             _lineRenderer.startColor = _boundaryLineColor;
             _lineRenderer.endColor = _boundaryLineColor;
@@ -138,6 +154,14 @@ namespace TargetIndicators
             var normalizedWidth = _width / Screen.height;
             _lineRenderer.startWidth = normalizedWidth;
             _lineRenderer.endWidth = normalizedWidth;
+        }
+
+        void OnDestroy()
+        {
+            // Only clean up the material if we are in the Editor and not playing.
+            // In a build, scene unloading handles this naturally.
+            if (!Application.isPlaying && _lineMaterial != null)
+                DestroyImmediate(_lineMaterial);
         }
     }
 }

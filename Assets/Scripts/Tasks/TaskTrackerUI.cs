@@ -12,6 +12,9 @@ public sealed class TaskTrackerUI : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text titleText;
     [SerializeField] private TMP_Text objectiveText;
 
+    [Header("Category Presentation")]
+    [SerializeField] private Color sideTaskAccentColor = new Color(75f / 255f, 133f / 255f, 189f / 255f, 1f);
+
     [Header("Progress Presentation")]
     [SerializeField] private Color progressPulseColor = Color.white;
     [SerializeField, Min(0f)] private float progressPulseDuration = 0.45f;
@@ -23,6 +26,8 @@ public sealed class TaskTrackerUI : MonoBehaviour
     [SerializeField, Min(0f)] private float completionFadeOutDuration = 0.35f;
     [SerializeField, Min(0f)] private float nextObjectiveFadeInDuration = 0.35f;
 
+    private Color authoredTypeLabelColor = Color.white;
+    private Color authoredTitleColor = Color.white;
     private Color normalObjectiveColor = Color.white;
     private bool hasActiveTask;
     private readonly Queue<CompletionPresentation> completions = new Queue<CompletionPresentation>();
@@ -67,15 +72,29 @@ public sealed class TaskTrackerUI : MonoBehaviour
             canvasGroup.blocksRaycasts = false;
         }
 
+        if (typeLabel != null)
+            authoredTypeLabelColor = typeLabel.color;
+        if (titleText != null)
+            authoredTitleColor = titleText.color;
         if (objectiveText != null)
             normalObjectiveColor = objectiveText.color;
     }
 
     private void OnEnable()
     {
+        ApplyCategoryColors();
         Subscribe();
         refreshPending = true;
         ProcessPending();
+    }
+
+    private void ApplyCategoryColors()
+    {
+        bool isSideTask = displayedTaskType == TaskType.Side;
+        if (typeLabel != null)
+            typeLabel.color = isSideTask ? sideTaskAccentColor : authoredTypeLabelColor;
+        if (titleText != null)
+            titleText.color = isSideTask ? sideTaskAccentColor : authoredTitleColor;
     }
 
     private void Start()

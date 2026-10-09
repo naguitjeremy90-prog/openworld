@@ -52,6 +52,17 @@ public sealed class TaskManager : MonoBehaviour
             Instance = null;
     }
 
+    /// <summary>Invalidates old presentation callbacks and clears caches; session keys are cleared separately.</summary>
+    public void ResetForNewGame()
+    {
+        ++presentationVersion;
+        StopAllCoroutines();
+        notificationUI = null;
+        objectivesById.Clear();
+        currentStageByTaskId.Clear();
+        currentTaskId = null;
+    }
+
     public bool StartTask(string taskId)
     {
         if (!TryGetDefinition(taskId, out TaskData task) ||

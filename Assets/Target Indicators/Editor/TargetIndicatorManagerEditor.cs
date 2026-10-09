@@ -1,4 +1,3 @@
-using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 
@@ -22,6 +21,7 @@ namespace TargetIndicators
             var camera = serializedObject.FindProperty("_camera");
             var boundaryType = serializedObject.FindProperty("_boundaryType");
             var boundaryShape = serializedObject.FindProperty("_boundaryShape");
+            var compassForwardReferenceOverride = serializedObject.FindProperty("_compassForwardReferenceOverride");
 
             var topPadding = serializedObject.FindProperty("_topPadding");
             var bottomPadding = serializedObject.FindProperty("_bottomPadding");
@@ -30,6 +30,8 @@ namespace TargetIndicators
 
             var width = serializedObject.FindProperty("_width");
             var height = serializedObject.FindProperty("_height");
+
+            var calculateLookAtDot = serializedObject.FindProperty("_calculateLookAtDot");
 
             EditorGUILayout.PropertyField(camera, new GUIContent("Camera"));
             EditorGUILayout.PropertyField(boundaryType, new GUIContent("Boundary Type"));
@@ -45,11 +47,11 @@ namespace TargetIndicators
                 }
             }
 
-            if (boundaryType != null && boundaryShape != null)
+            if (boundaryType != null)
             {
                 switch (boundaryType.enumValueIndex)
                 {
-                    case (int)BoundaryType.Padded when
+                    case (int)BoundaryType.Padded when boundaryShape != null &&
                         boundaryShape.enumValueIndex is (int)BoundaryShape.Rectangle or (int)BoundaryShape.Ellipse:
                         EditorGUILayout.PropertyField(topPadding, new GUIContent("Top Padding"));
                         EditorGUILayout.PropertyField(bottomPadding, new GUIContent("Bottom Padding"));
@@ -60,20 +62,16 @@ namespace TargetIndicators
                         EditorGUILayout.PropertyField(width, new GUIContent("Width"));
                         EditorGUILayout.PropertyField(height, new GUIContent("Height"));
                         break;
+                    case (int)BoundaryType.CompassTape:
+                        EditorGUILayout.PropertyField(compassForwardReferenceOverride, new GUIContent("Compass Forward Override"));
+                        break;
                 }
             }
 
+            EditorGUILayout.PropertyField(calculateLookAtDot);
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField("Boundary Visualization Instructions", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox(
-                $"To visualize the target indicator boundary add a `{nameof(TargetIndicatorBoundaryVisualizer)}` " +
-                $"component to this GameObject",
-                MessageType.Info);
-
             var targetIndicatorManager = (TargetIndicatorManager)target;
-            // TODO: dont do getcomponent. look up reference via reflection to ensure not deleting the wrong line renderer
-            // if the user already has a line renderer on the component
             var debugLinesComponent = targetIndicatorManager.gameObject.GetComponent<TargetIndicatorBoundaryVisualizer>();
             var hadDebugLines = debugLinesComponent != null;
 
@@ -89,15 +87,13 @@ namespace TargetIndicators
             {
                 if (GUILayout.Button("Remove Boundary Visualizer", GUILayout.Height(30)))
                 {
-                    var type = typeof(TargetIndicatorBoundaryVisualizer);
-                    var fieldInfo = type.GetField("_lineRenderer", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (fieldInfo != null)
-                    {
-                        var lineRenderer = (LineRenderer)fieldInfo.GetValue(debugLinesComponent);
-                        Undo.DestroyObjectImmediate(debugLinesComponent);
-                        Undo.DestroyObjectImmediate(lineRenderer);
-                    }
+                    var visualizerObj = new SerializedObject(debugLinesComponent);
+                    var lineRendererProp = visualizerObj.FindProperty("_lineRenderer");
 
+                    if (lineRendererProp != null && lineRendererProp.objectReferenceValue != null)
+                        Undo.DestroyObjectImmediate(lineRendererProp.objectReferenceValue);
+
+                    Undo.DestroyObjectImmediate(debugLinesComponent);
                     EditorUtility.SetDirty(targetIndicatorManager.gameObject);
                 }
             }

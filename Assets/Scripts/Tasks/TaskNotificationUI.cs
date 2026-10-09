@@ -8,11 +8,13 @@ public sealed class TaskNotificationUI : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text headingText;
     [SerializeField] private TMP_Text detailText;
+    [SerializeField] private Color sideTaskAccentColor = new Color(75f / 255f, 133f / 255f, 189f / 255f, 1f);
     [SerializeField, Min(0f)] private float fadeDuration = 0.25f;
     [SerializeField, Min(0f)] private float visibleDuration = 2.75f;
 
     [SerializeField] private AudioSource taskNotificationAudioSource;
     private TaskAudioConfig taskAudioConfig;
+    private Color authoredHeadingColor = Color.white;
     private readonly Queue<NotificationRequest> requests = new Queue<NotificationRequest>();
     private bool isPresenting;
     private PresentationPhase phase;
@@ -22,14 +24,16 @@ public sealed class TaskNotificationUI : MonoBehaviour
 
     private sealed class NotificationRequest
     {
+        public readonly TaskType Type;
         public readonly string Heading;
         public readonly string Body;
         public readonly AudioClip Sound;
         public readonly Action OnFinished;
         public bool SoundPlayed;
 
-        public NotificationRequest(string heading, string body, AudioClip sound, Action onFinished)
+        public NotificationRequest(TaskType taskType, string heading, string body, AudioClip sound, Action onFinished)
         {
+            Type = taskType;
             Heading = heading;
             Body = body;
             Sound = sound;
@@ -39,6 +43,9 @@ public sealed class TaskNotificationUI : MonoBehaviour
 
     private void Awake()
     {
+        if (headingText != null)
+            authoredHeadingColor = headingText.color;
+
         taskAudioConfig = Resources.Load<TaskAudioConfig>("TaskAudioConfig");
         if (taskNotificationAudioSource == null)
             taskNotificationAudioSource = GetComponent<AudioSource>();
@@ -138,6 +145,7 @@ public sealed class TaskNotificationUI : MonoBehaviour
 
         NotificationRequest request = requests.Peek();
         headingText.text = request.Heading;
+        headingText.color = request.Type == TaskType.Side ? sideTaskAccentColor : authoredHeadingColor;
         detailText.text = request.Body;
         phase = fadeDuration <= 0f ? PresentationPhase.Hold : PresentationPhase.FadeIn;
         phaseElapsed = 0f;
@@ -172,12 +180,13 @@ public sealed class TaskNotificationUI : MonoBehaviour
             : taskType == TaskType.Main
                 ? taskAudioConfig.MainTaskReceivedSound
                 : taskAudioConfig.SideTaskReceivedSound;
-        ShowNotification(GetHeading(taskType, "OBTAINED"), sound, onFinished);
+        ShowNotification(taskType, GetHeading(taskType, "OBTAINED"), sound, onFinished);
     }
 
     public void ShowTaskUpdated(TaskType taskType, Action onFinished = null)
     {
         ShowNotification(
+            taskType,
             GetHeading(taskType, "UPDATED"),
             taskAudioConfig != null ? taskAudioConfig.TaskUpdatedSound : null,
             onFinished);
@@ -190,15 +199,16 @@ public sealed class TaskNotificationUI : MonoBehaviour
             : taskType == TaskType.Main
                 ? taskAudioConfig.MainTaskCompletedSound
                 : taskAudioConfig.SideTaskCompletedSound;
-        ShowNotification(GetHeading(taskType, "COMPLETED"), sound, onFinished);
+        ShowNotification(taskType, GetHeading(taskType, "COMPLETED"), sound, onFinished);
     }
 
     private void ShowNotification(
+        TaskType taskType,
         string heading,
         AudioClip sound,
         Action onFinished)
     {
-        requests.Enqueue(new NotificationRequest(heading, string.Empty, sound, onFinished));
+        requests.Enqueue(new NotificationRequest(taskType, heading, string.Empty, sound, onFinished));
         TryStartPresentation();
     }
 

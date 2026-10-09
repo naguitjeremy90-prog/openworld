@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0d17fbc007cff664c990c4d1dd19b178
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324272
+  packageName: Off-Screen & Compass Tape Target Indicators
+  packageVersion: 1. 4.0
+  assetPath: Assets/Target Indicators/Samples/Core Assets/Prefabs/Compass Tape VisualIndicator.prefab
+  uploadId: 938718

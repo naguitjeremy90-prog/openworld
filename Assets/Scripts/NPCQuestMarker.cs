@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>Displays one task marker by reading the existing task and story state.</summary>
+/// <summary>Displays task markers by reading the existing task and story state.</summary>
 [DisallowMultipleComponent]
 public sealed class NPCQuestMarker : MonoBehaviour
 {
@@ -25,6 +25,7 @@ public sealed class NPCQuestMarker : MonoBehaviour
         [SerializeField] private TaskStateRequirement taskState = TaskStateRequirement.Any;
         [SerializeField] private string requiredStoryFlagId;
         [SerializeField] private bool expectedStoryFlagValue = true;
+        [SerializeField] private string blockingStoryFlagId;
         [SerializeField] private MarkerAppearance appearance = MarkerAppearance.YellowTarget;
         [SerializeField] private bool hideWhenTaskCompleted = true;
 
@@ -34,6 +35,7 @@ public sealed class NPCQuestMarker : MonoBehaviour
         public TaskStateRequirement TaskState => taskState;
         public string RequiredStoryFlagId => requiredStoryFlagId;
         public bool ExpectedStoryFlagValue => expectedStoryFlagValue;
+        public string BlockingStoryFlagId => blockingStoryFlagId;
         public MarkerAppearance Appearance => appearance;
         public bool HideWhenTaskCompleted => hideWhenTaskCompleted;
     }
@@ -64,9 +66,17 @@ public sealed class NPCQuestMarker : MonoBehaviour
     [Header("Rules; first matching rule wins")]
     [SerializeField] private List<MarkerRule> rules = new List<MarkerRule>();
 
+    [Header("Optional second channel; first matching rule wins independently")]
+    [SerializeField] private bool enableSecondaryChannel;
+    [SerializeField] private List<MarkerRule> secondaryRules = new List<MarkerRule>();
+    [SerializeField, Min(0f), Tooltip("Gap between the visible sprite edges, in world units at the configured scale.")]
+    private float dualMarkerGap = 0.15f;
+
     private Transform visualTransform;
     private SpriteRenderer spriteRenderer;
     private Sprite displayedSprite;
+    private Transform secondaryVisualTransform;
+    private SpriteRenderer secondarySpriteRenderer;
     private TaskManager subscribedTaskManager;
     private NPCConversationTrigger conversationTrigger;
     private Coroutine dialogueCloseRoutine;
@@ -92,6 +102,8 @@ public sealed class NPCQuestMarker : MonoBehaviour
         dialogueSuppressed = false;
         if (spriteRenderer != null)
             spriteRenderer.enabled = false;
+        if (secondarySpriteRenderer != null)
+            secondarySpriteRenderer.enabled = false;
         CleanupIndependentVisual();
     }
 
@@ -106,11 +118,15 @@ public sealed class NPCQuestMarker : MonoBehaviour
         SubscribeToTaskManager();
         if (spriteRenderer == null)
             EnsureVisual();
+        if (enableSecondaryChannel && secondarySpriteRenderer == null)
+            EnsureSecondaryVisual();
 
         if (dialogueSuppressed)
         {
             if (spriteRenderer != null)
                 spriteRenderer.enabled = false;
+            if (secondarySpriteRenderer != null)
+                secondarySpriteRenderer.enabled = false;
             if (dialogueCloseRoutine == null)
                 dialogueCloseRoutine = StartCoroutine(RefreshAfterDialogueCloses());
         }
@@ -161,6 +177,23 @@ public sealed class NPCQuestMarker : MonoBehaviour
             else
                 visualTransform.forward = camera.transform.forward;
         }
+
+        if (secondaryVisualTransform != null)
+        {
+            secondaryVisualTransform.position = visualTransform.position;
+            secondaryVisualTransform.rotation = visualTransform.rotation;
+            secondaryVisualTransform.localScale = visualTransform.localScale;
+            if (enableSecondaryChannel && spriteRenderer.enabled && secondarySpriteRenderer.enabled)
+            {
+                // Equal opposite camera-horizontal offsets keep the pair centered in screen space.
+                float halfSeparation = ((spriteRenderer.sprite.bounds.size.x +
+                    secondarySpriteRenderer.sprite.bounds.size.x) * 0.5f * runtimeWorldScale +
+                    dualMarkerGap * runtimeWorldScale / Mathf.Max(0.001f, markerWorldScale)) * 0.5f;
+                Vector3 right = camera != null ? camera.transform.right : transform.right;
+                visualTransform.position -= right * halfSeparation;
+                secondaryVisualTransform.position += right * halfSeparation;
+            }
+        }
     }
 
     private static float SafeScale(float value) => Mathf.Abs(value) < 0.0001f ? 1f : value;
@@ -188,19 +221,53 @@ public sealed class NPCQuestMarker : MonoBehaviour
         if (spriteRenderer == null)
             spriteRenderer = visual.AddComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = 50;
+        if (enableSecondaryChannel)
+            EnsureSecondaryVisual();
+    }
+
+    private void EnsureSecondaryVisual()
+    {
+        if (secondaryVisualTransform != null)
+            return;
+        Transform existing = transform.Find("NPCQuestMarkerSecondaryVisual");
+        GameObject visual = existing != null ? existing.gameObject :
+            new GameObject("NPCQuestMarkerSecondaryVisual");
+        secondaryVisualTransform = visual.transform;
+        if (independentVisualTransform)
+        {
+            secondaryVisualTransform.SetParent(null, true);
+            if (gameObject.scene.IsValid() && visual.scene != gameObject.scene)
+                SceneManager.MoveGameObjectToScene(visual, gameObject.scene);
+        }
+        else
+            secondaryVisualTransform.SetParent(transform, true);
+        secondarySpriteRenderer = visual.GetComponent<SpriteRenderer>();
+        if (secondarySpriteRenderer == null)
+            secondarySpriteRenderer = visual.AddComponent<SpriteRenderer>();
+        secondarySpriteRenderer.sortingOrder = 50;
     }
 
     private void CleanupIndependentVisual()
     {
-        if (!independentVisualTransform || visualTransform == null)
+        if (!independentVisualTransform)
             return;
 
-        GameObject visual = visualTransform.gameObject;
-        visual.SetActive(false);
-        Destroy(visual);
+        if (visualTransform != null)
+        {
+            GameObject visual = visualTransform.gameObject;
+            visual.SetActive(false);
+            Destroy(visual);
+        }
         visualTransform = null;
         spriteRenderer = null;
         displayedSprite = null;
+        if (secondaryVisualTransform != null)
+        {
+            secondaryVisualTransform.gameObject.SetActive(false);
+            Destroy(secondaryVisualTransform.gameObject);
+        }
+        secondaryVisualTransform = null;
+        secondarySpriteRenderer = null;
     }
 
     private void OnStoryFlagChanged(string _, bool __) => Refresh();
@@ -225,6 +292,8 @@ public sealed class NPCQuestMarker : MonoBehaviour
         dialogueSuppressed = true;
         if (spriteRenderer != null)
             spriteRenderer.enabled = false;
+        if (secondarySpriteRenderer != null)
+            secondarySpriteRenderer.enabled = false;
     }
 
     private System.Collections.IEnumerator RefreshAfterDialogueCloses()
@@ -290,6 +359,8 @@ public sealed class NPCQuestMarker : MonoBehaviour
         if (dialogueSuppressed)
         {
             spriteRenderer.enabled = false;
+            if (secondarySpriteRenderer != null)
+                secondarySpriteRenderer.enabled = false;
             return;
         }
 
@@ -314,10 +385,26 @@ public sealed class NPCQuestMarker : MonoBehaviour
             spriteRenderer.sprite = next;
             displayedSprite = next;
         }
+        if (secondarySpriteRenderer != null)
+        {
+            Sprite secondary = null;
+            if (showMarker && enableSecondaryChannel && secondaryRules != null)
+                foreach (MarkerRule rule in secondaryRules)
+                    if (rule != null && Matches(rule))
+                    {
+                        secondary = GetSprite(rule);
+                        break;
+                    }
+            secondarySpriteRenderer.sprite = secondary;
+            secondarySpriteRenderer.enabled = secondary != null;
+        }
     }
 
     private bool Matches(MarkerRule rule)
     {
+        if (!string.IsNullOrWhiteSpace(rule.BlockingStoryFlagId) &&
+            SessionStoryState.GetFlag(rule.BlockingStoryFlagId))
+            return false;
         if (!string.IsNullOrWhiteSpace(rule.RequiredStoryFlagId) &&
             SessionStoryState.GetFlag(rule.RequiredStoryFlagId) != rule.ExpectedStoryFlagValue)
             return false;

@@ -65,7 +65,6 @@ MonoBehaviour:
       - mang_nardo
       - mang_iko
       - mang_tibo
-      - aling_ika_lead
       - nena
       - toto
       - randomhouse_resident
@@ -78,7 +77,11 @@ MonoBehaviour:
       - church_mang_pedro
       - church_aling_elena
     - stageId: find_knowledgeable_person
-      objectiveText: Humanap ng taong maaaring may higit na alam tungkol sa Makamisa.
+      objectiveText: Kausapin si Erica sa loob ng bahay.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: ask_aling_ika_about_maestro
+      objectiveText: Magtanong kay Aling Ika tungkol kay Maestro Ben.
       requiredCount: 0
       allowedProgressIds: []
     - stageId: maestro_ben_lead

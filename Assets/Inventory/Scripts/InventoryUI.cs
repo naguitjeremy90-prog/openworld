@@ -62,6 +62,12 @@ public sealed class InventoryUI : MonoBehaviour
     private Coroutine inventoryRevealRoutine;
     private GameplayHUDUnlockReveal inventoryReveal;
     private bool inventoryRevealScheduled;
+    private bool ownsInventoryReveal;
+    private bool inventoryRevealNeedsRestore;
+    private Vector3 inventoryIconNormalScale;
+    private float inventoryIconNormalAlpha;
+    private bool inventoryIconNormalInteractable;
+    private bool inventoryIconNormalBlocksRaycasts;
     private bool[] previousBehaviourStates;
     private CursorLockMode previousCursorLockMode;
     private bool previousCursorVisible;
@@ -71,6 +77,72 @@ public sealed class InventoryUI : MonoBehaviour
     private AudioClip lastTabSwitchClip;
 
     public bool IsOpen { get; private set; }
+    public bool IsTutorialUIAvailable => isActiveAndEnabled && inventoryRoot != null &&
+        canvasGroup != null && slotContainer != null && slotPrefab != null &&
+        (inventoryRoot.transform.parent == null || inventoryRoot.transform.parent.gameObject.activeInHierarchy);
+    public bool IsWindowTransitioning => fadeRoutine != null;
+
+    public RectTransform TutorialWindow => inventoryRoot != null ? inventoryRoot.transform as RectTransform : null;
+
+    public RectTransform GetTutorialTabTarget(int index)
+    {
+        Button button = GetTutorialTabButton(index);
+        return button != null && button.isActiveAndEnabled && button.IsInteractable()
+            ? button.transform as RectTransform : null;
+    }
+
+    public void SelectTutorialTab(int index)
+    {
+        Button button = GetTutorialTabButton(index);
+        if (GetTutorialTabTarget(index) == null) return;
+        if ((int)currentFilter != index) button.onClick.Invoke();
+    }
+
+    private Button GetTutorialTabButton(int index)
+    {
+        switch (index)
+        {
+            case 0: return allTabButton;
+            case 1: return questItemsTabButton;
+            case 2: return keyItemsTabButton;
+            case 3: return documentsTabButton;
+            default: return null;
+        }
+    }
+
+    public bool HasTutorialItem
+    {
+        get
+        {
+            var manager = InventoryManager.Instance;
+            if (manager == null) return false;
+            foreach (var item in manager.GetOwnedItems())
+                if (item != null && !string.IsNullOrWhiteSpace(item.ItemID)) return true;
+            return false;
+        }
+    }
+
+    public bool TryGetTutorialItemTarget(out RectTransform target)
+    {
+        target = null;
+        if (!IsOpen || !IsTutorialUIAvailable || boundManager == null) return false;
+        foreach (var item in boundManager.GetOwnedItems())
+        {
+            if (item == null || string.IsNullOrWhiteSpace(item.ItemID) || !boundManager.HasItem(item.ItemID))
+                continue;
+            if (!TryGetItemSlot(item.ItemID, out target))
+            {
+                if (GetTutorialTabTarget(0) == null) return false;
+                SelectTutorialTab(0);
+                if (!TryGetItemSlot(item.ItemID, out target)) continue;
+            }
+            if (target != null && target.gameObject.activeInHierarchy &&
+                target.GetComponent<Button>() is Button button && button.isActiveAndEnabled && button.IsInteractable())
+                return true;
+        }
+        target = null;
+        return false;
+    }
 
     public bool TryGetItemSlot(string itemID, out RectTransform slotRect)
     {
@@ -129,7 +201,20 @@ public sealed class InventoryUI : MonoBehaviour
             target = gameObject.AddComponent<GameplayHUDTarget>();
         target.Configure(canvasGroup, inventoryRoot);
 
+        ResolveInventoryHUD();
+    }
+
+    private void ResolveInventoryHUD()
+    {
+        if (inventoryReveal != null) return;
         GameObject icon = GameObject.Find("InventoryButton");
+        if (icon == null)
+            foreach (var rect in FindObjectsByType<RectTransform>(FindObjectsInactive.Include))
+                if (rect.name == "InventoryButton" && rect.gameObject.scene == gameObject.scene)
+                {
+                    icon = rect.gameObject;
+                    break;
+                }
         if (icon != null && icon != gameObject)
         {
             GameplayHUDTarget iconTarget = icon.GetComponent<GameplayHUDTarget>();
@@ -145,15 +230,25 @@ public sealed class InventoryUI : MonoBehaviour
                 inventoryReveal = icon.AddComponent<GameplayHUDUnlockReveal>();
             inventoryReveal.Configure(iconGroup);
             GameplaySystemTutorialAnchor.AttachTo(icon, GameplaySystemId.Inventory);
+            if (isActiveAndEnabled)
+            {
+                inventoryReveal.RevealCompleted -= HandleInventoryRevealCompleted;
+                inventoryReveal.RevealCompleted += HandleInventoryRevealCompleted;
+            }
         }
     }
 
     private void OnEnable()
     {
         GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
+        ResolveInventoryHUD();
         if (inventoryReveal != null)
+        {
+            inventoryReveal.RevealCompleted -= HandleInventoryRevealCompleted;
             inventoryReveal.RevealCompleted += HandleInventoryRevealCompleted;
+        }
         BindToManager();
+        if (GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory)) BeginInventoryReveal();
     }
 
     private void OnDisable()
@@ -169,6 +264,8 @@ public sealed class InventoryUI : MonoBehaviour
             StopCoroutine(inventoryRevealRoutine);
             inventoryRevealRoutine = null;
         }
+        CancelOwnedInventoryReveal();
+        inventoryRevealScheduled = false;
 
         if (fadeRoutine != null)
         {
@@ -180,6 +277,8 @@ public sealed class InventoryUI : MonoBehaviour
             SetGameplayInputBlocked(false);
 
         IsOpen = false;
+        if (GameplaySystemTutorialManager.HasInstance)
+            GameplaySystemTutorialManager.Instance.NotifySystemClosed(GameplaySystemId.Inventory);
         SetVisibleImmediately(false);
     }
 
@@ -193,6 +292,14 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void Update()
     {
+        // A disabled/destroyed HUD root stops its own reveal coroutine without a completion event.
+        if (ownsInventoryReveal && (inventoryReveal == null || !inventoryReveal.isActiveAndEnabled))
+        {
+            CancelOwnedInventoryReveal();
+            inventoryRevealScheduled = false;
+        }
+        if (!inventoryRevealScheduled && GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory))
+            BeginInventoryReveal();
         if (StorySequenceCoordinator.IsStorySequenceActive)
         {
             if (IsOpen)
@@ -266,25 +373,59 @@ public sealed class InventoryUI : MonoBehaviour
             return;
 
         inventoryRevealScheduled = true;
-        if (StorySequenceCoordinator.IsStorySequenceActive)
-            inventoryRevealRoutine = StartCoroutine(PlayInventoryRevealWhenSequenceEnds());
-        else
-            PlayInventoryReveal();
+        if (GameplaySystemTutorialState.InventoryRevealReady)
+        {
+            HandleInventoryRevealCompleted();
+            return;
+        }
+        inventoryRevealRoutine = StartCoroutine(PlayInventoryRevealWhenSequenceEnds());
     }
 
     private IEnumerator PlayInventoryRevealWhenSequenceEnds()
     {
-        while (StorySequenceCoordinator.IsStorySequenceActive)
+        // Wait one frame for scene-local Awake/OnEnable and lock views to finish binding.
+        yield return null;
+        while (isActiveAndEnabled)
+        {
+            ResolveInventoryHUD();
+            if (inventoryRevealNeedsRestore && inventoryReveal != null && inventoryReveal.isActiveAndEnabled)
+                yield return RestoreInterruptedInventoryHUD();
+            var tutorial = GameplaySystemTutorialManager.Instance;
+            if (inventoryReveal != null && inventoryReveal.isActiveAndEnabled &&
+                tutorial != null && tutorial.IsInventoryPresentationEnvironmentSafe()) break;
             yield return null;
+        }
 
         inventoryRevealRoutine = null;
+        if (!isActiveAndEnabled) yield break;
+        if (GameplaySystemTutorialState.InventoryRevealStarted)
+        {
+            // An interrupted attempt has already introduced the HUD. Recover readiness without replaying it.
+            HandleInventoryRevealCompleted();
+            yield break;
+        }
         PlayInventoryReveal();
     }
 
     private void PlayInventoryReveal()
     {
-        if (inventoryReveal != null && inventoryReveal.PlayReveal())
+        var rect = inventoryReveal != null ? inventoryReveal.transform as RectTransform : null;
+        var group = inventoryReveal != null ? inventoryReveal.GetComponent<CanvasGroup>() : null;
+        if (rect != null && group != null)
+        {
+            inventoryIconNormalScale = rect.localScale;
+            inventoryIconNormalAlpha = group.alpha;
+            inventoryIconNormalInteractable = group.interactable;
+            inventoryIconNormalBlocksRaycasts = group.blocksRaycasts;
+        }
+        if (rect != null && group != null && inventoryReveal.PlayReveal())
+        {
+            ownsInventoryReveal = true;
+            GameplaySystemTutorialState.InventoryRevealStarted = true;
             return;
+        }
+
+        inventoryRevealScheduled = false;
 
         Debug.LogWarning(
             "Inventory unlock reveal could not start because the Inventory HUD icon is unavailable.",
@@ -293,8 +434,56 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void HandleInventoryRevealCompleted()
     {
+        ownsInventoryReveal = false;
+        GameplaySystemTutorialState.InventoryRevealReady = true;
         GameplaySystemTutorialManager.Instance.NotifySystemRevealCompleted(
             GameplaySystemId.Inventory);
+    }
+
+    private void CancelOwnedInventoryReveal()
+    {
+        if (!ownsInventoryReveal) return;
+        ownsInventoryReveal = false;
+        if (inventoryReveal == null) return;
+        inventoryReveal.StopAllCoroutines();
+        inventoryReveal.transform.localScale = inventoryIconNormalScale;
+        inventoryRevealNeedsRestore = true;
+        var group = inventoryReveal.GetComponent<CanvasGroup>();
+        if (group == null) return;
+        bool hidden = StorySequenceCoordinator.IsStorySequenceActive;
+        group.alpha = hidden ? 0f : inventoryIconNormalAlpha;
+        group.interactable = !hidden && inventoryIconNormalInteractable;
+        group.blocksRaycasts = !hidden && inventoryIconNormalBlocksRaycasts;
+    }
+
+    private IEnumerator RestoreInterruptedInventoryHUD()
+    {
+        // Let existing HUD suppression/restoration finish before restoring our captured normal state.
+        // Observe settling rather than assuming the HUD's configured fade duration.
+        float previousAlpha = float.NaN;
+        int stableFrames = 0;
+        while (inventoryReveal != null)
+        {
+            var group = inventoryReveal.GetComponent<CanvasGroup>();
+            if (group == null) break;
+            if (StorySequenceCoordinator.IsStorySequenceActive || !inventoryReveal.isActiveAndEnabled)
+                stableFrames = 0;
+            else
+            {
+                stableFrames = group.alpha == previousAlpha ? stableFrames + 1 : 0;
+                if (stableFrames >= 2)
+                {
+                    inventoryReveal.transform.localScale = inventoryIconNormalScale;
+                    group.alpha = inventoryIconNormalAlpha;
+                    group.interactable = inventoryIconNormalInteractable;
+                    group.blocksRaycasts = inventoryIconNormalBlocksRaycasts;
+                    break;
+                }
+            }
+            previousAlpha = group.alpha;
+            yield return null;
+        }
+        inventoryRevealNeedsRestore = false;
     }
 
     public void Refresh()
@@ -398,6 +587,8 @@ public sealed class InventoryUI : MonoBehaviour
     private void HandleInventoryChanged()
     {
         Refresh();
+        if (GameplaySystemTutorialManager.HasInstance)
+            GameplaySystemTutorialManager.Instance.NotifyInventoryItemsChanged();
     }
 
     private void ClearSlots()

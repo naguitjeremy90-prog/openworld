@@ -2,14 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 
-/// <summary>Small story bridge for starting the opening task and handling its exceptional lead.</summary>
+/// <summary>Starts the opening investigation task without coupling it to optional errands.</summary>
 public sealed class MainInvestigationTaskController : MonoBehaviour
 {
     private const string TaskId = "main_investigate_pili";
     private const string StartedFlag = "main_investigate_pili_started";
-    private const string MaestroLeadFlag = "maestro_ben_lead_received";
-    private const string MaestroBenCompletedFlag = "maestro_ben_completed";
-    private const string AlingIkaCompletedFlag = "aling_ika_completed";
 
     [Header("Testing (Development Only)")]
     [SerializeField] private bool forceMainTaskForTesting = false;
@@ -29,7 +26,6 @@ public sealed class MainInvestigationTaskController : MonoBehaviour
         if (!morningWasObserved || TaskManager.Instance == null ||
             TaskManager.Instance.GetTaskState(TaskId) == TaskState.Inactive)
         { morningWasObserved = true; EnsureTaskStarted(); }
-        if (SessionStoryState.GetFlag(AlingIkaCompletedFlag)) AdvanceToMaestroLead();
     }
 
     private void HandleProgressTestKeys()
@@ -74,22 +70,4 @@ public sealed class MainInvestigationTaskController : MonoBehaviour
         if (TaskManager.Instance.StartTask(TaskId)) SessionStoryState.SetFlag(StartedFlag, true);
     }
 
-    private void AdvanceToMaestroLead()
-    {
-        if (SessionStoryState.GetFlag(MaestroBenCompletedFlag))
-            return;
-
-        TaskManager manager = TaskManager.Instance;
-        if (manager == null || manager.GetTaskState(TaskId) != TaskState.Active)
-            return;
-
-        if (!SessionStoryState.GetFlag(MaestroLeadFlag))
-        {
-            SessionStoryState.SetFlag(MaestroLeadFlag, true);
-            manager.RegisterProgress(TaskId, "aling_ika_lead", 1, true);
-        }
-
-        if (!manager.IsCurrentStage(TaskId, "maestro_ben_lead"))
-            manager.AdvanceTaskStage(TaskId, "maestro_ben_lead");
-    }
 }

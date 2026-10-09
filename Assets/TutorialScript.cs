@@ -4,6 +4,15 @@ using DialogueEditor;
 
 public class TutorialStartDelay : MonoBehaviour
 {
+    public event System.Action TutorialCompleted;
+
+    public bool IsCompletedAndHidden => completionReady &&
+        SessionStoryState.GetFlag(CompletionFlag) && moveTextGroup != null &&
+        moveTextGroup.alpha <= 0f && !moveTextGroup.gameObject.activeSelf;
+
+    private bool completionReady;
+    private bool completionNotificationCancelled;
+
     public CanvasGroup moveTextGroup;
     public Transform player;
     public float delay = 5f;
@@ -15,6 +24,7 @@ public class TutorialStartDelay : MonoBehaviour
     private void Awake()
     {
         HidePrompt();
+        completionReady = SessionStoryState.GetFlag(CompletionFlag);
         if (moveTextGroup != null)
         {
             moveTextGroup.interactable = false;
@@ -40,6 +50,7 @@ public class TutorialStartDelay : MonoBehaviour
         Vector3 startPosition = player.position;
         moveTextGroup.gameObject.SetActive(true);
         bool waitingForSafety = false;
+        bool movementCompleted = false;
 
         while (player != null)
         {
@@ -63,6 +74,7 @@ public class TutorialStartDelay : MonoBehaviour
             displacement.y = 0f;
             if (displacement.sqrMagnitude >= MovementThreshold * MovementThreshold)
             {
+                movementCompleted = true;
                 SessionStoryState.SetFlag(CompletionFlag, true);
                 break;
             }
@@ -72,6 +84,7 @@ public class TutorialStartDelay : MonoBehaviour
             yield return null;
         }
 
+        bool fadeOutCompleted = moveTextGroup.alpha <= 0f;
         while (moveTextGroup.alpha > 0f)
         {
             if (!IsGameplaySafe())
@@ -79,10 +92,35 @@ public class TutorialStartDelay : MonoBehaviour
 
             moveTextGroup.alpha = Mathf.MoveTowards(moveTextGroup.alpha, 0f,
                 Mathf.Max(0.01f, fadeSpeed) * Time.deltaTime);
+            fadeOutCompleted = moveTextGroup.alpha <= 0f;
             yield return null;
         }
 
         HidePrompt();
+        if (movementCompleted && fadeOutCompleted && IsGameplaySafe() &&
+            isActiveAndEnabled && !completionNotificationCancelled)
+        {
+            completionReady = true;
+            NotifyTutorialCompleted();
+        }
+    }
+
+    private void OnDisable()
+    {
+        // Disabling a MonoBehaviour need not stop its coroutine; never report that run as completed.
+        completionNotificationCancelled = true;
+    }
+
+    private void NotifyTutorialCompleted()
+    {
+        var listeners = TutorialCompleted;
+        if (listeners == null)
+            return;
+        foreach (System.Action listener in listeners.GetInvocationList())
+        {
+            try { listener(); }
+            catch (System.Exception exception) { Debug.LogException(exception, this); }
+        }
     }
 
     private static bool IsGameplaySafe()

@@ -11,7 +11,7 @@ namespace TargetIndicators
         /// Gets a default-initialized `TargetIndicator`. This may be different from the zero-initialized version
         /// (for example, the pose is `Pose.identity` instead of zero initialized).
         /// </summary>
-        public static TargetIndicator Default => new(default, null, Pose.identity, false);
+        public static TargetIndicator Default => new(default, null, Pose.identity, false, 0f, 0f);
 
         /// <summary>
         /// The ID that defines the target indicator.
@@ -42,18 +42,39 @@ namespace TargetIndicators
         public bool IsOutsideBoundary { get; }
 
         /// <summary>
+        /// The distance in world space from the reference point (Camera or Compass Override) to the target.
+        /// </summary>
+        public float Distance { get; }
+
+        /// <summary>
+        /// The dot product of the reference forward vector and the direction to the target.
+        /// Ranges from 1 (looking directly at) to -1 (looking directly away).
+        /// </summary>
+        public float LookAtDot { get; }
+
+        /// <summary>
         /// Constructs a `TargetIndicator`.
         /// </summary>
         /// <param name="id">The ID that defines the indicator.</param>
         /// <param name="target">The target that is being tracked by the target indicator.</param>
         /// <param name="screenPose">The screen space coordinates and rotation of the target.</param>
         /// <param name="isOutsideBoundary">The current state of the target's screen pose if it's outside the boundary.</param>
-        public TargetIndicator(TargetIndicatorId id, Transform target, Pose screenPose, bool isOutsideBoundary)
+        /// <param name="distance">The world space distance to the target.</param>
+        /// <param name="lookAtDot">The dot product of the reference forward vector and the direction to the target.</param>
+        public TargetIndicator(
+            TargetIndicatorId id,
+            Transform target,
+            Pose screenPose,
+            bool isOutsideBoundary,
+            float distance,
+            float lookAtDot)
         {
             Id = id;
             Target = target;
             ScreenPose = screenPose;
             IsOutsideBoundary = isOutsideBoundary;
+            Distance = distance;
+            LookAtDot = lookAtDot;
         }
 
         /// <summary>
@@ -64,12 +85,23 @@ namespace TargetIndicators
         /// <param name="screenPoint">The screen space coordinates of the target.</param>
         /// <param name="rotation">The screen space rotation of the target.</param>
         /// <param name="isOutsideBoundary">The current state of the target's screen pose if it's outside the boundary.</param>
-        public TargetIndicator(TargetIndicatorId id, Transform target, Vector3 screenPoint, Quaternion rotation, bool isOutsideBoundary)
+        /// <param name="distance">The world space distance to the target.</param>
+        /// <param name="lookAtDot">The dot product of the reference forward vector and the direction to the target.</param>
+        public TargetIndicator(
+            TargetIndicatorId id,
+            Transform target,
+            Vector3 screenPoint,
+            Quaternion rotation,
+            bool isOutsideBoundary,
+            float distance,
+            float lookAtDot)
         {
             Id = id;
             Target = target;
             ScreenPose = new Pose(screenPoint, rotation);
             IsOutsideBoundary = isOutsideBoundary;
+            Distance = distance;
+            LookAtDot = lookAtDot;
         }
     }
 }

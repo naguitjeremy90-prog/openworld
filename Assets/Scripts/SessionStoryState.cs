@@ -84,4 +84,12 @@ public static class SessionStoryState
         stringValues.Clear();
         FlagChanged = null;
     }
+
+    /// <summary>Clears playthrough data silently while preserving live service subscriptions.</summary>
+    public static void ResetDataForNewGame()
+    {
+        completedFlags.Clear();
+        integerValues.Clear();
+        stringValues.Clear();
+    }
 }

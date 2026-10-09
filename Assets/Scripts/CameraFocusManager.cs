@@ -5,6 +5,10 @@ using Unity.Cinemachine;
 
 public class CameraFocusManager : MonoBehaviour
 {
+    // The existing completion callback is also the identity of the originating request.
+    public event System.Action<CameraFocusPoint, UnityEvent> FocusStarted;
+    private bool notifyingFocusStarted;
+
     [Header("Cinemachine Cameras (Optional)")]
     [SerializeField] private CinemachineCamera normalCinemachineCamera;
     [SerializeField] private CinemachineCamera focusCinemachineCamera;
@@ -61,7 +65,7 @@ public class CameraFocusManager : MonoBehaviour
         CameraFocusPoint focusPoint,
         UnityEvent onFinished = null)
     {
-        if (!isActiveAndEnabled || isFocusing || focusPoint == null)
+        if (notifyingFocusStarted || !isActiveAndEnabled || isFocusing || focusPoint == null)
             return false;
 
         isFocusing = true;
@@ -106,16 +110,21 @@ public class CameraFocusManager : MonoBehaviour
 
             focusCinemachineCamera.Priority = 20;
             normalCinemachineCamera.Priority = 10;
+            NotifyFocusStarted(focusPoint);
         }
 
         // REGULAR CAMERA
         else if (normalCamera != null)
         {
-            yield return StartCoroutine(
+            bool cameraAvailable = normalCamera.isActiveAndEnabled;
+            Coroutine moveRoutine = StartCoroutine(
                 MoveRegularCamera(
                     focusPoint.transform.position,
                     focusPoint.transform.rotation,
                     focusPoint.moveSpeed));
+            if (cameraAvailable && normalCamera != null && normalCamera.isActiveAndEnabled)
+                NotifyFocusStarted(focusPoint);
+            yield return moveRoutine;
         }
 
         // For automatic scenery focus
@@ -137,7 +146,7 @@ public class CameraFocusManager : MonoBehaviour
 
     internal bool TryReturnToNormal(CameraFocusPoint focusPoint)
     {
-        if (!isFocusing || isReturning || focusPoint == null ||
+        if (notifyingFocusStarted || !isFocusing || isReturning || focusPoint == null ||
             focusPoint != activeFocusPoint)
         {
             return false;
@@ -150,6 +159,24 @@ public class CameraFocusManager : MonoBehaviour
         cameraCoroutine =
             StartCoroutine(ReturnRoutine(focusPoint));
         return true;
+    }
+
+    private void NotifyFocusStarted(CameraFocusPoint focusPoint)
+    {
+        var listeners = FocusStarted;
+        if (listeners == null)
+            return;
+        UnityEvent requestCallback = focusFinishedCallback;
+        notifyingFocusStarted = true;
+        try
+        {
+            foreach (System.Action<CameraFocusPoint, UnityEvent> listener in listeners.GetInvocationList())
+            {
+                try { listener(focusPoint, requestCallback); }
+                catch (System.Exception exception) { Debug.LogException(exception, this); }
+            }
+        }
+        finally { notifyingFocusStarted = false; }
     }
 
     private IEnumerator ReturnRoutine(

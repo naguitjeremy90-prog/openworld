@@ -57,6 +57,12 @@ public sealed class InventoryManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>Clears prior ownership without ordinary item events during New Game initialization.</summary>
+    public void ClearOwnedItemsForNewGame()
+    {
+        ownedItems.Clear();
+    }
+
     public bool AddItem(string itemID)
     {
         string normalizedID = NormalizeID(itemID);

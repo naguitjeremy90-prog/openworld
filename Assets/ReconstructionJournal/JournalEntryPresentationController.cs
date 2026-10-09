@@ -65,6 +65,21 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
 
     private void OnDestroy() { if (instance == this) instance = null; }
 
+    /// <summary>Cancels notifications from the previous playthrough without unsubscribing the service.</summary>
+    public void ResetForNewGame()
+    {
+        StopAllCoroutines();
+        presentationRoutine = null;
+        requests.Clear();
+        queuedKeys.Clear();
+        LastCompletedPresentation = default;
+        notificationView?.SetVisibleAmount(0f);
+        inventoryUI = null;
+        documentViewer = null;
+        cameraFocusManager = null;
+        resolvedScenePath = string.Empty;
+    }
+
     private void Update()
     {
         ResolveSceneReferencesIfNeeded();

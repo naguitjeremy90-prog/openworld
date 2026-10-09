@@ -29,6 +29,37 @@ namespace DialogueEditor
         public static ConversationStartEvent OnConversationStarted;
         public static ConversationEndEvent OnConversationEnded;
 
+        // Additive lifecycle signal. true means a normal terminal path and fully closed UI.
+        // Cancellation also closes the UI before publishing false.
+        public static event System.Action<NPCConversation, bool> ConversationClosed;
+        public NPCConversation ActiveConversation { get; private set; }
+        public bool IsConversationClosing => m_state == eState.TransitioningDialogueOff;
+        private bool normalTerminalReached;
+
+        private void NotifyConversationClosed(bool normal)
+        {
+            NPCConversation closed = ActiveConversation;
+            ActiveConversation = null;
+            normalTerminalReached = false;
+            if (ReferenceEquals(closed, null)) return;
+            var listeners = ConversationClosed;
+            if (listeners == null) return;
+            foreach (System.Action<NPCConversation, bool> listener in listeners.GetInvocationList())
+            {
+                try { listener(closed, normal); }
+                catch (System.Exception exception) { Debug.LogException(exception, this); }
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (ReferenceEquals(ActiveConversation, null)) return;
+            // Keep the existing end event at the beginning of closure, including cancellation.
+            if (m_state != eState.TransitioningDialogueOff) EndConversation();
+            TurnOffUI();
+            NotifyConversationClosed(false);
+        }
+
         // User-Facing options
         // Drawn by custom inspector
         public bool ScrollText;
@@ -106,6 +137,7 @@ namespace DialogueEditor
 
         private void OnDestroy()
         {
+            OnDisable();
             if (Instance == this)
                 Instance = null;
         }
@@ -148,7 +180,15 @@ namespace DialogueEditor
 
         public void StartConversation(NPCConversation conversation)
         {
+            if (!ReferenceEquals(ActiveConversation, null))
+            {
+                if (!IsConversationClosing) EndConversation();
+                TurnOffUI();
+                NotifyConversationClosed(false);
+            }
             m_conversation = conversation.Deserialize();
+            ActiveConversation = conversation;
+            normalTerminalReached = false;
             if (OnConversationStarted != null)
                 OnConversationStarted.Invoke();
 
@@ -158,6 +198,18 @@ namespace DialogueEditor
         }
 
         public void EndConversation()
+        {
+            normalTerminalReached = false;
+            BeginConversationClose();
+        }
+
+        private void EndConversationNormally()
+        {
+            normalTerminalReached = true;
+            BeginConversationClose();
+        }
+
+        private void BeginConversationClose()
         {
             SetState(eState.TransitioningDialogueOff);
 
@@ -422,14 +474,14 @@ namespace DialogueEditor
 
                 if (m_selectedOption == null)
                 {
-                    EndConversation();
+                    EndConversationNormally();
                     return;
                 }
 
                 SpeechNode nextSpeech = GetValidSpeechOfNode(m_selectedOption);
                 if (nextSpeech == null)
                 {
-                    EndConversation();
+                    EndConversationNormally();
                 }
                 else
                 {
@@ -452,7 +504,9 @@ namespace DialogueEditor
 
             if (t > 1)
             {
+                bool normal = normalTerminalReached;
                 TurnOffUI();
+                NotifyConversationClosed(normal);
                 return;
             }
 
@@ -636,7 +690,7 @@ namespace DialogueEditor
             }
             else if (m_currentSpeech.ConnectionType == Connection.eConnectionType.None)
             {
-                EndConversation();
+                EndConversationNormally();
                 return true;
             }
             return false;
@@ -683,8 +737,8 @@ namespace DialogueEditor
 
         private void TurnOffUI()
         {
-            DialoguePanel.gameObject.SetActive(false);
-            OptionsPanel.gameObject.SetActive(false);
+            if (DialoguePanel != null) DialoguePanel.gameObject.SetActive(false);
+            if (OptionsPanel != null) OptionsPanel.gameObject.SetActive(false);
             SetState(eState.Off);
 #if UNITY_EDITOR
             // Debug.Log("[ConversationManager]: Conversation UI off.");

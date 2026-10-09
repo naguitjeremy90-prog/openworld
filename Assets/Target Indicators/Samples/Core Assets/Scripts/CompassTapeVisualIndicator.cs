@@ -22,12 +22,18 @@ namespace TargetIndicators.Samples
         /// <inheritdoc/>
         public override void UpdateVisualIndicator(TargetIndicator targetIndicator)
         {
-            UpdateVisualIndicator(targetIndicator.ScreenPose, targetIndicator.IsOutsideBoundary);
+            UpdateVisualIndicator(
+                targetIndicator.ScreenPose,
+                targetIndicator.IsOutsideBoundary,
+                targetIndicator.Distance,
+                targetIndicator.LookAtDot);
         }
 
         /// <inheritdoc/>
-        public override void UpdateVisualIndicator(Pose screenPose, bool isOutsideBoundary)
+        public override void UpdateVisualIndicator(Pose screenPose, bool isOutsideBoundary, float distance, float lookAtDot)
         {
+            UpdateDistanceLabel(distance, lookAtDot);
+
             screenPose.position.x %= 1f;
 
             var positionOnFullTape = screenPose.position.x * (FullTapeToVisibleTapeRatio * VisibleTapeLength);
@@ -46,26 +52,26 @@ namespace TargetIndicators.Samples
             switch (_coreContentVisibility)
             {
                 case IndicatorVisibility.Never:
-                    _contentGO.SetActive(false);
+                    SetActive(_contentGO, false);
                     break;
                 case IndicatorVisibility.Always:
                     screenPose.position.x = Mathf.Clamp(pointOnVisibleTape, 0, VisibleTapeLength);
                     _rectTransform.anchoredPosition = screenPose.position;
-                    _contentGO.SetActive(true);
+                    SetActive(_contentGO, true);
                     break;
                 case IndicatorVisibility.OutsideBoundary:
                     screenPose.position.x = Mathf.Clamp(pointOnVisibleTape, 0, VisibleTapeLength);
                     _rectTransform.anchoredPosition = screenPose.position;
-                    _contentGO.SetActive(isOutsideBoundary);
+                    SetActive(_contentGO, isOutsideBoundary);
                     break;
                 case IndicatorVisibility.InsideBoundary:
-                    _contentGO.SetActive(!isOutsideBoundary);
+                    SetActive(_contentGO, !isOutsideBoundary);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            _rotationContentGO.SetActive(false);
+            SetActive(_rotationContentGO, false);
         }
 
         /// <inheritdoc/>

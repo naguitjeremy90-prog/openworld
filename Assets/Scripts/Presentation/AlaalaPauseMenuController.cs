@@ -7,10 +7,12 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>Reusable scene-local ESC menu backed by an editable authored prefab.</summary>
+[DefaultExecutionOrder(-31000)] // Handle ESC before the document viewer's own Update closes it.
 public sealed class AlaalaPauseMenuController : MonoBehaviour
 {
     private const string ResourcePath = "UI/AlaalaPauseMenu";
     private const string MasterVolumeKey = "MasterVolume";
+    private const int PauseSortingOrder = 32050; // Above teaching (32000), below transitions (32100).
 
     [Header("Authored Views")]
     [SerializeField] private string mainMenuSceneName = "SceneMenu";
@@ -34,16 +36,83 @@ public sealed class AlaalaPauseMenuController : MonoBehaviour
     private float previousTimeScale;
     private CursorLockMode previousCursorLock;
     private bool previousCursorVisible;
+    private GameObject previousSelection;
     private bool isOpen;
     private bool inSettings;
     public bool IsOpen => isOpen;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void CreateForGameplayScene()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetSceneCallbacks()
     {
-        string scene = SceneManager.GetActiveScene().name;
-        if (scene == "LoginPage" || scene == "MainMenu" || scene == "SceneMenu" ||
-            FindAnyObjectByType<AlaalaPauseMenuController>() != null) return;
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+        SceneManager.activeSceneChanged -= HandleActiveSceneChanged;
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void RegisterSceneCallbacks()
+    {
+        ResetSceneCallbacks();
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+        SceneManager.activeSceneChanged += HandleActiveSceneChanged;
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void CreateForGameplayScene() => EnsureMenu(SceneManager.GetActiveScene());
+
+    private static void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene == SceneManager.GetActiveScene()) EnsureMenu(scene);
+    }
+
+    private static void HandleActiveSceneChanged(Scene previous, Scene next)
+    {
+        foreach (var menu in FindObjectsByType<AlaalaPauseMenuController>(FindObjectsInactive.Include))
+            if (menu.gameObject.scene == previous) menu.CloseMenu();
+        EnsureMenu(next);
+    }
+
+    private static bool IsGameplayScene(Scene scene)
+    {
+        if (!scene.IsValid() || !scene.isLoaded) return false;
+        if (scene.name == "LoginPage" || scene.name == "MainMenu" || scene.name == "SceneMenu" ||
+            scene.name == "IntroScene" || scene.name == "IntroStoryScene") return false;
+
+        // Require exploration components in this scene; an arbitrary loaded scene is not gameplay.
+        // Include disabled movement controllers because story sequences temporarily disable them.
+        bool hasGameplay = false;
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            if (root.GetComponentInChildren<MainMenuManager>(true) != null ||
+                root.GetComponentInChildren<IntroVideoManager>(true) != null ||
+                root.GetComponentInChildren<JeepIntroManager>(true) != null) return false;
+            hasGameplay |= root.GetComponentInChildren<InventoryUI>(true) != null ||
+                root.GetComponentInChildren<PlayerMovement>(true) != null ||
+                root.GetComponentInChildren<Supercyan.FreeSample.SimpleSampleCharacterControl>(true) != null;
+        }
+        return hasGameplay;
+    }
+
+    private static void EnsureMenu(Scene scene)
+    {
+        if (scene != SceneManager.GetActiveScene() || !IsGameplayScene(scene)) return;
+        AlaalaPauseMenuController existing = null;
+        foreach (var menu in FindObjectsByType<AlaalaPauseMenuController>(FindObjectsInactive.Include))
+        {
+            if (menu.gameObject.scene != scene) continue;
+            if (existing == null) existing = menu;
+            else
+            {
+                // Disable immediately so deferred destruction cannot process a second ESC.
+                menu.enabled = false;
+                Destroy(menu.gameObject);
+            }
+        }
+        if (existing != null)
+        {
+            existing.gameObject.SetActive(true);
+            existing.enabled = true;
+            return;
+        }
         AlaalaPauseMenuController prefab = Resources.Load<AlaalaPauseMenuController>(ResourcePath);
         if (prefab == null)
         {
@@ -56,6 +125,12 @@ public sealed class AlaalaPauseMenuController : MonoBehaviour
     private void Awake()
     {
         EnsureEventSystem();
+        Canvas pauseCanvas = pauseRoot.GetComponentInParent<Canvas>(true);
+        if (pauseCanvas != null)
+        {
+            pauseCanvas.overrideSorting = true;
+            pauseCanvas.sortingOrder = PauseSortingOrder;
+        }
         continueButton.onClick.AddListener(CloseMenu);
         settingsButton.onClick.AddListener(ShowSettings);
         exitButton.onClick.AddListener(RequestExitToMainMenu);
@@ -82,6 +157,7 @@ public sealed class AlaalaPauseMenuController : MonoBehaviour
 
     private void Update()
     {
+        if (gameObject.scene != SceneManager.GetActiveScene()) return;
         if (!Input.GetKeyDown(KeyCode.Escape)) return;
         if (isOpen)
         {
@@ -106,26 +182,43 @@ public sealed class AlaalaPauseMenuController : MonoBehaviour
     {
         if (StorySequenceCoordinator.IsStorySequenceActive ||
             (ConversationManager.Instance != null && ConversationManager.Instance.IsConversationActive)) return true;
-        if (GameplaySystemTutorialManager.HasInstance)
+        // Interactive teaching is not a pause blocker. Transition coverage remains protected.
+        if (Application.isLoadingLevel || !SceneManager.GetActiveScene().isLoaded ||
+            !string.IsNullOrEmpty(SpawnData.spawnPointName)) return true;
+        if (IrisTransitionController.Instance != null && IrisTransitionController.Instance.IsCovered) return true;
+        foreach (var fade in FindObjectsByType<FadeController>())
+            if (fade.isActiveAndEnabled && !fade.IncomingFadeCompleted) return true;
+        foreach (var canvas in FindObjectsByType<Canvas>())
         {
-            GameplaySystemTutorialManager tutorial = GameplaySystemTutorialManager.Instance;
-            if (tutorial.HasActiveTutorial || tutorial.IsPresentationVisible) return true;
+            if (!canvas.enabled || canvas.sortingOrder < 32100) continue;
+            var groups = canvas.GetComponentsInChildren<CanvasGroup>(true);
+            if (groups.Length > 0)
+            {
+                foreach (var group in groups)
+                    if (group.gameObject.activeInHierarchy && group.alpha > 0.01f) return true;
+                continue;
+            }
+            // The iris has no CanvasGroup and enables its Canvas throughout closing/opening.
+            foreach (var graphic in canvas.GetComponentsInChildren<Graphic>())
+                if (graphic.enabled && graphic.gameObject.activeInHierarchy && graphic.color.a > 0.01f) return true;
         }
         return false;
     }
 
     public void OpenMenu()
     {
-        if (isOpen || IsPauseBlocked()) return;
+        if (gameObject.scene != SceneManager.GetActiveScene() || isOpen || IsPauseBlocked()) return;
         previousTimeScale = Time.timeScale;
         previousCursorLock = Cursor.lockState;
         previousCursorVisible = Cursor.visible;
+        previousSelection = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         isOpen = true;
         pauseRoot.SetActive(true);
         ShowMainPanel();
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
     }
 
     public void CloseMenu()
@@ -137,6 +230,10 @@ public sealed class AlaalaPauseMenuController : MonoBehaviour
         Time.timeScale = previousTimeScale;
         Cursor.lockState = previousCursorLock;
         Cursor.visible = previousCursorVisible;
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(previousSelection != null && previousSelection.activeInHierarchy
+                ? previousSelection : null);
+        previousSelection = null;
     }
 
     public void RequestExitToMainMenu()

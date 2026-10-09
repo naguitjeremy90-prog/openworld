@@ -11,6 +11,40 @@ public class FadeController : MonoBehaviour
     [SerializeField] private bool fadeInOnStart = true;
     private bool holdBlackForSequence;
 
+    public bool IncomingFadeCompleted { get; private set; }
+    private int fadeVersion;
+    private readonly System.Collections.Generic.HashSet<int> activeFades =
+        new System.Collections.Generic.HashSet<int>();
+
+    private int BeginObservedFade()
+    {
+        IncomingFadeCompleted = false;
+        int version = ++fadeVersion;
+        activeFades.Add(version);
+        return version;
+    }
+
+    private void FinishObservedFade(int version, bool completed)
+    {
+        activeFades.Remove(version);
+        if (version == fadeVersion)
+            IncomingFadeCompleted = completed && activeFades.Count == 0 && isActiveAndEnabled;
+    }
+
+    private void InvalidateFadeReadiness()
+    {
+        IncomingFadeCompleted = false;
+        ++fadeVersion;
+    }
+
+    private void OnDisable()
+    {
+        InvalidateFadeReadiness();
+        activeFades.Clear();
+    }
+
+    private void OnDestroy() => OnDisable();
+
     private void Awake()
     {
         Canvas canvas = fadeCanvasGroup != null
@@ -41,6 +75,7 @@ public class FadeController : MonoBehaviour
     /// <summary>Keeps the existing fade canvas black for a scene-local authored sequence.</summary>
     public void HoldBlackForSequence()
     {
+        InvalidateFadeReadiness();
         holdBlackForSequence = true;
         if (fadeCanvasGroup != null)
             fadeCanvasGroup.alpha = 1f;
@@ -48,65 +83,94 @@ public class FadeController : MonoBehaviour
 
     public IEnumerator FadeToBlack()
     {
-        if (fadeCanvasGroup == null)
-            yield break;
-
-        float time = 0f;
-
-        while (time < fadeDuration)
+        int version = BeginObservedFade();
+        bool completed = false;
+        try
         {
-            time += Time.deltaTime;
+            if (fadeCanvasGroup == null)
+                yield break;
 
-            fadeCanvasGroup.alpha = Mathf.Lerp(
-                0f,
-                1f,
-                time / fadeDuration
-            );
+            float time = 0f;
 
-            yield return null;
+            while (time < fadeDuration)
+            {
+                time += Time.deltaTime;
+
+                fadeCanvasGroup.alpha = Mathf.Lerp(
+                    0f,
+                    1f,
+                    time / fadeDuration
+                );
+
+                yield return null;
+            }
+
+            fadeCanvasGroup.alpha = 1f;
         }
-
-        fadeCanvasGroup.alpha = 1f;
+        finally
+        {
+            FinishObservedFade(version, completed);
+        }
     }
 
     public IEnumerator FadeFromBlack()
     {
-        if (fadeCanvasGroup == null)
-            yield break;
-
-        float time = 0f;
-
-        while (time < fadeDuration)
+        int version = BeginObservedFade();
+        bool completed = false;
+        try
         {
-            time += Time.deltaTime;
+            if (fadeCanvasGroup == null)
+                yield break;
 
-            fadeCanvasGroup.alpha = Mathf.Lerp(
-                1f,
-                0f,
-                time / fadeDuration
-            );
+            float time = 0f;
 
-            yield return null;
+            while (time < fadeDuration)
+            {
+                time += Time.deltaTime;
+
+                fadeCanvasGroup.alpha = Mathf.Lerp(
+                    1f,
+                    0f,
+                    time / fadeDuration
+                );
+
+                yield return null;
+            }
+
+            fadeCanvasGroup.alpha = 0f;
+            completed = true;
         }
-
-        fadeCanvasGroup.alpha = 0f;
+        finally
+        {
+            FinishObservedFade(version, completed);
+        }
     }
 
     public IEnumerator FadeFromBlack(float duration)
     {
-        if (fadeCanvasGroup == null)
-            yield break;
-
-        fadeCanvasGroup.alpha = 1f;
-        float time = 0f;
-
-        while (time < duration)
+        int version = BeginObservedFade();
+        bool completed = false;
+        try
         {
-            time += Time.deltaTime;
-            fadeCanvasGroup.alpha = Mathf.Lerp(1f, 0f, time / duration);
-            yield return null;
-        }
+            if (fadeCanvasGroup == null)
+                yield break;
 
-        fadeCanvasGroup.alpha = 0f;
+            fadeCanvasGroup.alpha = 1f;
+            float time = 0f;
+
+            while (time < duration)
+            {
+                time += Time.deltaTime;
+                fadeCanvasGroup.alpha = Mathf.Lerp(1f, 0f, time / duration);
+                yield return null;
+            }
+
+            fadeCanvasGroup.alpha = 0f;
+            completed = true;
+        }
+        finally
+        {
+            FinishObservedFade(version, completed);
+        }
     }
 }
