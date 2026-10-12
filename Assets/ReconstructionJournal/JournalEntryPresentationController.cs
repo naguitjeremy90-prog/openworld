@@ -17,18 +17,23 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
     [SerializeField, Min(0f)] private float holdDuration = 0.4f;
     [SerializeField, Min(0f)] private float notificationFadeDuration = 0.2f;
 
+    [Header("Presentation")]
+    [SerializeField] private bool enableDiscoveryPopup = false;
+    [SerializeField] private Sprite notificationBackgroundSprite;
+
     private readonly Queue<PresentationRequest> requests = new Queue<PresentationRequest>();
     private readonly HashSet<JournalEntryUnlockedInfo> queuedKeys = new HashSet<JournalEntryUnlockedInfo>();
     private JournalEntryNotificationView notificationView;
     private Coroutine presentationRoutine;
+    private bool disabledPresentationCleared;
     private InventoryUI inventoryUI;
     private ClarityDocumentViewer documentViewer;
     private CameraFocusManager cameraFocusManager;
     private string resolvedScenePath = string.Empty;
 
     public static JournalEntryPresentationController Instance => instance;
-    public int PendingCount => requests.Count;
-    public bool IsPresenting => presentationRoutine != null;
+    public int PendingCount => enableDiscoveryPopup ? requests.Count : 0;
+    public bool IsPresenting => enableDiscoveryPopup && presentationRoutine != null;
     public JournalEntryUnlockedInfo LastCompletedPresentation { get; private set; }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -82,6 +87,17 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
 
     private void Update()
     {
+        if (!enableDiscoveryPopup)
+        {
+            if (!disabledPresentationCleared)
+            {
+                ClearDisabledPresentation();
+                disabledPresentationCleared = true;
+            }
+            return;
+        }
+
+        disabledPresentationCleared = false;
         ResolveSceneReferencesIfNeeded();
         if (presentationRoutine == null && requests.Count > 0 && IsPresentationSafe())
             presentationRoutine = StartCoroutine(PresentFrontRequest());
@@ -89,9 +105,31 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
 
     private void Enqueue(JournalEntryUnlockedInfo entry)
     {
+        if (!enableDiscoveryPopup)
+        {
+            if (!disabledPresentationCleared)
+            {
+                ClearDisabledPresentation();
+                disabledPresentationCleared = true;
+            }
+            return;
+        }
+
+        disabledPresentationCleared = false;
         if (string.IsNullOrWhiteSpace(entry.EntryID) || !queuedKeys.Add(entry)) return;
         requests.Enqueue(new PresentationRequest(entry));
         Debug.Log("Journal presentation queued: " + entry.Category + " / " + entry.EntryID + " / " + entry.DisplayTitle + ".");
+    }
+
+    private void ClearDisabledPresentation()
+    {
+        if (presentationRoutine != null || requests.Count > 0)
+            StopAllCoroutines();
+
+        presentationRoutine = null;
+        requests.Clear();
+        queuedKeys.Clear();
+        notificationView?.SetVisibleAmount(0f);
     }
 
     private IEnumerator PresentFrontRequest()
@@ -207,13 +245,17 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
         panel.anchorMin = panel.anchorMax = new Vector2(0.5f, 1f);
         panel.pivot = new Vector2(0.5f, 1f);
         panel.anchoredPosition = new Vector2(0f, -48f);
-        panel.sizeDelta = new Vector2(560f, 142f);
+        panel.sizeDelta = new Vector2(560f, 138f);
         Image background = panelObject.GetComponent<Image>();
-        background.color = new Color(0.105f, 0.09f, 0.075f, 0.94f);
+        background.sprite = notificationBackgroundSprite;
+        background.type = Image.Type.Sliced;
+        background.color = notificationBackgroundSprite != null
+            ? new Color(1f, 1f, 1f, 0.92f)
+            : new Color(60f / 255f, 48f / 255f, 40f / 255f, 0.92f);
         background.raycastTarget = false;
-        TMP_Text heading = CreateText(panel, "Heading", -14f, 26f, 18f, FontStyles.Bold, new Color(0.78f, 0.65f, 0.43f, 1f));
-        TMP_Text category = CreateText(panel, "Category", -45f, 25f, 16f, FontStyles.Bold, new Color(0.88f, 0.8f, 0.64f, 1f));
-        TMP_Text title = CreateText(panel, "Title", -75f, 51f, 25f, FontStyles.Normal, new Color(0.96f, 0.92f, 0.82f, 1f));
+        TMP_Text heading = CreateText(panel, "Heading", -14f, 22f, 17f, FontStyles.Bold, new Color(182f / 255f, 155f / 255f, 112f / 255f, 1f));
+        TMP_Text category = CreateText(panel, "Category", -40f, 20f, 15f, FontStyles.Normal, new Color(213f / 255f, 199f / 255f, 175f / 255f, 1f));
+        TMP_Text title = CreateText(panel, "Title", -66f, 58f, 24f, FontStyles.Normal, new Color(245f / 255f, 232f / 255f, 212f / 255f, 1f));
         notificationView = panelObject.AddComponent<JournalEntryNotificationView>();
         notificationView.Configure(group, heading, category, title);
     }
@@ -232,7 +274,8 @@ public sealed class JournalEntryPresentationController : MonoBehaviour
         text.fontSize = fontSize;
         text.fontStyle = fontStyle;
         text.color = color;
-        text.alignment = TextAlignmentOptions.Left;
+        text.alignment = TextAlignmentOptions.TopLeft;
+        text.textWrappingMode = TextWrappingModes.Normal;
         text.overflowMode = TextOverflowModes.Ellipsis;
         text.raycastTarget = false;
         return text;

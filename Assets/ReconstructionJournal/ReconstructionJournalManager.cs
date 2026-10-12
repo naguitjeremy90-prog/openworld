@@ -8,6 +8,7 @@ public class ReconstructionJournalManager : MonoBehaviour
 {
     private const string FirstDreamObservationId = "ang_panaginip";
     private const int FullInterfaceSortingOrder = 300;
+    private const int WindowSortingOrder = 301;
     private const string JournalAudioConfigResourcePath = "JournalAudioConfig";
 
     public static ReconstructionJournalManager Instance { get; private set; }
@@ -70,6 +71,9 @@ public class ReconstructionJournalManager : MonoBehaviour
     private GameplaySystemTutorialAnchor tutorialAnchor;
     private JournalAudioConfig journalAudioConfig;
     private AudioClip lastTabSwitchClip;
+    private readonly JournalDiscoveryPulse[] categoryUnreadBadges = new JournalDiscoveryPulse[4];
+    private GameObject categoryBadgePrefab;
+    private float categoryBadgeRefreshElapsed;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetNewEntryEvent()
@@ -90,9 +94,9 @@ public class ReconstructionJournalManager : MonoBehaviour
         journalAudioConfig = Resources.Load<JournalAudioConfig>(JournalAudioConfigResourcePath);
         ConfigureJournalAudioSource();
 
-        Canvas journalCanvas = journalWindow != null
-            ? journalWindow.GetComponentInParent<Canvas>()
-            : GetComponentInParent<Canvas>();
+        Canvas journalCanvas = journalWindow != null && journalWindow.transform.parent != null
+            ? journalWindow.transform.parent.GetComponentInParent<Canvas>(true)
+            : GetComponentInParent<Canvas>(true);
         if (journalCanvas != null)
         {
             // The opened journal is a full system interface. Keep it above all
@@ -100,6 +104,8 @@ public class ReconstructionJournalManager : MonoBehaviour
             journalCanvas.overrideSorting = true;
             journalCanvas.sortingOrder = FullInterfaceSortingOrder;
         }
+
+        ConfigureWindowCanvas();
 
         if (openButton != null)
         {
@@ -117,8 +123,7 @@ public class ReconstructionJournalManager : MonoBehaviour
                 entryPulse = openButton.gameObject.AddComponent<JournalHUDEntryPulse>();
             entryPulse.Configure(openButton.transform as RectTransform);
             JournalHUDEntryAttention.Instance?.Configure(
-                this, openButton.transform as RectTransform, entryPulse,
-                journalSparkleOffset, journalSparkleScale);
+                this, openButton.transform as RectTransform);
 
             tutorialAnchor = GameplaySystemTutorialAnchor.AttachTo(
                 openButton.gameObject,
@@ -133,11 +138,33 @@ public class ReconstructionJournalManager : MonoBehaviour
             reflectionsTabButton);
 
         GameplaySystemState.UnlockChanged += HandleSystemUnlockChanged;
+        SessionStoryState.FlagChanged += HandleJournalReadStateChanged;
         SubscribeToEntryUnlocks();
 
         AddButtonListeners();
+        ConfigureCategoryUnreadBadges();
         ShowTab(JournalTab.Observations, playTabSwitchSound: false);
         CloseJournal();
+    }
+
+    private void ConfigureWindowCanvas()
+    {
+        if (journalWindow == null)
+            return;
+
+        // A nested Canvas inherits its parent's render mode without changing layout.
+        Canvas windowCanvas = journalWindow.GetComponent<Canvas>();
+        if (windowCanvas == null)
+            windowCanvas = journalWindow.AddComponent<Canvas>();
+        windowCanvas.enabled = true;
+        windowCanvas.overrideSorting = true;
+        windowCanvas.sortingLayerName = "Default";
+        windowCanvas.sortingOrder = WindowSortingOrder;
+
+        GraphicRaycaster raycaster = journalWindow.GetComponent<GraphicRaycaster>();
+        if (raycaster == null)
+            raycaster = journalWindow.AddComponent<GraphicRaycaster>();
+        raycaster.enabled = true;
     }
 
     private void OnDestroy()
@@ -146,6 +173,7 @@ public class ReconstructionJournalManager : MonoBehaviour
             unlockReveal.RevealCompleted -= HandleUnlockRevealCompleted;
 
         GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
+        SessionStoryState.FlagChanged -= HandleJournalReadStateChanged;
         UnsubscribeFromEntryUnlocks();
         RemoveButtonListeners();
 
@@ -156,7 +184,23 @@ public class ReconstructionJournalManager : MonoBehaviour
     private void Update()
     {
         if (StorySequenceCoordinator.IsStorySequenceActive && IsOpen)
+        {
             CloseJournal();
+            return;
+        }
+
+        if (!IsOpen)
+        {
+            categoryBadgeRefreshElapsed = 0f;
+            return;
+        }
+
+        categoryBadgeRefreshElapsed += Time.unscaledDeltaTime;
+        if (categoryBadgeRefreshElapsed >= 0.25f)
+        {
+            categoryBadgeRefreshElapsed = 0f;
+            RefreshCategoryUnreadBadges();
+        }
     }
 
 #if UNITY_EDITOR
@@ -219,6 +263,7 @@ public class ReconstructionJournalManager : MonoBehaviour
         if (journalWindow != null)
             journalWindow.SetActive(true);
 
+        RefreshCategoryUnreadBadges();
         JournalHUDEntryAttention.Instance?.JournalOpened();
 
         OpenObservationsTab(playTabSwitchSound: !wasClosed);
@@ -235,6 +280,8 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         if (journalWindow != null)
             journalWindow.SetActive(false);
+
+        SetCategoryBadgesVisible(false);
 
         if (wasOpen)
             PlayJournalSound(journalAudioConfig != null ? journalAudioConfig.JournalCloseSound : null);
@@ -409,6 +456,96 @@ public class ReconstructionJournalManager : MonoBehaviour
 
         if (reflectionsPanel != null)
             reflectionsPanel.SetActive(tab == JournalTab.Reflections);
+    }
+
+    private void ConfigureCategoryUnreadBadges()
+    {
+        if (categoryBadgePrefab == null)
+            categoryBadgePrefab = Resources.Load<GameObject>("UI/JournalDiscoveryBadge");
+
+        if (categoryBadgePrefab == null)
+        {
+            Debug.LogError("Journal category unread badge prefab is missing.", this);
+            return;
+        }
+
+        CreateCategoryUnreadBadge(0, observationsTabButton);
+        CreateCategoryUnreadBadge(1, peopleTabButton);
+        CreateCategoryUnreadBadge(2, fragmentsTabButton);
+        CreateCategoryUnreadBadge(3, reflectionsTabButton);
+        RefreshCategoryUnreadBadges();
+    }
+
+    private void CreateCategoryUnreadBadge(int index, Button tabButton)
+    {
+        if (tabButton == null || categoryUnreadBadges[index] != null)
+            return;
+
+        Canvas canvas = tabButton.GetComponentInParent<Canvas>();
+        RectTransform canvasRect = canvas != null ? canvas.rootCanvas.transform as RectTransform : null;
+        RectTransform buttonRect = tabButton.transform as RectTransform;
+        if (canvasRect == null || buttonRect == null)
+            return;
+
+        float x = canvasRect.InverseTransformVector(buttonRect.TransformVector(Vector3.right)).magnitude;
+        float y = canvasRect.InverseTransformVector(buttonRect.TransformVector(Vector3.up)).magnitude;
+        if (x <= 0.0001f || y <= 0.0001f)
+            return;
+
+        RectTransform compensator = new GameObject(
+            "JournalCategoryBadgeScaleCompensator",
+            typeof(RectTransform),
+            typeof(LayoutElement)).GetComponent<RectTransform>();
+        compensator.SetParent(buttonRect, false);
+        compensator.GetComponent<LayoutElement>().ignoreLayout = true;
+        compensator.anchorMin = compensator.anchorMax = Vector2.one;
+        compensator.pivot = new Vector2(0.5f, 0.5f);
+        compensator.sizeDelta = Vector2.zero;
+        compensator.localScale = new Vector3(0.5f / x, 0.5f / y, 1f);
+        compensator.anchoredPosition = new Vector2(-14f / x, -12f / y);
+
+        GameObject visual = Instantiate(categoryBadgePrefab, compensator, false);
+        visual.name = "JournalCategoryUnreadBadge";
+        Image glow = visual.transform.Find("Glow")?.GetComponent<Image>();
+        if (glow != null)
+        {
+            Color glowColor = glow.color;
+            glowColor.a *= 0.5f;
+            glow.color = glowColor;
+        }
+
+        categoryUnreadBadges[index] = visual.GetComponent<JournalDiscoveryPulse>();
+        categoryUnreadBadges[index]?.SetVisible(false);
+    }
+
+    private void HandleJournalReadStateChanged(string key, bool value)
+    {
+        if (key.StartsWith("journal.e12.", StringComparison.Ordinal) ||
+            key.StartsWith("journal_observation_unlocked:", StringComparison.Ordinal) ||
+            key.StartsWith("journal_person_unlocked:", StringComparison.Ordinal) ||
+            key.StartsWith("journal_fragment_unlocked:", StringComparison.Ordinal) ||
+            key.StartsWith("journal_reflection_unlocked:", StringComparison.Ordinal))
+            RefreshCategoryUnreadBadges();
+    }
+
+    private void RefreshCategoryUnreadBadges()
+    {
+        for (int i = 0; i < categoryUnreadBadges.Length; i++)
+        {
+            JournalDiscoveryPulse badge = categoryUnreadBadges[i];
+            if (badge != null)
+                badge.SetVisible(IsOpen && JournalEntryReadState.GetUnreadCount((JournalEntryCategory)i) > 0);
+        }
+    }
+
+    private void SetCategoryBadgesVisible(bool visible)
+    {
+        for (int i = 0; i < categoryUnreadBadges.Length; i++)
+        {
+            JournalDiscoveryPulse badge = categoryUnreadBadges[i];
+            if (badge != null)
+                badge.SetVisible(visible && JournalEntryReadState.GetUnreadCount((JournalEntryCategory)i) > 0);
+        }
     }
 
     private void ConfigureJournalAudioSource()

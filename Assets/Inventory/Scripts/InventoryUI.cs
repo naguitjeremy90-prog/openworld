@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public sealed class InventoryUI : MonoBehaviour
 {
     private const int FullInterfaceSortingOrder = 300;
+    private const int WindowSortingOrder = 301;
+    private const int SlotsPerPage = 20;
     private const string InventoryAudioConfigResourcePath = "InventoryAudioConfig";
     private enum InventoryFilter
     {
@@ -27,6 +29,15 @@ public sealed class InventoryUI : MonoBehaviour
     [SerializeField] private Transform slotContainer;
     [SerializeField] private InventorySlotUI slotPrefab;
     [SerializeField, Min(0)] private int visibleSlotCount = 8;
+
+    [Header("Paged Presentation")]
+    [SerializeField] private bool enablePagination;
+    [SerializeField] private GameObject pageControlsRoot;
+    [SerializeField] private Button previousPageButton;
+    [SerializeField] private Button nextPageButton;
+    [SerializeField] private TMP_Text pageNumberText;
+
+    private int currentPageIndex;
 
     [Header("Filters")]
     [SerializeField] private Button allTabButton;
@@ -150,6 +161,15 @@ public sealed class InventoryUI : MonoBehaviour
         if (string.IsNullOrEmpty(itemID))
             return false;
 
+        // Tutorial requests must reveal an owned item even when it is on another page.
+        if (enablePagination && IsOpen)
+        {
+            int itemIndex = filteredItems.FindIndex(item => item != null &&
+                string.Equals(item.ItemID, itemID, System.StringComparison.OrdinalIgnoreCase));
+            if (itemIndex >= 0 && currentPageIndex != itemIndex / SlotsPerPage)
+                SelectPage(itemIndex / SlotsPerPage);
+        }
+
         for (int i = 0; i < spawnedSlots.Count; i++)
         {
             InventorySlotUI slot = spawnedSlots[i];
@@ -187,10 +207,15 @@ public sealed class InventoryUI : MonoBehaviour
         if (inventoryRoot == null && canvasGroup != null)
             inventoryRoot = canvasGroup.gameObject;
 
+        ConfigureWindowCanvas();
+
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseInventory);
 
         AddFilterListeners();
+        previousPageButton?.onClick.AddListener(ShowPreviousPage);
+        nextPageButton?.onClick.AddListener(ShowNextPage);
+        UpdatePageControls();
         UpdateTabVisuals();
 
         SetVisibleImmediately(false);
@@ -202,6 +227,26 @@ public sealed class InventoryUI : MonoBehaviour
         target.Configure(canvasGroup, inventoryRoot);
 
         ResolveInventoryHUD();
+    }
+
+    private void ConfigureWindowCanvas()
+    {
+        if (inventoryRoot == null)
+            return;
+
+        // A nested Canvas inherits its parent's render mode without changing layout.
+        Canvas windowCanvas = inventoryRoot.GetComponent<Canvas>();
+        if (windowCanvas == null)
+            windowCanvas = inventoryRoot.AddComponent<Canvas>();
+        windowCanvas.enabled = true;
+        windowCanvas.overrideSorting = true;
+        windowCanvas.sortingLayerName = "Default";
+        windowCanvas.sortingOrder = WindowSortingOrder;
+
+        GraphicRaycaster raycaster = inventoryRoot.GetComponent<GraphicRaycaster>();
+        if (raycaster == null)
+            raycaster = inventoryRoot.AddComponent<GraphicRaycaster>();
+        raycaster.enabled = true;
     }
 
     private void ResolveInventoryHUD()
@@ -228,7 +273,8 @@ public sealed class InventoryUI : MonoBehaviour
             inventoryReveal = icon.GetComponent<GameplayHUDUnlockReveal>();
             if (inventoryReveal == null)
                 inventoryReveal = icon.AddComponent<GameplayHUDUnlockReveal>();
-            inventoryReveal.Configure(iconGroup);
+            iconTarget.GetNormalPresentationState(out float normalAlpha, out bool normalInteractable, out bool normalBlocksRaycasts);
+            inventoryReveal.ConfigureNormalState(iconGroup, normalAlpha, normalInteractable, normalBlocksRaycasts);
             GameplaySystemTutorialAnchor.AttachTo(icon, GameplaySystemId.Inventory);
             if (isActiveAndEnabled)
             {
@@ -288,6 +334,8 @@ public sealed class InventoryUI : MonoBehaviour
             closeButton.onClick.RemoveListener(CloseInventory);
 
         RemoveFilterListeners();
+        previousPageButton?.onClick.RemoveListener(ShowPreviousPage);
+        nextPageButton?.onClick.RemoveListener(ShowNextPage);
     }
 
     private void Update()
@@ -491,7 +539,12 @@ public sealed class InventoryUI : MonoBehaviour
         ClearSlots();
 
         if (boundManager == null || slotContainer == null || slotPrefab == null)
+        {
+            filteredItems.Clear();
+            currentPageIndex = 0;
+            UpdatePageControls();
             return;
+        }
 
         IReadOnlyList<InventoryItemData> ownedItems = boundManager.GetOwnedItems();
         filteredItems.Clear();
@@ -503,15 +556,26 @@ public sealed class InventoryUI : MonoBehaviour
                 filteredItems.Add(item);
         }
 
-        int displayedSlotCount = Mathf.Max(visibleSlotCount, filteredItems.Count);
+        currentPageIndex = enablePagination
+            ? Mathf.Clamp(currentPageIndex, 0, GetPageCount() - 1)
+            : 0;
+        int firstItemIndex = enablePagination ? currentPageIndex * SlotsPerPage : 0;
+        int displayedSlotCount = enablePagination
+            ? SlotsPerPage
+            : Mathf.Max(visibleSlotCount, filteredItems.Count);
 
         for (int i = 0; i < displayedSlotCount; i++)
         {
-            InventoryItemData item = i < filteredItems.Count ? filteredItems[i] : null;
+            int itemIndex = firstItemIndex + i;
+            InventoryItemData item = itemIndex < filteredItems.Count ? filteredItems[itemIndex] : null;
             InventorySlotUI slot = Instantiate(slotPrefab, slotContainer);
             slot.Setup(item, SelectItem);
             spawnedSlots.Add(slot);
         }
+
+        UpdatePageControls();
+        if (enablePagination && slotContainer is RectTransform slotRect)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(slotRect);
 
         if (selectedItem != null &&
             (!boundManager.HasItem(selectedItem.ItemID) ||
@@ -519,6 +583,49 @@ public sealed class InventoryUI : MonoBehaviour
         {
             ClearDetails();
         }
+    }
+
+    private int GetPageCount()
+    {
+        return Mathf.Max(1, filteredItems.Count / SlotsPerPage +
+            (filteredItems.Count % SlotsPerPage == 0 ? 0 : 1));
+    }
+
+    public void ShowPreviousPage()
+    {
+        SelectPage(currentPageIndex - 1);
+    }
+
+    public void ShowNextPage()
+    {
+        SelectPage(currentPageIndex + 1);
+    }
+
+    private void SelectPage(int pageIndex)
+    {
+        if (!enablePagination || !IsOpen)
+            return;
+
+        int validPageIndex = Mathf.Clamp(pageIndex, 0, GetPageCount() - 1);
+        if (validPageIndex == currentPageIndex)
+            return;
+
+        currentPageIndex = validPageIndex;
+        Refresh();
+    }
+
+    private void UpdatePageControls()
+    {
+        int pageCount = GetPageCount();
+        bool showControls = enablePagination && pageCount > 1;
+        if (pageControlsRoot != null)
+            pageControlsRoot.SetActive(showControls);
+        if (previousPageButton != null)
+            previousPageButton.interactable = showControls && currentPageIndex > 0;
+        if (nextPageButton != null)
+            nextPageButton.interactable = showControls && currentPageIndex < pageCount - 1;
+        if (pageNumberText != null)
+            pageNumberText.text = $"{currentPageIndex + 1} / {pageCount}";
     }
 
     public void ShowAllItems()
@@ -596,7 +703,12 @@ public sealed class InventoryUI : MonoBehaviour
         for (int i = 0; i < spawnedSlots.Count; i++)
         {
             if (spawnedSlots[i] != null)
+            {
+                // Destroy is deferred; exclude the old page from this frame's grid layout.
+                if (enablePagination)
+                    spawnedSlots[i].gameObject.SetActive(false);
                 Destroy(spawnedSlots[i].gameObject);
+            }
         }
 
         spawnedSlots.Clear();
@@ -612,6 +724,8 @@ public sealed class InventoryUI : MonoBehaviour
     {
         bool filterChanged = filter != currentFilter;
         currentFilter = filter;
+        if (filterChanged)
+            currentPageIndex = 0;
         UpdateTabVisuals();
 
         if (filterChanged && IsOpen)

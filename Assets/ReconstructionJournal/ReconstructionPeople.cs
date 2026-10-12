@@ -79,6 +79,7 @@ public class ReconstructionPeople : MonoBehaviour
             return false;
 
         currentStages[personID] = 0;
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.People, personID);
         SessionStoryState.SetFlag(UnlockFlagPrefix + personID, true);
         SessionStoryState.SetInt(StageValuePrefix + personID, 0);
         RefreshList();
@@ -242,8 +243,18 @@ public class ReconstructionPeople : MonoBehaviour
         if (buttonText != null)
             buttonText.text = person.characterName;
 
+        JournalEntryDiscoveryVisual discoveryVisual = newButton.GetComponent<JournalEntryDiscoveryVisual>();
+        discoveryVisual?.Bind(JournalEntryCategory.People, person.personID);
+
         newButton.onClick.RemoveAllListeners();
-        newButton.onClick.AddListener(() => ShowPerson(person));
+        newButton.onClick.AddListener(() =>
+        {
+            bool wasUnread = JournalEntryReadState.IsUnread(JournalEntryCategory.People, person.personID);
+            ShowPerson(person);
+            bool markedRead = JournalEntryReadState.MarkRead(JournalEntryCategory.People, person.personID);
+            if (wasUnread && markedRead)
+                discoveryVisual?.AcknowledgeFirstRead();
+        });
         spawnedListButtons.Add(newButton.gameObject);
     }
 

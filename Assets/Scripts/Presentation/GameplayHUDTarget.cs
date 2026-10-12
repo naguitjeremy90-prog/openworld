@@ -88,6 +88,22 @@ public sealed class GameplayHUDTarget : MonoBehaviour
             ApplyPresentationState(true, false);
     }
 
+    internal void GetNormalPresentationState(out float alpha, out bool interactable, out bool blocksRaycasts)
+    {
+        ResolveReferences();
+        if (presentationHidden)
+        {
+            alpha = previousAlpha;
+            interactable = previousInteractable;
+            blocksRaycasts = previousBlocksRaycasts;
+            return;
+        }
+
+        alpha = canvasGroup != null ? canvasGroup.alpha : 1f;
+        interactable = canvasGroup != null && canvasGroup.interactable;
+        blocksRaycasts = canvasGroup != null && canvasGroup.blocksRaycasts;
+    }
+
     internal void ApplyPresentationState(bool hidden, bool animate)
     {
         ResolveReferences();

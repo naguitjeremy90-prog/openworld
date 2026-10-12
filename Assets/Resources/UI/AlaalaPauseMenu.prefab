@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7565155533552404403}
   - component: {fileID: 1023348415824236177}
+  - component: {fileID: 1363086221988385594}
+  - component: {fileID: 436699991969451456}
   m_Layer: 0
   m_Name: AlaalaPauseMenu
   m_TagString: Untagged
@@ -60,6 +62,119 @@ MonoBehaviour:
   fullscreenToggle: {fileID: 3636293093010421131}
   resolutionDropdown: {fileID: 8306637219232672284}
   backButton: {fileID: 1166973207201360261}
+--- !u!82 &1363086221988385594
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119093193917914325}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &436699991969451456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119093193917914325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a3f8a6bc6ba0a7478ad992497bbe0b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneMenuUISoundPlayer
+  hoverClip: {fileID: 8300000, guid: b43d102aac6b145468dcaa94a5cccae1, type: 3}
+  clickClip: {fileID: 8300000, guid: 92d9128629e9e7a45afd47f4eff2c461, type: 3}
+  hoverVolume: 0.753
+  clickVolume: 0.809
 --- !u!1 &318434024040952663
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,6 +1106,7 @@ GameObject:
   - component: {fileID: 6132286715970030401}
   - component: {fileID: 5664002654556618201}
   - component: {fileID: 3510583476683664327}
+  - component: {fileID: 930898554542162126}
   m_Layer: 0
   m_Name: Settings
   m_TagString: Untagged
@@ -1100,6 +1216,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &930898554542162126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023489422777456546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bde7df9dd3e07498883a05ea7e0cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneMenuUIButtonSound
+  soundPlayer: {fileID: 0}
+  persistClickThroughSceneLoad: 0
+  selectWhenEnabled: 0
+  suppressInitialSelectionSound: 0
 --- !u!1 &2160719902513298521
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,6 +1541,7 @@ GameObject:
   - component: {fileID: 7434085890097679943}
   - component: {fileID: 3604970409009169772}
   - component: {fileID: 1166973207201360261}
+  - component: {fileID: 5853929857909212073}
   m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
@@ -1518,6 +1651,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5853929857909212073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2453400195910361642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bde7df9dd3e07498883a05ea7e0cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneMenuUIButtonSound
+  soundPlayer: {fileID: 0}
+  persistClickThroughSceneLoad: 0
+  selectWhenEnabled: 1
+  suppressInitialSelectionSound: 0
 --- !u!1 &2743473366385564601
 GameObject:
   m_ObjectHideFlags: 0
@@ -2602,6 +2751,7 @@ GameObject:
   - component: {fileID: 5120401624630431033}
   - component: {fileID: 749791197466295451}
   - component: {fileID: 2383111503837545879}
+  - component: {fileID: 4638482276508326053}
   m_Layer: 0
   m_Name: Exit
   m_TagString: Untagged
@@ -2711,6 +2861,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4638482276508326053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875098230625744520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bde7df9dd3e07498883a05ea7e0cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneMenuUIButtonSound
+  soundPlayer: {fileID: 0}
+  persistClickThroughSceneLoad: 1
+  selectWhenEnabled: 0
+  suppressInitialSelectionSound: 0
 --- !u!1 &4898362155743797990
 GameObject:
   m_ObjectHideFlags: 0
@@ -4900,6 +5066,7 @@ GameObject:
   - component: {fileID: 702544399650868017}
   - component: {fileID: 900802183313347674}
   - component: {fileID: 6017754867340541353}
+  - component: {fileID: 9048743878784014705}
   m_Layer: 0
   m_Name: Continue
   m_TagString: Untagged
@@ -5009,3 +5176,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9048743878784014705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9178529284914925959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87bde7df9dd3e07498883a05ea7e0cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneMenuUIButtonSound
+  soundPlayer: {fileID: 0}
+  persistClickThroughSceneLoad: 0
+  selectWhenEnabled: 1
+  suppressInitialSelectionSound: 1

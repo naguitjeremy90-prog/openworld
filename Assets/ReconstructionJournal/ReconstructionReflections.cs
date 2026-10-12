@@ -166,6 +166,7 @@ public class ReconstructionReflections : MonoBehaviour
         if (!unlockedReflectionIDs.Add(reflectionID))
             return false;
 
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.Reflection, reflectionID);
         SessionStoryState.SetFlag(UnlockFlagPrefix + reflectionID, true);
         RefreshList();
         EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
@@ -765,8 +766,18 @@ public class ReconstructionReflections : MonoBehaviour
         if (buttonText != null)
             buttonText.text = reflection.title;
 
+        JournalEntryDiscoveryVisual discoveryVisual = newButton.GetComponent<JournalEntryDiscoveryVisual>();
+        discoveryVisual?.Bind(JournalEntryCategory.Reflection, reflection.reflectionID);
+
         newButton.onClick.RemoveAllListeners();
-        newButton.onClick.AddListener(() => ShowReflection(reflection));
+        newButton.onClick.AddListener(() =>
+        {
+            bool wasUnread = JournalEntryReadState.IsUnread(JournalEntryCategory.Reflection, reflection.reflectionID);
+            ShowReflection(reflection);
+            bool markedRead = JournalEntryReadState.MarkRead(JournalEntryCategory.Reflection, reflection.reflectionID);
+            if (wasUnread && markedRead)
+                discoveryVisual?.AcknowledgeFirstRead();
+        });
         spawnedListButtons.Add(newButton.gameObject);
     }
 

@@ -80,6 +80,7 @@ public class ReconstructionFragments : MonoBehaviour
             return false;
 
         currentStages[fragmentID] = 0;
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.Fragment, fragmentID);
         SessionStoryState.SetFlag(UnlockFlagPrefix + fragmentID, true);
         SessionStoryState.SetInt(StageValuePrefix + fragmentID, 0);
         RefreshList();
@@ -247,8 +248,18 @@ public class ReconstructionFragments : MonoBehaviour
         if (buttonText != null)
             buttonText.text = fragment.title;
 
+        JournalEntryDiscoveryVisual discoveryVisual = newButton.GetComponent<JournalEntryDiscoveryVisual>();
+        discoveryVisual?.Bind(JournalEntryCategory.Fragment, fragment.fragmentID);
+
         newButton.onClick.RemoveAllListeners();
-        newButton.onClick.AddListener(() => ShowFragment(fragment));
+        newButton.onClick.AddListener(() =>
+        {
+            bool wasUnread = JournalEntryReadState.IsUnread(JournalEntryCategory.Fragment, fragment.fragmentID);
+            ShowFragment(fragment);
+            bool markedRead = JournalEntryReadState.MarkRead(JournalEntryCategory.Fragment, fragment.fragmentID);
+            if (wasUnread && markedRead)
+                discoveryVisual?.AcknowledgeFirstRead();
+        });
         spawnedListButtons.Add(newButton.gameObject);
     }
 

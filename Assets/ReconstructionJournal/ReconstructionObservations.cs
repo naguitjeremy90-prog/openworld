@@ -69,6 +69,7 @@ public class ReconstructionObservations : MonoBehaviour
         if (!unlockedObservationIDs.Add(observationID))
             return false;
 
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.Observation, observationID);
         SessionStoryState.SetFlag(UnlockFlagPrefix + observationID, true);
         RefreshList();
         EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
@@ -171,8 +172,18 @@ public class ReconstructionObservations : MonoBehaviour
         if (buttonText != null)
             buttonText.text = observation.title;
 
+        JournalEntryDiscoveryVisual discoveryVisual = newButton.GetComponent<JournalEntryDiscoveryVisual>();
+        discoveryVisual?.Bind(JournalEntryCategory.Observation, observation.observationID);
+
         newButton.onClick.RemoveAllListeners();
-        newButton.onClick.AddListener(() => ShowObservation(observation));
+        newButton.onClick.AddListener(() =>
+        {
+            bool wasUnread = JournalEntryReadState.IsUnread(JournalEntryCategory.Observation, observation.observationID);
+            ShowObservation(observation);
+            bool markedRead = JournalEntryReadState.MarkRead(JournalEntryCategory.Observation, observation.observationID);
+            if (wasUnread && markedRead)
+                discoveryVisual?.AcknowledgeFirstRead();
+        });
 
         spawnedListButtons.Add(newButton.gameObject);
     }

@@ -1,0 +1,2612 @@
+ALAALA
+MAIN SYSTEM SOURCE CODE
+CAPSTONE MANUSCRIPT
+
+==================================================
+
+EXTRACTION NOTE
+
+All code blocks are verbatim excerpts from the source files identified above them. A block containing selected members is a manuscript excerpt, not a complete compilable source file; omitted class members and dependencies are not replaced with generated code. Complete files are identified explicitly. Supporting state, data assets, shaders, UI prefabs, and serialized configurations are listed in the notes where they affect interpretation.
+
+==================================================
+
+1. INVENTORY SYSTEM
+
+InventoryManager owns the runtime list of unique item definitions, resolves item IDs through the configured database, and exposes add, remove, ownership, and read-only retrieval operations. InventoryItemData defines the ScriptableObject item record consumed by that manager. InventoryUI.cs is omitted because it presents and filters the stored data rather than owning item state.
+
+Main Script: InventoryManager
+Source File: Assets/Inventory/Scripts/InventoryManager.cs
+Purpose: Central runtime inventory store and item operations.
+
+MAIN SOURCE CODE (complete source file):
+InventoryManager.cs
+```csharp
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public sealed class InventoryManager : MonoBehaviour
+{
+    public static InventoryManager Instance { get; private set; }
+
+    [Header("Item Definitions")]
+    [Tooltip("Every item that must be addable by item ID. Direct AddItem(asset) calls do not require the asset to be in this list.")]
+    [SerializeField] private List<InventoryItemData> itemDatabase = new List<InventoryItemData>();
+
+    [Header("Lifetime")]
+    [Tooltip("Keep the runtime inventory when changing scenes.")]
+    [SerializeField] private bool persistAcrossScenes = true;
+
+    private readonly List<InventoryItemData> ownedItems = new List<InventoryItemData>();
+    private readonly Dictionary<string, InventoryItemData> definitionsByID =
+        new Dictionary<string, InventoryItemData>(StringComparer.Ordinal);
+
+    private IReadOnlyList<InventoryItemData> ownedItemsView;
+
+    public event Action OnInventoryChanged;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        ownedItemsView = ownedItems.AsReadOnly();
+        RebuildItemLookup();
+
+        if (persistAcrossScenes)
+            DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
+    public bool AddItem(InventoryItemData item)
+    {
+        if (!IsValidItem(item))
+            return false;
+
+        if (HasItem(item.ItemID))
+            return false;
+
+        ownedItems.Add(item);
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
+    /// <summary>Clears prior ownership without ordinary item events during New Game initialization.</summary>
+    public void ClearOwnedItemsForNewGame()
+    {
+        ownedItems.Clear();
+    }
+
+    public bool AddItem(string itemID)
+    {
+        string normalizedID = NormalizeID(itemID);
+
+        if (string.IsNullOrEmpty(normalizedID))
+        {
+            Debug.LogWarning("InventoryManager: Cannot add an item with an empty item ID.", this);
+            return false;
+        }
+
+        if (!definitionsByID.TryGetValue(normalizedID, out InventoryItemData item))
+        {
+            Debug.LogWarning($"InventoryManager: No item definition with ID '{normalizedID}' exists in the item database.", this);
+            return false;
+        }
+
+        return AddItem(item);
+    }
+
+    public bool RemoveItem(string itemID)
+    {
+        string normalizedID = NormalizeID(itemID);
+
+        for (int i = 0; i < ownedItems.Count; i++)
+        {
+            InventoryItemData item = ownedItems[i];
+            if (item != null && string.Equals(item.ItemID, normalizedID, StringComparison.Ordinal))
+            {
+                ownedItems.RemoveAt(i);
+                OnInventoryChanged?.Invoke();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool HasItem(string itemID)
+    {
+        string normalizedID = NormalizeID(itemID);
+
+        if (string.IsNullOrEmpty(normalizedID))
+            return false;
+
+        for (int i = 0; i < ownedItems.Count; i++)
+        {
+            InventoryItemData item = ownedItems[i];
+            if (item != null && string.Equals(item.ItemID, normalizedID, StringComparison.Ordinal))
+                return true;
+        }
+
+        return false;
+    }
+
+    public IReadOnlyList<InventoryItemData> GetOwnedItems()
+    {
+        return ownedItemsView;
+    }
+
+    public bool TryGetItemDefinition(string itemID, out InventoryItemData item)
+    {
+        return definitionsByID.TryGetValue(NormalizeID(itemID), out item);
+    }
+
+    private void RebuildItemLookup()
+    {
+        definitionsByID.Clear();
+
+        for (int i = 0; i < itemDatabase.Count; i++)
+        {
+            InventoryItemData item = itemDatabase[i];
+
+            if (!IsValidItem(item))
+                continue;
+
+            if (!definitionsByID.TryAdd(item.ItemID, item))
+            {
+                Debug.LogWarning(
+                    $"InventoryManager: Duplicate item ID '{item.ItemID}' in the item database. " +
+                    "Only the first definition will be used.",
+                    this);
+            }
+        }
+    }
+
+    private bool IsValidItem(InventoryItemData item)
+    {
+        if (item == null)
+        {
+            Debug.LogWarning("InventoryManager: Cannot use a missing item definition.", this);
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(item.ItemID))
+        {
+            Debug.LogWarning($"InventoryManager: Item '{item.name}' has an empty item ID.", item);
+            return false;
+        }
+
+        return true;
+    }
+
+    private static string NormalizeID(string itemID)
+    {
+        return itemID == null ? string.Empty : itemID.Trim();
+    }
+}
+```
+
+Supporting Script: InventoryItemData
+Source File: Assets/Inventory/Scripts/InventoryItemData.cs
+Purpose: Serialized item definition and category data used by the store.
+
+SOURCE CODE (complete source file):
+InventoryItemData.cs
+```csharp
+using UnityEngine;
+
+public enum ItemCategory
+{
+    General,
+    Quest,
+    Key,
+    Document
+}
+
+[CreateAssetMenu(fileName = "InventoryItem", menuName = "ALAALA/Inventory Item")]
+public sealed class InventoryItemData : ScriptableObject
+{
+    [SerializeField] private string itemID;
+    [SerializeField] private string displayName;
+    [SerializeField] private Sprite icon;
+    [SerializeField, TextArea(3, 8)] private string description;
+    [SerializeField] private ItemCategory category = ItemCategory.General;
+
+    public string ItemID => itemID;
+    public string DisplayName => displayName;
+    public Sprite Icon => icon;
+    public string Description => description;
+    public ItemCategory Category => category;
+
+    private void OnValidate()
+    {
+        itemID = itemID == null ? string.Empty : itemID.Trim();
+    }
+}
+```
+==================================================
+
+2. JOURNAL SYSTEM
+
+The current Reconstruction Journal uses a coordinating manager and separate category stores for observations, people, fragments, and reflections. The selected excerpts show category selection, discovery/unlock flow, saved state restoration, entry display, reflection submission state, and shared unread/read tracking.
+
+Main Script: ReconstructionJournalManager
+Source File: Assets/ReconstructionJournal/ReconstructionJournalManager.cs
+Purpose: Coordinates the Journal tabs, forwards category operations, and broadcasts newly unlocked entries.
+
+MAIN SOURCE CODE (selected complete methods):
+Category event routing and tab selection
+```csharp
+    private void SubscribeToEntryUnlocks()
+    {
+        if (observations != null)
+            observations.EntryUnlocked += HandleEntryUnlocked;
+        if (people != null)
+            people.EntryUnlocked += HandleEntryUnlocked;
+        if (fragments != null)
+            fragments.EntryUnlocked += HandleEntryUnlocked;
+        if (reflections != null)
+            reflections.EntryUnlocked += HandleEntryUnlocked;
+    }
+
+    private void HandleEntryUnlocked(JournalEntryUnlockedInfo entry)
+    {
+        NewEntryUnlocked?.Invoke(entry);
+    }
+
+    public void OpenObservationsTab()
+    {
+        OpenObservationsTab(playTabSwitchSound: true);
+    }
+
+    private void OpenObservationsTab(bool playTabSwitchSound)
+    {
+        ShowTab(JournalTab.Observations, playTabSwitchSound);
+
+        // NEW: Keep Observations tab raised
+        if (observationsTabVisual != null)
+            observationsTabVisual.SelectTab();
+
+        if (observations != null)
+            observations.RefreshList();
+    }
+
+    public void OpenPeopleTab()
+    {
+        ShowTab(JournalTab.People, playTabSwitchSound: true);
+
+        // NEW: Keep People tab raised
+        if (peopleTabVisual != null)
+            peopleTabVisual.SelectTab();
+
+        if (people != null)
+            people.RefreshList();
+    }
+
+    public void OpenFragmentsTab()
+    {
+        ShowTab(JournalTab.Fragments, playTabSwitchSound: true);
+
+        // NEW: Keep Fragments tab raised
+        if (fragmentsTabVisual != null)
+            fragmentsTabVisual.SelectTab();
+
+        if (fragments != null)
+            fragments.RefreshList();
+    }
+
+    public void OpenReflectionsTab()
+    {
+        ShowTab(JournalTab.Reflections, playTabSwitchSound: true);
+
+        // NEW: Keep Reflections tab raised
+        if (reflectionsTabVisual != null)
+            reflectionsTabVisual.SelectTab();
+
+        if (reflections != null)
+            reflections.RefreshList();
+    }
+
+    private void ShowTab(JournalTab tab, bool playTabSwitchSound)
+    {
+        bool tabChanged = tab != CurrentTab;
+        CurrentTab = tab;
+
+        if (tabChanged && playTabSwitchSound && IsOpen)
+            PlayRandomTabSwitchSound();
+
+        if (observationsPanel != null)
+            observationsPanel.SetActive(tab == JournalTab.Observations);
+
+        if (peoplePanel != null)
+            peoplePanel.SetActive(tab == JournalTab.People);
+
+        if (fragmentsPanel != null)
+            fragmentsPanel.SetActive(tab == JournalTab.Fragments);
+
+        if (reflectionsPanel != null)
+            reflectionsPanel.SetActive(tab == JournalTab.Reflections);
+    }
+```
+
+Category unlock and stage API
+```csharp
+    public bool UnlockObservation(string observationID)
+    {
+        if (observations == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: The Observations system is not assigned.");
+            return false;
+        }
+
+        return observations.UnlockObservation(observationID);
+    }
+
+    public bool UnlockPerson(string personID)
+    {
+        if (people == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: The People system is not assigned.");
+            return false;
+        }
+
+        return people.UnlockPerson(personID);
+    }
+
+    public bool SetPersonStage(string personID, int stageIndex)
+    {
+        if (people == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: The People system is not assigned.");
+            return false;
+        }
+
+        return people.SetPersonStage(personID, stageIndex);
+    }
+
+    public bool UnlockFragment(string fragmentID)
+    {
+        if (fragments == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: The Fragments system is not assigned.");
+            return false;
+        }
+
+        return fragments.UnlockFragment(fragmentID);
+    }
+
+    public bool SetFragmentStage(string fragmentID, int stageIndex)
+    {
+        if (fragments == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: The Fragments system is not assigned.");
+            return false;
+        }
+
+        return fragments.SetFragmentStage(fragmentID, stageIndex);
+    }
+
+    public bool UnlockReflection(string reflectionID)
+    {
+        if (reflections == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: The Reflections system is not assigned.");
+            return false;
+        }
+
+        return reflections.UnlockReflection(reflectionID);
+    }
+```
+
+Category Script: ReconstructionObservations
+Source File: Assets/ReconstructionJournal/ReconstructionObservations.cs
+Purpose: Stores discovered observation IDs, restores them from session state, and displays unlocked observation records.
+
+MAIN SOURCE CODE (selected complete methods):
+Discovery, retrieval, list refresh, and detail display
+```csharp
+    public bool UnlockObservation(string observationID)
+    {
+        ObservationData observation = FindObservation(observationID);
+
+        if (observation == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Observation ID '" +
+                observationID +
+                "' was not found.");
+            return false;
+        }
+
+        if (!unlockedObservationIDs.Add(observationID))
+            return false;
+
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.Observation, observationID);
+        SessionStoryState.SetFlag(UnlockFlagPrefix + observationID, true);
+        RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.Observation,
+            observation.observationID,
+            observation.title));
+        Debug.Log("Reconstruction Journal: Unlocked observation '" + observationID + "'.");
+        return true;
+    }
+
+    public bool IsObservationUnlocked(string observationID)
+    {
+        return unlockedObservationIDs.Contains(observationID);
+    }
+
+    public void RefreshList()
+    {
+        ClearSpawnedButtons();
+
+        foreach (ObservationData observation in allObservations)
+        {
+            if (observation == null)
+                continue;
+
+            if (!unlockedObservationIDs.Contains(observation.observationID))
+                continue;
+
+            CreateListButton(observation);
+        }
+
+        if (emptyListText != null)
+            emptyListText.gameObject.SetActive(spawnedListButtons.Count == 0);
+
+        if (selectedObservation == null ||
+            !unlockedObservationIDs.Contains(selectedObservation.observationID))
+        {
+            ClearDetails();
+        }
+    }
+
+    private ObservationData FindObservation(string observationID)
+    {
+        if (string.IsNullOrWhiteSpace(observationID))
+            return null;
+
+        return allObservations.Find(
+            observation =>
+                observation != null &&
+                observation.observationID == observationID);
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedObservationIDs.Clear();
+
+        foreach (ObservationData observation in allObservations)
+        {
+            if (observation != null &&
+                SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + observation.observationID))
+            {
+                unlockedObservationIDs.Add(observation.observationID);
+            }
+        }
+    }
+
+    private void CreateListButton(ObservationData observation)
+    {
+        if (listContent == null || listButtonPrefab == null)
+            return;
+
+        Button newButton = Instantiate(listButtonPrefab, listContent);
+        newButton.gameObject.SetActive(true);
+        newButton.name = "Observation_" + observation.observationID;
+
+        TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
+        if (buttonText != null)
+            buttonText.text = observation.title;
+
+        JournalEntryDiscoveryVisual discoveryVisual = newButton.GetComponent<JournalEntryDiscoveryVisual>();
+        discoveryVisual?.Bind(JournalEntryCategory.Observation, observation.observationID);
+
+        newButton.onClick.RemoveAllListeners();
+        newButton.onClick.AddListener(() =>
+        {
+            bool wasUnread = JournalEntryReadState.IsUnread(JournalEntryCategory.Observation, observation.observationID);
+            ShowObservation(observation);
+            bool markedRead = JournalEntryReadState.MarkRead(JournalEntryCategory.Observation, observation.observationID);
+            if (wasUnread && markedRead)
+                discoveryVisual?.AcknowledgeFirstRead();
+        });
+
+        spawnedListButtons.Add(newButton.gameObject);
+    }
+
+    private void ShowObservation(ObservationData observation)
+    {
+        selectedObservation = observation;
+
+        if (detailTitleText != null)
+            detailTitleText.text = observation.title;
+
+        if (detailContextText != null)
+            detailContextText.text = observation.GetContextLabel();
+
+        if (detailObservationText != null)
+            detailObservationText.text = observation.observationText;
+    }
+```
+
+Category Script: ReconstructionPeople
+Source File: Assets/ReconstructionJournal/ReconstructionPeople.cs
+Purpose: Tracks discovered people and their progressive description stages, then restores and presents the current record.
+
+MAIN SOURCE CODE (selected complete methods):
+Unlock, stage progression, retrieval, restoration, and display
+```csharp
+    public bool UnlockPerson(string personID)
+    {
+        PersonData person = FindPerson(personID);
+
+        if (person == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Person ID '" + personID + "' was not found.");
+            return false;
+        }
+
+        if (!unlockedPersonIDs.Add(personID))
+            return false;
+
+        currentStages[personID] = 0;
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.People, personID);
+        SessionStoryState.SetFlag(UnlockFlagPrefix + personID, true);
+        SessionStoryState.SetInt(StageValuePrefix + personID, 0);
+        RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.People,
+            person.personID,
+            person.characterName));
+        Debug.Log("Reconstruction Journal: Unlocked person '" + personID + "'.");
+        return true;
+    }
+
+    public bool SetPersonStage(string personID, int stageIndex)
+    {
+        PersonData person = FindPerson(personID);
+
+        if (person == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Person ID '" + personID + "' was not found.");
+            return false;
+        }
+
+        if (!unlockedPersonIDs.Contains(personID))
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Person '" + personID +
+                "' must be unlocked before changing its stage.");
+            return false;
+        }
+
+        if (stageIndex < 0 || stageIndex >= person.descriptionStages.Count)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Stage " + stageIndex +
+                " is invalid for person '" + personID + "'.");
+            return false;
+        }
+
+        currentStages[personID] = stageIndex;
+        SessionStoryState.SetInt(StageValuePrefix + personID, stageIndex);
+
+        if (selectedPerson == person)
+            ShowPerson(person);
+
+        Debug.Log(
+            "Reconstruction Journal: Set person '" + personID +
+            "' to stage " + stageIndex + ".");
+        return true;
+    }
+
+    public bool IsPersonUnlocked(string personID)
+    {
+        return unlockedPersonIDs.Contains(personID);
+    }
+
+    public int GetPersonStage(string personID)
+    {
+        int stageIndex;
+        return currentStages.TryGetValue(personID, out stageIndex) ? stageIndex : -1;
+    }
+
+    public void RefreshList()
+    {
+        ClearSpawnedButtons();
+
+        foreach (PersonData person in allPeople)
+        {
+            if (person == null || !unlockedPersonIDs.Contains(person.personID))
+                continue;
+
+            CreateListButton(person);
+        }
+
+        if (emptyListText != null)
+            emptyListText.gameObject.SetActive(spawnedListButtons.Count == 0);
+
+        if (selectedPerson == null || !unlockedPersonIDs.Contains(selectedPerson.personID))
+            ClearDetails();
+    }
+
+    private PersonData FindPerson(string personID)
+    {
+        if (string.IsNullOrWhiteSpace(personID))
+            return null;
+
+        return allPeople.Find(
+            person => person != null && person.personID == personID);
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedPersonIDs.Clear();
+        currentStages.Clear();
+
+        foreach (PersonData person in allPeople)
+        {
+            if (person == null ||
+                !SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + person.personID))
+            {
+                continue;
+            }
+
+            unlockedPersonIDs.Add(person.personID);
+            int maximumStage = Mathf.Max(0, person.descriptionStages.Count - 1);
+            currentStages[person.personID] = Mathf.Clamp(
+                SessionStoryState.GetInt(StageValuePrefix + person.personID),
+                0,
+                maximumStage);
+        }
+    }
+
+    private void CreateListButton(PersonData person)
+    {
+        if (listContent == null || listButtonPrefab == null)
+            return;
+
+        Button newButton = Instantiate(listButtonPrefab, listContent);
+        newButton.gameObject.SetActive(true);
+        newButton.name = "Person_" + person.personID;
+
+        TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
+        if (buttonText != null)
+            buttonText.text = person.characterName;
+
+        JournalEntryDiscoveryVisual discoveryVisual = newButton.GetComponent<JournalEntryDiscoveryVisual>();
+        discoveryVisual?.Bind(JournalEntryCategory.People, person.personID);
+
+        newButton.onClick.RemoveAllListeners();
+        newButton.onClick.AddListener(() =>
+        {
+            bool wasUnread = JournalEntryReadState.IsUnread(JournalEntryCategory.People, person.personID);
+            ShowPerson(person);
+            bool markedRead = JournalEntryReadState.MarkRead(JournalEntryCategory.People, person.personID);
+            if (wasUnread && markedRead)
+                discoveryVisual?.AcknowledgeFirstRead();
+        });
+        spawnedListButtons.Add(newButton.gameObject);
+    }
+
+    private void ShowPerson(PersonData person)
+    {
+        selectedPerson = person;
+
+        if (portraitImage != null)
+        {
+            portraitImage.sprite = person.portrait;
+            portraitImage.gameObject.SetActive(person.portrait != null);
+        }
+
+        if (portraitPlaceholderText != null)
+            portraitPlaceholderText.gameObject.SetActive(person.portrait == null);
+
+        if (detailNameText != null)
+            detailNameText.text = person.characterName;
+
+        if (detailContextText != null)
+            detailContextText.text = person.GetContextLabel();
+
+        int stageIndex = GetPersonStage(person.personID);
+        if (detailDescriptionText != null)
+            detailDescriptionText.text = person.descriptionStages[stageIndex];
+    }
+```
+
+Category Script: ReconstructionFragments
+Source File: Assets/ReconstructionJournal/ReconstructionFragments.cs
+Purpose: Tracks discovered fragments and interpretation stages, and builds the available fragment list and detail view.
+
+MAIN SOURCE CODE (selected complete methods):
+Unlock, stage progression, retrieval, restoration, and display
+```csharp
+    public bool UnlockFragment(string fragmentID)
+    {
+        FragmentData fragment = FindFragment(fragmentID);
+
+        if (fragment == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Fragment ID '" + fragmentID + "' was not found.");
+            return false;
+        }
+
+        if (!unlockedFragmentIDs.Add(fragmentID))
+            return false;
+
+        currentStages[fragmentID] = 0;
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.Fragment, fragmentID);
+        SessionStoryState.SetFlag(UnlockFlagPrefix + fragmentID, true);
+        SessionStoryState.SetInt(StageValuePrefix + fragmentID, 0);
+        RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.Fragment,
+            fragment.fragmentID,
+            fragment.title));
+        Debug.Log("Reconstruction Journal: Unlocked fragment '" + fragmentID + "'.");
+        return true;
+    }
+
+    public bool SetFragmentStage(string fragmentID, int stageIndex)
+    {
+        FragmentData fragment = FindFragment(fragmentID);
+
+        if (fragment == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Fragment ID '" + fragmentID + "' was not found.");
+            return false;
+        }
+
+        if (!unlockedFragmentIDs.Contains(fragmentID))
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Fragment '" + fragmentID +
+                "' must be unlocked before changing its stage.");
+            return false;
+        }
+
+        if (stageIndex < 0 || stageIndex >= fragment.interpretationStages.Count)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Stage " + stageIndex +
+                " is invalid for fragment '" + fragmentID + "'.");
+            return false;
+        }
+
+        currentStages[fragmentID] = stageIndex;
+        SessionStoryState.SetInt(StageValuePrefix + fragmentID, stageIndex);
+
+        if (selectedFragment == fragment)
+            ShowFragment(fragment);
+
+        Debug.Log(
+            "Reconstruction Journal: Set fragment '" + fragmentID +
+            "' to stage " + stageIndex + ".");
+        return true;
+    }
+
+    public bool IsFragmentUnlocked(string fragmentID)
+    {
+        return unlockedFragmentIDs.Contains(fragmentID);
+    }
+
+    public int GetFragmentStage(string fragmentID)
+    {
+        int stageIndex;
+        return currentStages.TryGetValue(fragmentID, out stageIndex) ? stageIndex : -1;
+    }
+
+    public void RefreshList()
+    {
+        ClearSpawnedButtons();
+
+        foreach (FragmentData fragment in allFragments)
+        {
+            if (fragment == null || !unlockedFragmentIDs.Contains(fragment.fragmentID))
+                continue;
+
+            CreateListButton(fragment);
+        }
+
+        if (emptyListText != null)
+            emptyListText.gameObject.SetActive(spawnedListButtons.Count == 0);
+
+        if (selectedFragment == null ||
+            !unlockedFragmentIDs.Contains(selectedFragment.fragmentID))
+        {
+            ClearDetails();
+        }
+    }
+
+    private FragmentData FindFragment(string fragmentID)
+    {
+        if (string.IsNullOrWhiteSpace(fragmentID))
+            return null;
+
+        return allFragments.Find(
+            fragment => fragment != null && fragment.fragmentID == fragmentID);
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedFragmentIDs.Clear();
+        currentStages.Clear();
+
+        foreach (FragmentData fragment in allFragments)
+        {
+            if (fragment == null ||
+                !SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + fragment.fragmentID))
+            {
+                continue;
+            }
+
+            unlockedFragmentIDs.Add(fragment.fragmentID);
+            int maximumStage = Mathf.Max(0, fragment.interpretationStages.Count - 1);
+            currentStages[fragment.fragmentID] = Mathf.Clamp(
+                SessionStoryState.GetInt(StageValuePrefix + fragment.fragmentID),
+                0,
+                maximumStage);
+        }
+    }
+
+    private void CreateListButton(FragmentData fragment)
+    {
+        if (listContent == null || listButtonPrefab == null)
+            return;
+
+        Button newButton = Instantiate(listButtonPrefab, listContent);
+        newButton.gameObject.SetActive(true);
+        newButton.name = "Fragment_" + fragment.fragmentID;
+
+        TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
+        if (buttonText != null)
+            buttonText.text = fragment.title;
+
+        JournalEntryDiscoveryVisual discoveryVisual = newButton.GetComponent<JournalEntryDiscoveryVisual>();
+        discoveryVisual?.Bind(JournalEntryCategory.Fragment, fragment.fragmentID);
+
+        newButton.onClick.RemoveAllListeners();
+        newButton.onClick.AddListener(() =>
+        {
+            bool wasUnread = JournalEntryReadState.IsUnread(JournalEntryCategory.Fragment, fragment.fragmentID);
+            ShowFragment(fragment);
+            bool markedRead = JournalEntryReadState.MarkRead(JournalEntryCategory.Fragment, fragment.fragmentID);
+            if (wasUnread && markedRead)
+                discoveryVisual?.AcknowledgeFirstRead();
+        });
+        spawnedListButtons.Add(newButton.gameObject);
+    }
+
+    private void ShowFragment(FragmentData fragment)
+    {
+        selectedFragment = fragment;
+
+        if (fragmentImage != null)
+        {
+            fragmentImage.sprite = fragment.fragmentImage;
+            fragmentImage.gameObject.SetActive(fragment.fragmentImage != null);
+        }
+
+        if (imagePlaceholderText != null)
+            imagePlaceholderText.gameObject.SetActive(fragment.fragmentImage == null);
+
+        if (detailTitleText != null)
+            detailTitleText.text = fragment.title;
+
+        if (recoveredInText != null)
+            recoveredInText.text = fragment.GetRecoveredInLabel();
+
+        if (relatedToText != null)
+            relatedToText.text = fragment.GetRelatedToLabel();
+
+        int stageIndex = GetFragmentStage(fragment.fragmentID);
+        if (interpretationText != null)
+            interpretationText.text = fragment.interpretationStages[stageIndex];
+    }
+```
+
+Category Script: ReconstructionReflections
+Source File: Assets/ReconstructionJournal/ReconstructionReflections.cs
+Purpose: Unlocks reflection prompts, accepts a submitted response, records its status, and restores saved responses.
+
+MAIN SOURCE CODE (selected complete methods):
+Unlock, submission, response validation, saved state, and status retrieval
+```csharp
+    public bool UnlockReflection(string reflectionID)
+    {
+        ReflectionData reflection = FindReflection(reflectionID);
+
+        if (reflection == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Reflection ID '" +
+                reflectionID +
+                "' was not found.");
+            return false;
+        }
+
+        if (!unlockedReflectionIDs.Add(reflectionID))
+            return false;
+
+        JournalEntryReadState.RegisterDiscovery(JournalEntryCategory.Reflection, reflectionID);
+        SessionStoryState.SetFlag(UnlockFlagPrefix + reflectionID, true);
+        RefreshList();
+        EntryUnlocked?.Invoke(new JournalEntryUnlockedInfo(
+            JournalEntryCategory.Reflection,
+            reflection.reflectionID,
+            reflection.title));
+        Debug.Log(
+            "Reconstruction Journal: Unlocked reflection '" + reflectionID + "'.");
+        return true;
+    }
+
+    public bool SubmitSelectedReflection()
+    {
+        if (selectedReflection == null)
+        {
+            Debug.LogWarning(
+                "Reconstruction Journal: Select a Reflection before submitting.");
+            return false;
+        }
+
+        if (submittedResponses.ContainsKey(selectedReflection.reflectionID))
+            return false;
+
+        string response = responseInputField != null ? responseInputField.text : "";
+
+        string validationMessage;
+        if (!ValidateReflectionResponse(response, out validationMessage))
+        {
+            if (validationText != null)
+            {
+                validationText.text = validationMessage;
+                validationText.gameObject.SetActive(true);
+            }
+
+            Debug.LogWarning(
+                "Reconstruction Journal: A Reflection response cannot be empty.");
+            return false;
+        }
+
+        if (validationText != null)
+            validationText.gameObject.SetActive(false);
+
+        selectedFollowUps[selectedReflection.reflectionID] =
+            GetBestThemeFollowUp(selectedReflection, response);
+        submittedResponses[selectedReflection.reflectionID] = response;
+        SessionStoryState.SetString(
+            ResponseValuePrefix + selectedReflection.reflectionID,
+            response);
+        SessionStoryState.SetString(
+            FollowUpValuePrefix + selectedReflection.reflectionID,
+            selectedFollowUps[selectedReflection.reflectionID]);
+        ShowReflection(selectedReflection);
+
+        Debug.Log(
+            "Reconstruction Journal: Completed reflection '" +
+            selectedReflection.reflectionID +
+            "'.");
+        return true;
+    }
+
+    private bool ValidateReflectionResponse(
+        string response,
+        out string validationMessage)
+    {
+        validationMessage = "";
+
+        if (string.IsNullOrWhiteSpace(response))
+        {
+            validationMessage = "Sumulat muna ng sagot bago magnilay.";
+            return false;
+        }
+
+        if (!ContainsUsableCharacters(response))
+        {
+            validationMessage = "Subukang sumulat ng malinaw na sagot.";
+            return false;
+        }
+
+        if (ContainsBlockedLanguage(response))
+        {
+            validationMessage =
+                "Gumamit ng angkop na pananalita sa iyong pagninilay.";
+            return false;
+        }
+
+        if (HasExcessiveRepeatedCharacters(response) ||
+            LooksLikeKeyboardSmash(response))
+        {
+            validationMessage = "Subukang sumulat ng malinaw na sagot.";
+            return false;
+        }
+
+        return true;
+    }
+
+    private void RestoreSessionState()
+    {
+        unlockedReflectionIDs.Clear();
+        submittedResponses.Clear();
+        selectedFollowUps.Clear();
+
+        foreach (ReflectionData reflection in allReflections)
+        {
+            if (reflection == null ||
+                !SessionStoryState.GetFlag(
+                    UnlockFlagPrefix + reflection.reflectionID))
+            {
+                continue;
+            }
+
+            string reflectionID = reflection.reflectionID;
+            unlockedReflectionIDs.Add(reflectionID);
+
+            string response = SessionStoryState.GetString(
+                ResponseValuePrefix + reflectionID);
+            if (string.IsNullOrEmpty(response))
+                continue;
+
+            submittedResponses[reflectionID] = response;
+            selectedFollowUps[reflectionID] = SessionStoryState.GetString(
+                FollowUpValuePrefix + reflectionID);
+        }
+    }
+
+    public ReflectionStatus GetReflectionStatus(string reflectionID)
+    {
+        if (!unlockedReflectionIDs.Contains(reflectionID))
+            return ReflectionStatus.Locked;
+
+        if (submittedResponses.ContainsKey(reflectionID))
+            return ReflectionStatus.Completed;
+
+        return ReflectionStatus.Unanswered;
+    }
+
+    public string GetSubmittedResponse(string reflectionID)
+    {
+        string response;
+        return submittedResponses.TryGetValue(reflectionID, out response)
+            ? response
+            : "";
+    }
+
+    public void RefreshList()
+    {
+        ClearSpawnedButtons();
+
+        foreach (ReflectionData reflection in allReflections)
+        {
+            if (reflection == null ||
+                !unlockedReflectionIDs.Contains(reflection.reflectionID))
+            {
+                continue;
+            }
+
+            CreateListButton(reflection);
+        }
+
+        if (emptyListText != null)
+            emptyListText.gameObject.SetActive(spawnedListButtons.Count == 0);
+
+        if (selectedReflection == null ||
+            !unlockedReflectionIDs.Contains(selectedReflection.reflectionID))
+        {
+            ClearDetails();
+        }
+        else
+        {
+            string currentDraft =
+                responseInputField != null ? responseInputField.text : "";
+            ShowReflection(selectedReflection);
+
+            if (responseInputField != null &&
+                GetReflectionStatus(selectedReflection.reflectionID) ==
+                ReflectionStatus.Unanswered)
+            {
+                responseInputField.text = currentDraft;
+            }
+        }
+    }
+
+    private ReflectionData FindReflection(string reflectionID)
+    {
+        if (string.IsNullOrWhiteSpace(reflectionID))
+            return null;
+
+        return allReflections.Find(
+            reflection =>
+                reflection != null &&
+                reflection.reflectionID == reflectionID);
+    }
+
+    private void ShowReflection(ReflectionData reflection)
+    {
+        selectedReflection = reflection;
+
+        if (detailTitleText != null)
+            detailTitleText.text = reflection.title;
+
+        if (detailContextText != null)
+            detailContextText.text = reflection.GetContextLabel();
+
+        if (promptText != null)
+            promptText.text = reflection.prompt;
+
+        if (validationText != null)
+            validationText.gameObject.SetActive(false);
+
+        string submittedResponse;
+        bool isCompleted = submittedResponses.TryGetValue(
+            reflection.reflectionID,
+            out submittedResponse);
+
+        string storedFollowUp;
+        if (isCompleted &&
+            selectedFollowUps.TryGetValue(reflection.reflectionID, out storedFollowUp))
+        {
+            ShowReflectionFollowUp(storedFollowUp);
+        }
+        else
+        {
+            HideReflectionFollowUp();
+        }
+
+        bool hasSuggestions =
+            !isCompleted &&
+            reflection.suggestedResponses != null &&
+            reflection.suggestedResponses.Count > 0;
+
+        ClearSuggestionButtons();
+
+        HideSuggestionPanel();
+
+        if (suggestionsLabel != null)
+            suggestionsLabel.gameObject.SetActive(false);
+
+        if (suggestionsSeparatorText != null)
+            suggestionsSeparatorText.gameObject.SetActive(false);
+
+        if (ownResponseLabel != null)
+            ownResponseLabel.gameObject.SetActive(false);
+
+        if (hasSuggestions)
+        {
+            foreach (string suggestion in reflection.suggestedResponses)
+            {
+                if (!string.IsNullOrWhiteSpace(suggestion))
+                    CreateSuggestionButton(suggestion);
+            }
+        }
+
+        if (responseInputField != null)
+        {
+            responseInputField.gameObject.SetActive(!isCompleted);
+
+            if (!isCompleted)
+                responseInputField.text = "";
+        }
+
+        if (submitButton != null)
+            submitButton.gameObject.SetActive(!isCompleted);
+
+        if (completedLabelText != null)
+            completedLabelText.gameObject.SetActive(isCompleted);
+
+        if (completedResponseText != null)
+        {
+            completedResponseText.gameObject.SetActive(isCompleted);
+
+            if (isCompleted)
+                completedResponseText.text = submittedResponse;
+        }
+    }
+```
+
+Supporting Script: JournalEntryReadState
+Source File: Assets/ReconstructionJournal/JournalEntryReadState.cs
+Purpose: Tracks whether discovered entries are known and read, and counts unread entries by category.
+
+SOURCE CODE (complete source file):
+JournalEntryReadState.cs
+```csharp
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>Per-entry read metadata stored in the existing play-session state.</summary>
+public static class JournalEntryReadState
+{
+    private const string KnownPrefix = "journal.e12.known:";
+    private const string ReadPrefix = "journal.e12.read:";
+
+    // Cache identities and key strings, not read-state values or UI instances.
+    private static readonly Dictionary<JournalEntryUnlockedInfo, EntryKeys> entries =
+        new Dictionary<JournalEntryUnlockedInfo, EntryKeys>();
+
+    public static int UnreadCount => GetUnreadCount();
+
+    /// <summary>
+    /// Call only for a successful new unlock, before writing its discovery flag.
+    /// Existing discoveries without E.12 metadata retain their legacy read status.
+    /// </summary>
+    public static bool RegisterDiscovery(JournalEntryCategory category, string entryID)
+    {
+        if (!TryGetKeys(category, entryID, out EntryKeys keys) ||
+            SessionStoryState.GetFlag(keys.Known) ||
+            SessionStoryState.GetFlag(keys.Discovered))
+            return false;
+
+        SessionStoryState.SetFlag(keys.Known, true);
+        return true;
+    }
+
+    public static bool IsUnread(JournalEntryCategory category, string entryID)
+    {
+        return TryGetKeys(category, entryID, out EntryKeys keys) && IsUnread(keys);
+    }
+
+    public static bool IsRead(JournalEntryCategory category, string entryID)
+    {
+        return TryGetKeys(category, entryID, out EntryKeys keys) &&
+               SessionStoryState.GetFlag(keys.Discovered) && !IsUnread(keys);
+    }
+
+    /// <summary>Returns true only for the first unread-to-read transition.</summary>
+    public static bool MarkRead(JournalEntryCategory category, string entryID)
+    {
+        if (!TryGetKeys(category, entryID, out EntryKeys keys) || !IsUnread(keys))
+            return false;
+
+        SessionStoryState.SetFlag(keys.Read, true);
+        return true;
+    }
+
+    public static int GetUnreadCount()
+    {
+        int count = 0;
+        foreach (var entry in entries)
+            if (IsUnread(entry.Value))
+                count++;
+        return count;
+    }
+
+    /// <summary>Counts unread entries from all registered session categories without using scene catalogs.</summary>
+    public static int GetUnreadCount(JournalEntryCategory category)
+    {
+        int count = 0;
+        foreach (var entry in entries)
+            if (entry.Key.Category == category && IsUnread(entry.Value))
+                count++;
+        return count;
+    }
+
+    private static bool IsUnread(EntryKeys keys)
+    {
+        return SessionStoryState.GetFlag(keys.Discovered) &&
+               SessionStoryState.GetFlag(keys.Known) &&
+               !SessionStoryState.GetFlag(keys.Read);
+    }
+
+    private static bool TryGetKeys(JournalEntryCategory category, string entryID, out EntryKeys keys)
+    {
+        keys = default;
+        if (string.IsNullOrWhiteSpace(entryID))
+            return false;
+
+        string discoveryPrefix;
+        string categoryName;
+        switch (category)
+        {
+            case JournalEntryCategory.Observation:
+                discoveryPrefix = "journal_observation_unlocked:";
+                categoryName = "Observation";
+                break;
+            case JournalEntryCategory.People:
+                discoveryPrefix = "journal_person_unlocked:";
+                categoryName = "People";
+                break;
+            case JournalEntryCategory.Fragment:
+                discoveryPrefix = "journal_fragment_unlocked:";
+                categoryName = "Fragment";
+                break;
+            case JournalEntryCategory.Reflection:
+                discoveryPrefix = "journal_reflection_unlocked:";
+                categoryName = "Reflection";
+                break;
+            default:
+                return false;
+        }
+
+        var identity = new JournalEntryUnlockedInfo(category, entryID, string.Empty);
+        if (!entries.TryGetValue(identity, out keys))
+        {
+            string suffix = categoryName + ":" + entryID;
+            keys = new EntryKeys(KnownPrefix + suffix, ReadPrefix + suffix, discoveryPrefix + entryID);
+            entries.Add(identity, keys);
+        }
+        return true;
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetKeyCache()
+    {
+        entries.Clear();
+    }
+
+    private readonly struct EntryKeys
+    {
+        public readonly string Known;
+        public readonly string Read;
+        public readonly string Discovered;
+
+        public EntryKeys(string known, string read, string discovered)
+        {
+            Known = known;
+            Read = read;
+            Discovered = discovered;
+        }
+    }
+}
+```
+
+Supporting Type: JournalEntryUnlockedInfo
+Source File: Assets/ReconstructionJournal/JournalEntryUnlockedInfo.cs
+Purpose: Defines the category and entry identity shared by category unlock events and the Journal manager.
+
+SOURCE CODE (complete source file):
+JournalEntryUnlockedInfo.cs
+```csharp
+using System;
+
+public enum JournalEntryCategory
+{
+    Observation,
+    People,
+    Fragment,
+    Reflection
+}
+
+[Serializable]
+public readonly struct JournalEntryUnlockedInfo : IEquatable<JournalEntryUnlockedInfo>
+{
+    public JournalEntryCategory Category { get; }
+    public string EntryID { get; }
+    public string DisplayTitle { get; }
+
+    public JournalEntryUnlockedInfo(
+        JournalEntryCategory category,
+        string entryID,
+        string displayTitle)
+    {
+        Category = category;
+        EntryID = entryID ?? string.Empty;
+        DisplayTitle = displayTitle ?? string.Empty;
+    }
+
+    public bool Equals(JournalEntryUnlockedInfo other)
+    {
+        return Category == other.Category &&
+               string.Equals(EntryID, other.EntryID, StringComparison.Ordinal);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is JournalEntryUnlockedInfo other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return ((int)Category * 397) ^
+                   (EntryID != null ? StringComparer.Ordinal.GetHashCode(EntryID) : 0);
+        }
+    }
+}
+```
+==================================================
+
+3. CLARITY SYSTEM
+
+ClarityManager activates the C-key mechanic, applies its visual strength, and checks registered targets against the mouse-controlled lens. The document viewer and region components provide a second investigation path: document regions require lens overlap for a dwell period, honor prerequisites, and raise completion events when required regions are investigated.
+
+Main Script: ClarityManager
+Source File: Assets/Scripts/ClarityManager.cs
+Purpose: Controls Clarity activation, target highlighting, document mode, and target-to-lens detection.
+
+MAIN SOURCE CODE (selected complete methods):
+Activation, target registry, and document mode
+```csharp
+    private void Update()
+    {
+        bool wasActive = IsClarityActive;
+        bool storySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
+        if (storySequenceActive ||
+            !clarityUnlocked)
+            IsClarityActive = false;
+        else
+            IsClarityActive = Input.GetKey(clarityKey);
+
+        if (IsClarityActive && !wasActive)
+        {
+            PlayConfiguredSound(pagsusuriAudioConfig != null
+                ? pagsusuriAudioConfig.ActivationSound
+                : null);
+            Activated?.Invoke(IsDocumentMode);
+        }
+        else if (wasActive && !IsClarityActive &&
+                 !storySequenceActive && clarityUnlocked &&
+                 !Input.GetKey(clarityKey))
+        {
+            PlayConfiguredSound(pagsusuriAudioConfig != null
+                ? pagsusuriAudioConfig.DeactivationSound
+                : null);
+        }
+
+        float targetStrength = IsClarityActive ? 1f : 0f;
+        float nextStrength;
+
+        if (transitionDuration <= 0f)
+        {
+            nextStrength = targetStrength;
+        }
+        else
+        {
+            nextStrength = Mathf.MoveTowards(
+                currentStrength,
+                targetStrength,
+                Time.deltaTime / transitionDuration);
+        }
+
+        bool strengthChanged =
+            !Mathf.Approximately(nextStrength, currentStrength);
+
+        if (!strengthChanged && !IsClarityActive)
+            return;
+
+        currentStrength = nextStrength;
+        ApplyVisualStrength(currentStrength);
+    }
+
+    public static void RegisterTarget(ClarityTarget target)
+    {
+        if (target == null)
+            return;
+
+        targets.Add(target);
+
+        if (instance != null)
+        {
+            float targetStrength = instance.IsDocumentMode
+                ? 0f
+                : instance.GetTargetStrength(target, instance.currentStrength);
+            target.SetClarityVisual(
+                targetStrength,
+                instance.targetHighlightColor,
+                instance.targetHighlightIntensity);
+        }
+    }
+
+    public static void UnregisterTarget(ClarityTarget target)
+    {
+        if (target != null)
+            targets.Remove(target);
+    }
+
+    public void EnterDocumentMode()
+    {
+        if (IsDocumentMode)
+            return;
+
+        IsDocumentMode = true;
+        ApplyVisualStrength(currentStrength);
+    }
+
+    public void ExitDocumentMode()
+    {
+        if (!IsDocumentMode)
+            return;
+
+        IsDocumentMode = false;
+        ApplyVisualStrength(currentStrength);
+    }
+
+    private void ApplyVisualStrength(float strength)
+    {
+        targets.RemoveWhere(target => target == null);
+
+        foreach (ClarityTarget target in targets)
+        {
+            float targetStrength = GetTargetStrength(target, strength);
+            target.SetClarityVisual(
+                targetStrength,
+                targetHighlightColor,
+                targetHighlightIntensity);
+        }
+
+        if (vignetteEffect != null)
+        {
+            vignetteEffect.SetVignette(
+                vignetteIntensity * strength,
+                vignetteSoftness);
+        }
+    }
+
+    private float GetTargetStrength(
+        ClarityTarget target,
+        float globalStrength)
+    {
+        if (IsDocumentMode ||
+            globalStrength <= 0.0001f ||
+            target == null)
+        {
+            return 0f;
+        }
+
+        // Preserve the original global behavior in scenes that have not yet
+        // been given a lens presentation.
+        if (lensUI == null)
+            return globalStrength;
+
+        if (targetCamera == null ||
+            !target.TryGetScreenRect(targetCamera, out Rect targetRect))
+        {
+            return 0f;
+        }
+
+        Vector2 lensCenter = lensUI.LensCenterScreenPosition;
+        Vector2 closestPoint = new Vector2(
+            Mathf.Clamp(lensCenter.x, targetRect.xMin, targetRect.xMax),
+            Mathf.Clamp(lensCenter.y, targetRect.yMin, targetRect.yMax));
+        float distance = Vector2.Distance(lensCenter, closestPoint);
+
+        return distance <= lensUI.DetectionRadiusScreenPixels
+            ? globalStrength
+            : 0f;
+    }
+```
+
+Supporting Script: ClarityTarget
+Source File: Assets/Scripts/ClarityTarget.cs
+Purpose: Registers a target, computes its screen-space bounds, and applies the Clarity highlight visual.
+
+MAIN SOURCE CODE (selected complete methods):
+Target registration and screen-space target bounds
+```csharp
+    private void OnEnable()
+    {
+        ClarityManager.RegisterTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        ClarityManager.UnregisterTarget(this);
+        SetOverlaysVisible(false);
+    }
+
+    public void SetClarityVisual(
+        float strength,
+        Color highlightColor,
+        float highlightIntensity)
+    {
+        strength = Mathf.Clamp01(strength);
+
+        if (strength <= 0.0001f)
+        {
+            SetOverlaysVisible(false);
+            return;
+        }
+
+        if (!overlayResourcesCreated)
+            CreateOverlayResources();
+
+        if (overlayMaterial == null)
+            return;
+
+        overlayMaterial.SetColor(HighlightColorId, highlightColor);
+        overlayMaterial.SetFloat(
+            StrengthId,
+            strength * Mathf.Max(0f, highlightIntensity));
+
+        SetOverlaysVisible(true);
+    }
+
+    public bool TryGetScreenRect(Camera camera, out Rect screenRect)
+    {
+        screenRect = default;
+
+        if (camera == null)
+            return false;
+
+        if (targetRenderers == null || targetRenderers.Length == 0)
+            targetRenderers = GetSupportedRenderersInChildren();
+
+        bool foundPoint = false;
+        Vector2 minimum = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+        Vector2 maximum = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+
+        foreach (Renderer targetRenderer in targetRenderers)
+        {
+            if (targetRenderer == null ||
+                !targetRenderer.enabled ||
+                !targetRenderer.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            Bounds bounds = targetRenderer.bounds;
+            Vector3 center = bounds.center;
+            Vector3 extents = bounds.extents;
+
+            for (int x = -1; x <= 1; x += 2)
+            {
+                for (int y = -1; y <= 1; y += 2)
+                {
+                    for (int z = -1; z <= 1; z += 2)
+                    {
+                        Vector3 corner = center + Vector3.Scale(
+                            extents,
+                            new Vector3(x, y, z));
+                        Vector3 screenPoint = camera.WorldToScreenPoint(corner);
+
+                        if (screenPoint.z <= 0f)
+                            continue;
+
+                        Vector2 point = screenPoint;
+                        minimum = Vector2.Min(minimum, point);
+                        maximum = Vector2.Max(maximum, point);
+                        foundPoint = true;
+                    }
+                }
+            }
+        }
+
+        if (!foundPoint)
+            return false;
+
+        screenRect = Rect.MinMaxRect(
+            minimum.x,
+            minimum.y,
+            maximum.x,
+            maximum.y);
+        return true;
+    }
+```
+
+Supporting Script: ClarityLensUI
+Source File: Assets/Scripts/ClarityLensUI.cs
+Purpose: Supplies the functional lens center and scale-adjusted detection radius used by the world and document investigation checks.
+
+MAIN SOURCE CODE (selected properties):
+Functional lens coordinates and radius
+```csharp
+    public Vector2 LensCenterScreenPosition => Input.mousePosition;
+
+    public float DetectionRadiusScreenPixels
+    {
+        get
+        {
+            float scaleFactor = parentCanvas != null
+                ? Mathf.Max(0.0001f, parentCanvas.scaleFactor)
+                : 1f;
+            return detectionRadius * scaleFactor;
+        }
+    }
+```
+
+Supporting Script: ClarityDocumentViewer
+Source File: Assets/Scripts/ClarityDocumentViewer.cs
+Purpose: Opens a document investigation, processes eligible regions while Clarity is active, and reports region and document completion.
+
+MAIN SOURCE CODE (selected complete methods):
+Document opening, completion checks, region processing, and events
+```csharp
+    public bool OpenDocument(ClarityDocumentSource source)
+    {
+        if (source == null)
+            return false;
+
+        return OpenDocument(
+            source.DocumentId,
+            source.DocumentSprite,
+            source.ObscuredDocumentSprite,
+            source.RegionLayoutPrefab);
+    }
+
+    public bool OpenDocument(ClarityDocumentSource source)
+    {
+        if (source == null)
+            return false;
+
+        return OpenDocument(
+            source.DocumentId,
+            source.DocumentSprite,
+            source.ObscuredDocumentSprite,
+            source.RegionLayoutPrefab);
+    }
+
+    public bool OpenDocument(
+        string documentId,
+        Sprite documentSprite,
+        GameObject regionLayoutPrefab = null)
+    {
+        return OpenDocument(documentId, documentSprite, null, regionLayoutPrefab);
+    }
+
+    public bool OpenDocument(
+        string documentId,
+        Sprite documentSprite,
+        Sprite obscuredDocumentSprite,
+        GameObject regionLayoutPrefab = null)
+    {
+        if (documentSprite == null)
+        {
+            Debug.LogWarning(
+                "ClarityDocumentViewer cannot open a document without a sprite.",
+                this);
+            return false;
+        }
+
+        CacheReferences();
+        if (clarityManager == null || clarityLensUI == null)
+        {
+            Debug.LogWarning(
+                "ClarityDocumentViewer requires a ClarityManager and ClarityLensUI.",
+                this);
+            return false;
+        }
+
+        if (IsOpen || modalStateCaptured)
+            CloseDocument();
+
+        ActiveDocumentId = documentId ?? string.Empty;
+        completionRaised = false;
+
+        ConfigureDocumentImages(documentSprite, obscuredDocumentSprite);
+        CreateRuntimeRevealMaterial();
+        CreateRegionLayout(regionLayoutPrefab);
+        CollectAndValidateRegions();
+
+        CaptureModalState();
+        IsOpen = true;
+        SetDocumentPanelVisible(true);
+        clarityManager.EnterDocumentMode();
+        UpdateRevealMaterial();
+
+        OnDocumentOpened?.Invoke(ActiveDocumentId);
+        onDocumentOpened?.Invoke(ActiveDocumentId);
+        AnyDocumentOpened?.Invoke(ActiveDocumentId, usingObscuredDocument);
+        return true;
+    }
+
+    public void CloseDocument()
+    {
+        if (!IsOpen && !modalStateCaptured)
+            return;
+
+        string closedDocumentId = ActiveDocumentId;
+        IsOpen = false;
+
+        ResetRegionFocus();
+        SetDocumentPanelVisible(false);
+
+        if (clarityManager != null)
+            clarityManager.ExitDocumentMode();
+
+        RestoreModalState();
+        DestroyRuntimeRevealMaterial();
+        DestroyInstantiatedRegionLayout();
+
+        ActiveDocumentId = string.Empty;
+        OnDocumentClosed?.Invoke(closedDocumentId);
+        onDocumentClosed?.Invoke(closedDocumentId);
+        AnyDocumentClosed?.Invoke(closedDocumentId, usingObscuredDocument);
+    }
+
+    public bool IsRegionInvestigated(string regionId)
+    {
+        for (int i = 0; i < activeRegions.Count; i++)
+        {
+            ClarityDocumentRegion region = activeRegions[i];
+            if (region != null &&
+                string.Equals(
+                    region.RegionId,
+                    regionId,
+                    StringComparison.Ordinal))
+            {
+                return region.IsInvestigated;
+            }
+        }
+
+        return false;
+    }
+
+    public bool AreRequiredRegionsComplete()
+    {
+        int requiredCount = 0;
+
+        for (int i = 0; i < activeRegions.Count; i++)
+        {
+            ClarityDocumentRegion region = activeRegions[i];
+            if (region == null || !region.Required)
+                continue;
+
+            requiredCount++;
+            if (invalidRegions.Contains(region) || !region.IsInvestigated)
+                return false;
+        }
+
+        return requiredCount > 0;
+    }
+
+    private void ProcessRegions()
+    {
+        bool clarityActive = clarityManager != null &&
+                             clarityManager.IsDocumentMode &&
+                             clarityManager.IsClarityActive;
+
+        Camera uiCamera = GetUICamera();
+        for (int i = 0; i < activeRegions.Count; i++)
+        {
+            ClarityDocumentRegion region = activeRegions[i];
+            if (region == null || region.IsInvestigated)
+                continue;
+
+            bool eligible = clarityActive &&
+                            !invalidRegions.Contains(region) &&
+                            region.ArePrerequisitesSatisfied();
+            if (!eligible)
+            {
+                region.ResetDwell();
+                continue;
+            }
+
+            bool investigated = region.ProcessLens(
+                clarityLensUI.LensCenterScreenPosition,
+                clarityLensUI.DetectionRadiusScreenPixels,
+                Time.unscaledDeltaTime,
+                uiCamera);
+
+            if (investigated)
+                HandleRegionInvestigated(region);
+        }
+    }
+
+    private void HandleRegionInvestigated(ClarityDocumentRegion region)
+    {
+        clarityManager?.PlayDiscoverySound();
+        OnRegionInvestigated?.Invoke(region);
+        onRegionInvestigated?.Invoke(region);
+
+        if (completionRaised || !AreRequiredRegionsComplete())
+            return;
+
+        completionRaised = true;
+        OnDocumentInvestigationCompleted?.Invoke(ActiveDocumentId);
+        onDocumentInvestigationCompleted?.Invoke(ActiveDocumentId);
+    }
+```
+
+Supporting Script: ClarityDocumentRegion
+Source File: Assets/Scripts/ClarityDocumentRegion.cs
+Purpose: Tracks prerequisites and lens dwell progress for an individual investigation region.
+
+MAIN SOURCE CODE (selected complete methods):
+Region dwell, prerequisites, and lens overlap
+```csharp
+    internal void BeginInvestigationLifecycle()
+    {
+        IsInvestigated = false;
+        dwellProgress = 0f;
+        isFocused = false;
+        ApplyFeedbackImmediately();
+    }
+
+    internal void ResetDwell()
+    {
+        if (IsInvestigated)
+            return;
+
+        dwellProgress = 0f;
+        isFocused = false;
+    }
+
+    internal bool ProcessLens(
+        Vector2 lensCenterScreenPosition,
+        float lensRadiusScreenPixels,
+        float unscaledDeltaTime,
+        Camera uiCamera)
+    {
+        if (IsInvestigated || !gameObject.activeInHierarchy)
+            return false;
+
+        bool overlapping = OverlapsLens(
+            lensCenterScreenPosition,
+            lensRadiusScreenPixels,
+            uiCamera);
+
+        isFocused = overlapping;
+
+        if (!overlapping)
+        {
+            dwellProgress = 0f;
+            return false;
+        }
+
+        dwellProgress += Mathf.Max(0f, unscaledDeltaTime);
+        if (dwellProgress < dwellDuration)
+            return false;
+
+        dwellProgress = dwellDuration;
+        IsInvestigated = true;
+        isFocused = false;
+        onInvestigated?.Invoke();
+        return true;
+    }
+
+    internal bool ArePrerequisitesSatisfied()
+    {
+        for (int i = 0; i < prerequisites.Length; i++)
+        {
+            ClarityDocumentRegion prerequisite = prerequisites[i];
+            if (prerequisite == null || !prerequisite.IsInvestigated)
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool OverlapsLens(
+        Vector2 lensCenterScreenPosition,
+        float lensRadiusScreenPixels,
+        Camera uiCamera)
+    {
+        if (regionTransform == null)
+            regionTransform = GetComponent<RectTransform>();
+
+        regionTransform.GetWorldCorners(worldCorners);
+
+        Vector2 minimum = new Vector2(
+            float.PositiveInfinity,
+            float.PositiveInfinity);
+        Vector2 maximum = new Vector2(
+            float.NegativeInfinity,
+            float.NegativeInfinity);
+
+        for (int i = 0; i < worldCorners.Length; i++)
+        {
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(
+                uiCamera,
+                worldCorners[i]);
+            minimum = Vector2.Min(minimum, screenPoint);
+            maximum = Vector2.Max(maximum, screenPoint);
+        }
+
+        Vector2 closestPoint = new Vector2(
+            Mathf.Clamp(lensCenterScreenPosition.x, minimum.x, maximum.x),
+            Mathf.Clamp(lensCenterScreenPosition.y, minimum.y, maximum.y));
+
+        float radius = Mathf.Max(0f, lensRadiusScreenPixels);
+        return (lensCenterScreenPosition - closestPoint).sqrMagnitude <=
+               radius * radius;
+    }
+```
+==================================================
+
+4. TASK SYSTEM
+
+TaskManager handles both Main and Side task types through serialized TaskData definitions. It activates and completes tasks, records stage-specific progress in SessionStoryState, advances stages when required counts are met, restores active progress, and exposes task state to other systems.
+
+Main Script: TaskManager
+Source File: Assets/Scripts/Tasks/TaskManager.cs
+Purpose: Owns task lifecycle, objectives, stage progression, progress counters, and persisted task state.
+
+MAIN SOURCE CODE (selected complete methods):
+Task lifecycle and progress operations
+```csharp
+    public bool StartTask(string taskId)
+    {
+        if (!TryGetDefinition(taskId, out TaskData task) ||
+            GetTaskState(taskId) != TaskState.Inactive)
+        {
+            return false;
+        }
+
+        SessionStoryState.SetFlag(GetActiveFlag(taskId), true);
+        TaskStage firstStage = task.Stages?.FirstOrDefault(s => s != null);
+        currentStageByTaskId[taskId] = firstStage?.StageId?.Trim();
+        SessionStoryState.SetString(
+            GetStageValue(taskId),
+            currentStageByTaskId[taskId]);
+        objectivesById[taskId] = firstStage == null
+            ? task.StartingObjective
+            : FormatStageObjective(taskId, firstStage);
+        currentTaskId = taskId;
+        TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            taskId, task.Type, string.Empty, string.Empty,
+            objectivesById[taskId], taskStarted: true));
+
+        ShowNotificationThenTracker(
+            taskId,
+            task.StartingObjective,
+            onFinished => notificationUI.ShowTaskStarted(
+                task.Type,
+                onFinished));
+        return true;
+    }
+
+    public bool UpdateTask(string taskId, string objective)
+    {
+        return UpdateTaskObjective(taskId, objective, false);
+    }
+
+    private bool UpdateTaskObjective(string taskId, string objective, bool objectiveCompleted)
+    {
+        if (!TryGetDefinition(taskId, out TaskData task) ||
+            GetTaskState(taskId) != TaskState.Active ||
+            string.IsNullOrWhiteSpace(objective))
+        {
+            return false;
+        }
+
+        string normalizedObjective = objective.Trim();
+        if (objectivesById.TryGetValue(taskId, out string currentObjective) &&
+            string.Equals(currentObjective, normalizedObjective, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (objectiveCompleted && string.IsNullOrWhiteSpace(currentObjective))
+            return false;
+
+        string previousObjective = objectivesById.TryGetValue(taskId, out string existingObjective)
+            ? existingObjective
+            : string.Empty;
+        objectivesById[taskId] = normalizedObjective;
+        currentTaskId = taskId;
+        TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            taskId, task.Type, previousObjective, previousObjective, normalizedObjective,
+            objectiveCompleted: objectiveCompleted));
+
+        ShowNotificationThenTracker(
+            taskId,
+            normalizedObjective,
+            onFinished => notificationUI.ShowTaskUpdated(
+                task.Type,
+                onFinished));
+        return true;
+    }
+
+    public bool CompleteTask(string taskId)
+    {
+        if (!TryGetDefinition(taskId, out TaskData task) ||
+            GetTaskState(taskId) != TaskState.Active)
+        {
+            return false;
+        }
+
+        presentationVersion++;
+        string previousObjective = objectivesById.TryGetValue(taskId, out string existingObjective)
+            ? existingObjective
+            : string.Empty;
+
+        SessionStoryState.SetFlag(GetActiveFlag(taskId), false);
+        SessionStoryState.SetFlag(GetCompletedFlag(taskId), true);
+        objectivesById.Remove(taskId);
+
+        notificationUI?.ShowTaskCompleted(task.Type);
+
+        if (string.Equals(currentTaskId, taskId, StringComparison.Ordinal))
+        {
+            currentTaskId = null;
+        }
+
+        TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            taskId, task.Type, previousObjective, previousObjective, string.Empty,
+            taskCompleted: true));
+
+        return true;
+    }
+
+    public bool RegisterProgress(string taskId, string progressId, int amount = 1, bool once = true)
+    {
+        if (!TryGetDefinition(taskId, out _) ||
+            GetTaskState(taskId) != TaskState.Active ||
+            string.IsNullOrWhiteSpace(progressId) ||
+            amount <= 0)
+        {
+            return false;
+        }
+
+        string normalizedTaskId = taskId.Trim();
+        string normalizedProgressId = progressId.Trim();
+        if (!TryGetCurrentStage(normalizedTaskId, out TaskData task, out TaskStage stage))
+            return false;
+
+
+        if (stage.AllowedProgressIds == null || !stage.AllowedProgressIds.Any(id =>
+            string.Equals(id?.Trim(), normalizedProgressId, StringComparison.Ordinal)))
+            return false;
+
+        string normalizedStageId = stage.StageId.Trim();
+        string previousObjective = objectivesById.TryGetValue(
+            normalizedTaskId, out string existingObjective)
+            ? existingObjective
+            : FormatStageObjective(normalizedTaskId, stage);
+        string storageKey = GetProgressFlag(
+            normalizedTaskId,
+            normalizedStageId,
+            normalizedProgressId);
+        int currentAmount = GetStoredProgress(storageKey);
+
+        if (once && currentAmount > 0)
+            return false;
+
+        int updatedAmount = currentAmount + amount;
+        SessionStoryState.SetInt(storageKey, updatedAmount);
+        SessionStoryState.SetFlag(storageKey, true);
+
+        string previousStageId = currentStageByTaskId.TryGetValue(
+            normalizedTaskId,
+            out string currentStageId)
+            ? currentStageId
+            : normalizedStageId;
+        bool stageChanged = false;
+        int stageProgress = GetCurrentStageProgress(normalizedTaskId, stage);
+        if (stage.RequiredCount > 0 && stageProgress >= stage.RequiredCount)
+        {
+            TaskStage next = GetNextStage(task, stage);
+            if (next != null)
+            {
+                stageChanged = !string.Equals(
+                    previousStageId,
+                    next.StageId?.Trim(),
+                    StringComparison.Ordinal);
+                SetStage(normalizedTaskId, next);
+            }
+            else
+                objectivesById[normalizedTaskId] = FormatStageObjective(normalizedTaskId, stage);
+        }
+        else
+        {
+            objectivesById[normalizedTaskId] = FormatStageObjective(normalizedTaskId, stage);
+        }
+
+        currentTaskId = normalizedTaskId;
+        TaskChanged?.Invoke();
+
+        if (stageChanged)
+            StageChanged?.Invoke(normalizedTaskId, normalizedStageId);
+
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            normalizedTaskId,
+            task.Type,
+            previousObjective,
+            stageChanged
+                ? FormatStageObjective(normalizedTaskId, stage, stage.RequiredCount)
+                : previousObjective,
+            objectivesById[normalizedTaskId],
+            progressIncreased: updatedAmount > currentAmount,
+            stageChanged: stageChanged));
+
+        if (stageChanged && string.Equals(normalizedStageId, GatherInformationStageId, StringComparison.Ordinal))
+            ReconstructionJournalManager.Instance?.UnlockObservation(GatherInformationJournalObservationId);
+
+        if (stageChanged)
+        {
+            string updatedObjective = objectivesById[normalizedTaskId];
+            ShowNotificationThenTracker(
+                normalizedTaskId,
+                updatedObjective,
+                onFinished => notificationUI.ShowTaskUpdated(
+                    task.Type,
+                    onFinished));
+        }
+        return true;
+    }
+
+    public bool AdvanceTaskStage(string taskId, string stageId)
+    {
+        if (!TryGetDefinition(taskId, out TaskData task) ||
+            GetTaskState(taskId) != TaskState.Active ||
+            string.IsNullOrWhiteSpace(stageId))
+            return false;
+
+        TaskStage stage = task.Stages?.FirstOrDefault(s => s != null &&
+            string.Equals(s.StageId?.Trim(), stageId.Trim(), StringComparison.Ordinal));
+        if (stage == null)
+            return false;
+
+        string normalizedTaskId = taskId.Trim();
+        string normalizedStageId = stage.StageId?.Trim();
+        string previousObjective = objectivesById.TryGetValue(
+            normalizedTaskId, out string existingObjective)
+            ? existingObjective
+            : string.Empty;
+        if (currentStageByTaskId.TryGetValue(normalizedTaskId, out string currentStageId) &&
+            string.Equals(currentStageId, normalizedStageId, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        SetStage(normalizedTaskId, stage);
+        currentTaskId = normalizedTaskId;
+        TaskChanged?.Invoke();
+        PresentationChanged?.Invoke(new TaskPresentationChange(
+            normalizedTaskId, task.Type, previousObjective, previousObjective,
+            objectivesById[normalizedTaskId], stageChanged: true));
+
+        string updatedObjective = objectivesById[normalizedTaskId];
+        ShowNotificationThenTracker(
+            normalizedTaskId,
+            updatedObjective,
+            onFinished => notificationUI.ShowTaskUpdated(
+                task.Type,
+                onFinished));
+        return true;
+    }
+
+    public bool HasProgress(string taskId, string progressId)
+    {
+        if (string.IsNullOrWhiteSpace(taskId) || string.IsNullOrWhiteSpace(progressId))
+            return false;
+
+        string taskKey = taskId.Trim();
+        string progressKey = progressId.Trim();
+        string stageId = currentStageByTaskId.TryGetValue(taskKey, out string currentStage)
+            ? currentStage : string.Empty;
+        return GetProgressForStage(taskKey, stageId, progressKey) > 0;
+    }
+
+    public int GetProgress(string taskId, string progressId)
+    {
+        if (string.IsNullOrWhiteSpace(taskId) || string.IsNullOrWhiteSpace(progressId))
+            return 0;
+
+        string taskKey = taskId.Trim();
+        string progressKey = progressId.Trim();
+        string stageId = currentStageByTaskId.TryGetValue(taskKey, out string currentStage)
+            ? currentStage : string.Empty;
+        return GetProgressForStage(taskKey, stageId, progressKey);
+    }
+
+    public bool TryGetActiveTask(TaskType type, out TaskData definition, out string objective)
+    {
+        foreach (TaskData candidate in taskDefinitions)
+        {
+            if (candidate == null || candidate.Type != type ||
+                GetTaskState(candidate.TaskId) != TaskState.Active)
+            {
+                continue;
+            }
+
+            definition = candidate;
+            if (!objectivesById.TryGetValue(candidate.TaskId.Trim(), out objective))
+                objective = candidate.StartingObjective;
+            return true;
+        }
+
+        definition = null;
+        objective = null;
+        return false;
+    }
+
+    public TaskState GetTaskState(string taskId)
+    {
+        if (string.IsNullOrWhiteSpace(taskId))
+            return TaskState.Inactive;
+
+        taskId = taskId.Trim();
+
+        if (SessionStoryState.GetFlag(GetCompletedFlag(taskId)))
+            return TaskState.Completed;
+
+        return SessionStoryState.GetFlag(GetActiveFlag(taskId))
+            ? TaskState.Active
+            : TaskState.Inactive;
+    }
+
+    public bool IsCurrentStage(string taskId, string stageId)
+    {
+        if (string.IsNullOrWhiteSpace(taskId) || string.IsNullOrWhiteSpace(stageId))
+            return false;
+
+        return currentStageByTaskId.TryGetValue(taskId.Trim(), out string currentStageId) &&
+            string.Equals(currentStageId, stageId.Trim(), StringComparison.Ordinal);
+    }
+
+    public bool IsCurrentStageAtOrAfter(string taskId, string earliestStageId)
+    {
+        if (!TryGetDefinition(taskId, out TaskData task) ||
+            string.IsNullOrWhiteSpace(earliestStageId) ||
+            !currentStageByTaskId.TryGetValue(taskId.Trim(), out string currentStageId) ||
+            task.Stages == null)
+        {
+            return false;
+        }
+
+        int earliestIndex = Array.FindIndex(task.Stages, stage => stage != null &&
+            string.Equals(stage.StageId?.Trim(), earliestStageId.Trim(), StringComparison.Ordinal));
+        int currentIndex = Array.FindIndex(task.Stages, stage => stage != null &&
+            string.Equals(stage.StageId?.Trim(), currentStageId, StringComparison.Ordinal));
+        return earliestIndex >= 0 && currentIndex >= earliestIndex;
+    }
+
+    private void BuildDefinitionLookup()
+    {
+        definitionsById.Clear();
+
+        foreach (TaskData task in taskDefinitions)
+        {
+            if (task == null || string.IsNullOrWhiteSpace(task.TaskId))
+                continue;
+
+            if (!definitionsById.TryAdd(task.TaskId.Trim(), task))
+            {
+                Debug.LogWarning(
+                    $"TaskManager has more than one definition for '{task.TaskId}'.",
+                    this);
+            }
+        }
+    }
+
+    private bool TryGetDefinition(string taskId, out TaskData task)
+    {
+        string normalizedId = taskId == null ? string.Empty : taskId.Trim();
+        return definitionsById.TryGetValue(normalizedId, out task);
+    }
+
+    private void ShowNotificationThenTracker(
+        string taskId,
+        string objective,
+        Action<Action> showNotification)
+    {
+        int version = ++presentationVersion;
+
+        void ShowCurrentTracker()
+        {
+            if (version != presentationVersion ||
+                !string.Equals(currentTaskId, taskId, StringComparison.Ordinal) ||
+                GetTaskState(taskId) != TaskState.Active ||
+                !objectivesById.TryGetValue(taskId, out string currentObjective) ||
+                !string.Equals(currentObjective, objective, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            TaskChanged?.Invoke();
+        }
+
+        if (notificationUI != null)
+            showNotification(ShowCurrentTracker);
+        else
+            ShowCurrentTracker();
+    }
+
+    private static string GetActiveFlag(string taskId)
+    {
+        return ActiveFlagPrefix + taskId;
+    }
+
+    private static string GetCompletedFlag(string taskId)
+    {
+        return CompletedFlagPrefix + taskId;
+    }
+
+    private static string GetProgressFlag(string taskId, string stageId, string progressId)
+    {
+        return ProgressFlagPrefix + taskId + ":" + stageId + ":" + progressId;
+    }
+
+    private static string GetStageValue(string taskId)
+    {
+        return StageValuePrefix + taskId;
+    }
+
+    private static int GetStoredProgress(string storageKey)
+    {
+        int value = SessionStoryState.GetInt(storageKey);
+        if (value > 0)
+            return value;
+
+        // Compatibility with progress written as a bool before integer storage existed.
+        return SessionStoryState.GetFlag(storageKey) ? 1 : 0;
+    }
+
+    private static int GetProgressForStage(string taskId, string stageId, string progressId)
+    {
+        if (string.IsNullOrWhiteSpace(stageId))
+            return 0;
+
+        string storageKey = GetProgressFlag(
+            taskId.Trim(),
+            stageId.Trim(),
+            progressId.Trim());
+        return GetStoredProgress(storageKey);
+    }
+
+    private bool TryGetCurrentStage(string taskId, out TaskData task, out TaskStage stage)
+    {
+        if (!TryGetDefinition(taskId, out task) || task.Stages == null || task.Stages.Length == 0 ||
+            !currentStageByTaskId.TryGetValue(taskId, out string stageId))
+        {
+            stage = null;
+            return false;
+        }
+        stage = task.Stages.FirstOrDefault(s => s != null &&
+            string.Equals(s.StageId?.Trim(), stageId, StringComparison.Ordinal));
+        return stage != null;
+    }
+
+    private TaskStage GetNextStage(TaskData task, TaskStage current)
+    {
+        int index = Array.IndexOf(task.Stages, current);
+        return index >= 0 && index + 1 < task.Stages.Length ? task.Stages[index + 1] : null;
+    }
+
+    private int GetCurrentStageProgress(string taskId, TaskStage stage)
+    {
+        int total = 0;
+        if (stage.AllowedProgressIds == null) return total;
+        foreach (string id in stage.AllowedProgressIds
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id.Trim())
+            .Distinct(StringComparer.Ordinal))
+        {
+            total += GetProgressForStage(taskId, stage.StageId, id);
+        }
+        return total;
+    }
+
+    private string FormatStageObjective(string taskId, TaskStage stage)
+    {
+        return stage.RequiredCount > 0
+            ? stage.ObjectiveText + " (" + GetCurrentStageProgress(taskId, stage) + "/" + stage.RequiredCount + ")"
+            : stage.ObjectiveText;
+    }
+
+    private string FormatStageObjective(string taskId, TaskStage stage, int progress)
+    {
+        return stage.RequiredCount > 0
+            ? stage.ObjectiveText + " (" + Mathf.Clamp(progress, 0, stage.RequiredCount) + "/" + stage.RequiredCount + ")"
+            : stage.ObjectiveText;
+    }
+
+    private void SetStage(string taskId, TaskStage stage)
+    {
+        currentStageByTaskId[taskId] = stage.StageId?.Trim();
+        SessionStoryState.SetString(
+            GetStageValue(taskId),
+            currentStageByTaskId[taskId]);
+        objectivesById[taskId] = FormatStageObjective(taskId, stage);
+    }
+
+    private void RestoreRuntimeState()
+    {
+        foreach (TaskData task in taskDefinitions)
+        {
+            if (task == null || string.IsNullOrWhiteSpace(task.TaskId) ||
+                GetTaskState(task.TaskId) != TaskState.Active)
+            {
+                continue;
+            }
+
+            string taskId = task.TaskId.Trim();
+            string storedStageId = SessionStoryState.GetString(
+                GetStageValue(taskId));
+            TaskStage stage = task.Stages?.FirstOrDefault(candidate =>
+                candidate != null &&
+                string.Equals(
+                    candidate.StageId?.Trim(),
+                    storedStageId,
+                    StringComparison.Ordinal));
+
+            if (stage == null)
+                stage = task.Stages?.FirstOrDefault(candidate => candidate != null);
+
+            if (stage != null)
+            {
+                currentStageByTaskId[taskId] = stage.StageId?.Trim();
+                SessionStoryState.SetString(
+                    GetStageValue(taskId),
+                    currentStageByTaskId[taskId]);
+                objectivesById[taskId] = FormatStageObjective(taskId, stage);
+            }
+            else
+            {
+                objectivesById[taskId] = task.StartingObjective;
+            }
+
+            currentTaskId = taskId;
+        }
+    }
+```
+
+Supporting Types: TaskData, TaskStage, TaskType, TaskState
+Source File: Assets/Scripts/Tasks/TaskData.cs
+Purpose: Defines serialized task objectives and ordered stages, along with the Main/Side classification and task lifecycle states.
+
+SOURCE CODE (complete source file):
+TaskData.cs
+```csharp
+using System;
+using UnityEngine;
+
+[Serializable]
+public sealed class TaskData
+{
+    [SerializeField] private string taskId;
+    [SerializeField] private string title;
+    [SerializeField, TextArea(2, 4)] private string startingObjective;
+    [SerializeField] private TaskType taskType = TaskType.Side;
+    [SerializeField] private TaskStage[] stages = Array.Empty<TaskStage>();
+
+    public string TaskId => taskId;
+    public string Title => title;
+    public string StartingObjective => startingObjective;
+    public TaskType Type => taskType;
+    public TaskStage[] Stages => stages;
+}
+
+[Serializable]
+public sealed class TaskStage
+{
+    [SerializeField] private string stageId;
+    [SerializeField, TextArea(2, 4)] private string objectiveText;
+    [SerializeField, Min(0)] private int requiredCount;
+    [SerializeField] private string[] allowedProgressIds = Array.Empty<string>();
+
+    public string StageId => stageId;
+    public string ObjectiveText => objectiveText;
+    public int RequiredCount => requiredCount;
+    public string[] AllowedProgressIds => allowedProgressIds;
+}
+
+public enum TaskType
+{
+    Main,
+    Side
+}
+
+public enum TaskState
+{
+    Inactive,
+    Active,
+    Completed
+}
+```
+==================================================
+
+IMPORTANT OMITTED DEPENDENCIES
+
+The excerpts depend on existing project types and serialized data, including SessionStoryState, Journal category data and assets, the omitted reflection response/theme helpers, Clarity shaders and document source data, ClarityTarget overlay-resource helpers, ClarityDocumentViewer layout/modal-state helpers, GameplaySystemState, TaskPresentationChange, TaskNotificationUI, and serialized TaskData definitions. These remain in the project and are not reproduced. Legacy JournalManager and Inventory2D scripts also remain in the project; this document selects ReconstructionJournalManager and InventoryManager for the current gameplay systems. ClaritySyst.cs implements a separate clarity-points/hearts component; ClarityManager owns the magnifying-lens mechanic. Task tracker visuals and side-task trigger scripts are omitted.
+
+==================================================

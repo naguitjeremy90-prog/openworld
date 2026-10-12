@@ -39,6 +39,22 @@ public sealed class GameplayHUDUnlockReveal : MonoBehaviour
         CaptureNormalState();
     }
 
+    internal void ConfigureNormalState(CanvasGroup group, float alpha, bool interactable, bool blocksRaycasts)
+    {
+        if (group != null)
+            canvasGroup = group;
+        if (rectTransform == null)
+            rectTransform = transform as RectTransform;
+        if (rectTransform == null || canvasGroup == null)
+            return;
+
+        normalScale = rectTransform.localScale;
+        normalAlpha = Mathf.Clamp01(alpha);
+        normalInteractable = interactable;
+        normalBlocksRaycasts = blocksRaycasts;
+        capturedNormalState = true;
+    }
+
     public bool PlayReveal()
     {
         if (!isActiveAndEnabled || rectTransform == null || canvasGroup == null ||

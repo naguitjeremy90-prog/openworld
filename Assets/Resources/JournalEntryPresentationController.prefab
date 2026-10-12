@@ -46,3 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JournalEntryPresentationController
   holdDuration: 1
   notificationFadeDuration: 0.2
+  enableDiscoveryPopup: 0
+  notificationBackgroundSprite: {fileID: 21300000, guid: d263a9b16621c5b4b9f2e0881c0a62df, type: 3}
