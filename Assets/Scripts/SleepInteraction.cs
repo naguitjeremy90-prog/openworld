@@ -30,6 +30,7 @@ public class SleepInteraction : MonoBehaviour
 
     [Header("Wake Dialogue")]
     [SerializeField] private SelfDialogueTrigger wakeSelfDialogue;
+    [SerializeField] private AlaalaInteractionSFX interactionSFX;
 
     private bool playerNear = false;  
     private bool hasSlept = false;
@@ -41,6 +42,8 @@ public class SleepInteraction : MonoBehaviour
     private void Awake()
     {
         GameplayHUDTarget.AttachTo(interactText);
+        if (interactionSFX == null)
+            interactionSFX = GetComponent<AlaalaInteractionSFX>();
     }
 
     private void Start()
@@ -85,6 +88,8 @@ public class SleepInteraction : MonoBehaviour
             HasObservedSleepAttempt = true;
             hasSlept = true;
             NotifySleepAccepted();
+            if (interactionSFX != null)
+                interactionSFX.PlayAcceptedInteraction();
             bool shouldPlayDream = !GameFlags.isMorning;
             bool movementWasEnabled = playerMovement != null && playerMovement.enabled;
 

@@ -70,7 +70,7 @@ public sealed class RandomHouseResidentLeadController : MonoBehaviour
             return;
 
         leadAttemptActive = isLead;
-        if (!conversationTrigger.StartConversationProgrammatically(conversation))
+        if (!conversationTrigger.StartInteractionConversationProgrammatically(conversation))
             leadAttemptActive = false;
     }
 

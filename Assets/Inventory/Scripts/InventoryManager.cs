@@ -21,6 +21,7 @@ public sealed class InventoryManager : MonoBehaviour
     private IReadOnlyList<InventoryItemData> ownedItemsView;
 
     public event Action OnInventoryChanged;
+    public event Action<InventoryItemData> ItemAdded;
 
     private void Awake()
     {
@@ -53,6 +54,8 @@ public sealed class InventoryManager : MonoBehaviour
             return false;
 
         ownedItems.Add(item);
+        InventoryItemReadState.RegisterAcquisition(item.ItemID);
+        ItemAdded?.Invoke(item);
         OnInventoryChanged?.Invoke();
         return true;
     }
@@ -61,6 +64,7 @@ public sealed class InventoryManager : MonoBehaviour
     public void ClearOwnedItemsForNewGame()
     {
         ownedItems.Clear();
+        InventoryItemReadState.ResetForNewGame();
     }
 
     public bool AddItem(string itemID)
@@ -92,6 +96,7 @@ public sealed class InventoryManager : MonoBehaviour
             if (item != null && string.Equals(item.ItemID, normalizedID, StringComparison.Ordinal))
             {
                 ownedItems.RemoveAt(i);
+                InventoryItemReadState.HandleItemRemoved(item.ItemID);
                 OnInventoryChanged?.Invoke();
                 return true;
             }

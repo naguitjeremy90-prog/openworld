@@ -53,6 +53,7 @@ public class NPCConversationTrigger : MonoBehaviour
     private INPCConversationMovement pausedMovement;
     private StoryConversationSelector storyConversationSelector;
     private TaskStageConversationSelector taskStageConversationSelector;
+    private AlaalaInteractionSFX interactionSFX;
 
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
@@ -67,6 +68,7 @@ public class NPCConversationTrigger : MonoBehaviour
     {
         storyConversationSelector = GetComponent<StoryConversationSelector>();
         taskStageConversationSelector = GetComponent<TaskStageConversationSelector>();
+        interactionSFX = GetComponent<AlaalaInteractionSFX>();
         storyFocusFinishedEvent.AddListener(HandleStoryFocusFinished);
         GameplayHUDTarget.AttachTo(talkText);
 
@@ -184,7 +186,7 @@ public class NPCConversationTrigger : MonoBehaviour
                     : firstConversation;
         }
 
-        BeginConversation(conversation, true);
+        BeginConversation(conversation, true, true);
     }
 
     /// <summary>Starts a specified follow-up conversation through this NPC's normal presentation.</summary>
@@ -198,12 +200,32 @@ public class NPCConversationTrigger : MonoBehaviour
             return false;
         }
 
-        BeginConversation(conversation, false);
-        return true;
+        return BeginConversation(conversation, false, false);
     }
 
-    private void BeginConversation(NPCConversation conversation, bool countsAsFirstConversation)
+    /// <summary>Starts a programmatic conversation requested by a player interaction.</summary>
+    public bool StartInteractionConversationProgrammatically(NPCConversation conversation)
     {
+        ConversationManager manager = ConversationManager.Instance;
+        if (conversation == null || !isActiveAndEnabled || isTalking ||
+            activeConversationTrigger != null || manager == null ||
+            manager.IsConversationActive || StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            return false;
+        }
+
+        return BeginConversation(conversation, false, true);
+    }
+
+    private bool BeginConversation(
+        NPCConversation conversation,
+        bool countsAsFirstConversation,
+        bool playInteractionSFX)
+    {
+        ConversationManager manager = ConversationManager.Instance;
+        if (conversation == null || manager == null)
+            return false;
+
         isTalking = true;
         activeConversationTrigger = this;
         currentConversationCountsAsFirst = countsAsFirstConversation;
@@ -231,7 +253,10 @@ public class NPCConversationTrigger : MonoBehaviour
 
         LastStartedConversation = conversation;
 
-        ConversationManager.Instance.StartConversation(conversation);
+        manager.StartConversation(conversation);
+
+        if (playInteractionSFX && interactionSFX != null)
+            interactionSFX.PlayAcceptedInteraction();
 
         INPCConversationMovement movement = linkedConversationMovement != null
             ? linkedConversationMovement as INPCConversationMovement
@@ -241,6 +266,8 @@ public class NPCConversationTrigger : MonoBehaviour
             movement.SetConversationMovementPaused(true);
             pausedMovement = movement;
         }
+
+        return true;
     }
 
     private bool IsInteractionAvailable()

@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -180,10 +180,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.29411765, g: 0.52156866, b: 0.7411765, a: 1}
+  m_Color: {r: 0.103773475, g: 0.63641447, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e85a9deb654d37943b366255afb3c947, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationVisualIndicator
   _coreContent: {fileID: 4568015673543872858}
   _rotationContent: {fileID: 7791333382514610722}
@@ -319,6 +319,8 @@ MonoBehaviour:
   _distanceLabelVisibility: 0
   _lookAtDotThreshold: 0.95
   _distanceLabelFadeTime: 0.15
+  presentationMode: 0
+  usePrefabArrowRotation: 0
   iconGroup: {fileID: 3364963628670803037}
   arrowGroup: {fileID: 2673594580076310855}
   onScreenResponseTime: 0.065

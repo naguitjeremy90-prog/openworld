@@ -13,6 +13,7 @@ public class SceneEntrance : MonoBehaviour
     [Header("Story Requirement (Optional)")]
     [SerializeField] private string requiredStoryFlagId;
     [SerializeField] private UnityEvent onRequirementFailed = new UnityEvent();
+    [SerializeField] private AlaalaInteractionSFX interactionSFX;
     [Header("Interaction Highlight")]
     [SerializeField] private Renderer highlightRenderer;
     [SerializeField] private Color highlightColor = Color.white;
@@ -28,6 +29,9 @@ public class SceneEntrance : MonoBehaviour
 
     private void Start()
     {
+        if (interactionSFX == null)
+            interactionSFX = GetComponent<AlaalaInteractionSFX>();
+
         if (interactText != null)
             interactText.SetActive(false);
 
@@ -161,6 +165,8 @@ public class SceneEntrance : MonoBehaviour
         }
 
         transitionInProgress = true;
+        if (interactionSFX != null)
+            interactionSFX.PlayAcceptedInteraction();
         NotifyEntranceAccepted();
         StartCoroutine(TransitionScene());
     }

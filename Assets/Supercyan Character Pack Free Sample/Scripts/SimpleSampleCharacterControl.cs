@@ -5,6 +5,9 @@ namespace Supercyan.FreeSample
 {
     public class SimpleSampleCharacterControl : MonoBehaviour
     {
+        /// <summary>Raised after a grounded jump passes the cooldown check and its impulse is applied.</summary>
+        public event System.Action JumpStarted;
+
         private enum ControlMode
         {
             /// <summary>
@@ -426,6 +429,7 @@ namespace Supercyan.FreeSample
                     );
 
                     m_playerMovementAudio?.PlayJumpSound();
+                    NotifyJumpStarted();
                 }
 
                 // Jump animation starts immediately
@@ -598,6 +602,19 @@ namespace Supercyan.FreeSample
         private static bool IsWalkableGroundNormal(Vector3 normal)
         {
             return Vector3.Dot(normal, Vector3.up) > GroundNormalThreshold;
+        }
+
+        private void NotifyJumpStarted()
+        {
+            System.Action listeners = JumpStarted;
+            if (listeners == null)
+                return;
+
+            foreach (System.Action listener in listeners.GetInvocationList())
+            {
+                try { listener(); }
+                catch (System.Exception exception) { Debug.LogException(exception, this); }
+            }
         }
     }
 }

@@ -1339,6 +1339,7 @@ GameObject:
   - component: {fileID: 38832317}
   - component: {fileID: 38832319}
   - component: {fileID: 38832318}
+  - component: {fileID: 38832320}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1415,6 +1416,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &38832320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38832316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1001 &48275009
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3485,6 +3505,7 @@ GameObject:
   - component: {fileID: 303703196}
   - component: {fileID: 303703198}
   - component: {fileID: 303703197}
+  - component: {fileID: 303703199}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -3561,6 +3582,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &303703199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303703195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &307408550
 GameObject:
   m_ObjectHideFlags: 0
@@ -3688,6 +3728,7 @@ GameObject:
   - component: {fileID: 327964543}
   - component: {fileID: 327964545}
   - component: {fileID: 327964544}
+  - component: {fileID: 327964546}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -3764,6 +3805,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &327964546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327964542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &343034966
 GameObject:
   m_ObjectHideFlags: 0
@@ -3954,6 +4014,7 @@ GameObject:
   - component: {fileID: 374752181}
   - component: {fileID: 374752180}
   - component: {fileID: 374752179}
+  - component: {fileID: 374752182}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -4045,6 +4106,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &374752182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374752177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &398175430
 GameObject:
   m_ObjectHideFlags: 0
@@ -11956,6 +12036,7 @@ GameObject:
   - component: {fileID: 686732932}
   - component: {fileID: 686732931}
   - component: {fileID: 686732930}
+  - component: {fileID: 686732933}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -12047,6 +12128,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &686732933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686732928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &696649717 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3219099679595096129, guid: d6072e16975044c4c9e2715486847062, type: 3}
@@ -12259,6 +12359,7 @@ GameObject:
   - component: {fileID: 774539157}
   - component: {fileID: 774539156}
   - component: {fileID: 774539155}
+  - component: {fileID: 774539160}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -12402,6 +12503,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &774539160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774539153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &779731117
 GameObject:
   m_ObjectHideFlags: 0
@@ -13341,6 +13461,7 @@ GameObject:
   - component: {fileID: 1001155114}
   - component: {fileID: 1001155113}
   - component: {fileID: 1001155112}
+  - component: {fileID: 1001155115}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -13432,6 +13553,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1001155115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001155110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &1008934309 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7907327731746674247, guid: d6072e16975044c4c9e2715486847062, type: 3}
@@ -14644,6 +14784,7 @@ GameObject:
   - component: {fileID: 1293344125}
   - component: {fileID: 1293344124}
   - component: {fileID: 1293344123}
+  - component: {fileID: 1293344126}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -14735,6 +14876,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1293344126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1293344121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &1306578875 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2067938877933881456, guid: d6072e16975044c4c9e2715486847062, type: 3}
@@ -15668,6 +15828,7 @@ GameObject:
   - component: {fileID: 1536067358}
   - component: {fileID: 1536067357}
   - component: {fileID: 1536067356}
+  - component: {fileID: 1536067359}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -15759,6 +15920,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1536067359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536067354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!134 &1536573871
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -15982,6 +16162,7 @@ GameObject:
   - component: {fileID: 1541299478}
   - component: {fileID: 1541299480}
   - component: {fileID: 1541299479}
+  - component: {fileID: 1541299481}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -16058,6 +16239,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.6666626
   m_Center: {x: 0, y: 0, z: 0.1666626}
+--- !u!114 &1541299481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541299477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!134 &1543081117
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -17971,6 +18171,7 @@ GameObject:
   - component: {fileID: 1965055638}
   - component: {fileID: 1965055637}
   - component: {fileID: 1965055636}
+  - component: {fileID: 1965055639}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -18062,6 +18263,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1965055639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965055634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &1990676763
 GameObject:
   m_ObjectHideFlags: 0
@@ -18529,6 +18749,7 @@ GameObject:
   - component: {fileID: 2097531644}
   - component: {fileID: 2097531646}
   - component: {fileID: 2097531645}
+  - component: {fileID: 2097531647}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -18605,6 +18826,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.65461427
   m_Center: {x: 0, y: 0, z: 0.15461425}
+--- !u!114 &2097531647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097531643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1 &2111846787
 GameObject:
   m_ObjectHideFlags: 0

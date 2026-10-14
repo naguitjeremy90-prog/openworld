@@ -50,6 +50,7 @@ public sealed class KalesaTravelController : MonoBehaviour
 
     [Header("Travel presentation")]
     [SerializeField] private AudioClip travelAudioClip;
+    [SerializeField] private AlaalaInteractionSFX interactionSFX;
     [SerializeField] private AudioSource travelAudioSource;
     [SerializeField, Min(0f)] private float travelBlackScreenDuration = 3f;
 
@@ -85,6 +86,9 @@ public sealed class KalesaTravelController : MonoBehaviour
 
         if (boardingTrigger == null)
             boardingTrigger = GetComponent<SphereCollider>();
+
+        if (interactionSFX == null)
+            interactionSFX = GetComponent<AlaalaInteractionSFX>();
 
         if (boardingTrigger != null)
             boardingTrigger.isTrigger = true;
@@ -301,6 +305,9 @@ public sealed class KalesaTravelController : MonoBehaviour
                 Debug.LogWarning("Kalesa travel could not acquire story-sequence ownership.", this);
                 yield break;
             }
+
+            if (interactionSFX != null)
+                interactionSFX.PlayAcceptedInteraction();
 
             CaptureAndLockGameplay();
             fadeNeedsRecovery = true;

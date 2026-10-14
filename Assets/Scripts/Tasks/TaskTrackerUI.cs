@@ -6,6 +6,12 @@ using UnityEngine;
 [DefaultExecutionOrder(100)] // Apply tracker alpha after the HUD restoration fade.
 public sealed class TaskTrackerUI : MonoBehaviour
 {
+    private const float ObjectiveTopOffset = 48f;
+    private const float CardBottomPadding = 7f;
+    private const float ObjectiveSafetyPadding = 1.5f;
+    private const float MinimumCardHeight = 68f;
+    private const float TrackerGapInParentSpace = 10f;
+
     [SerializeField] private TaskType displayedTaskType = TaskType.Side;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMPro.TMP_Text typeLabel;
@@ -29,6 +35,12 @@ public sealed class TaskTrackerUI : MonoBehaviour
     private Color authoredTypeLabelColor = Color.white;
     private Color authoredTitleColor = Color.white;
     private Color normalObjectiveColor = Color.white;
+    private RectTransform trackerRect;
+    private RectTransform objectiveRect;
+    private Vector2 authoredAnchoredPosition;
+    private TaskTrackerUI pairedTracker;
+    private bool trackerPairResolved;
+    private bool invalidPreferredHeightReported;
     private bool hasActiveTask;
     private readonly Queue<CompletionPresentation> completions = new Queue<CompletionPresentation>();
     private readonly Dictionary<string, string> titles = new Dictionary<string, string>();
@@ -61,6 +73,11 @@ public sealed class TaskTrackerUI : MonoBehaviour
 
     private void Awake()
     {
+        trackerRect = transform as RectTransform;
+        objectiveRect = objectiveText != null ? objectiveText.rectTransform : null;
+        if (trackerRect != null)
+            authoredAnchoredPosition = trackerRect.anchoredPosition;
+
         GameplayHUDTarget target = GetComponent<GameplayHUDTarget>();
         if (target == null)
             target = gameObject.AddComponent<GameplayHUDTarget>();
@@ -165,6 +182,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
                 : string.Empty;
         if (objectiveText != null)
             objectiveText.text = objective;
+        RefreshDynamicLayout();
         SetPresentationAlpha(hasActiveTask ? 1f : 0f);
     }
 
@@ -177,6 +195,7 @@ public sealed class TaskTrackerUI : MonoBehaviour
             objectiveText.text = string.Empty;
         if (titleText != null)
             titleText.text = string.Empty;
+        RefreshDynamicLayout();
         SetPresentationAlpha(0f);
     }
 
@@ -299,7 +318,87 @@ public sealed class TaskTrackerUI : MonoBehaviour
             objectiveText.color = normalObjectiveColor;
         }
 
+        RefreshDynamicLayout();
         SetPresentationAlpha(hasActiveTask ? 1f : 0f);
+    }
+
+    private void RefreshDynamicLayout()
+    {
+        if (hasActiveTask && objectiveText != null && objectiveRect != null && trackerRect != null)
+        {
+            // Force TMP to generate the current string at its authored width before
+            // reading preferredHeight, so the first visible frame uses final geometry.
+            objectiveText.ForceMeshUpdate();
+            float preferredHeight = objectiveText.preferredHeight;
+            if (preferredHeight > 0f && !float.IsNaN(preferredHeight) && !float.IsInfinity(preferredHeight))
+            {
+                float objectiveHeight = Mathf.Ceil(preferredHeight + ObjectiveSafetyPadding);
+                objectiveRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, objectiveHeight);
+
+                float cardHeight = Mathf.Ceil(Mathf.Max(
+                    MinimumCardHeight,
+                    ObjectiveTopOffset + objectiveHeight + CardBottomPadding));
+                trackerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, cardHeight);
+                invalidPreferredHeightReported = false;
+            }
+            else if (!invalidPreferredHeightReported)
+            {
+                Debug.LogWarning("Task tracker could not measure its current objective; keeping the authored layout.", this);
+                invalidPreferredHeightReported = true;
+            }
+        }
+
+        UpdatePairedTrackerPosition();
+    }
+
+    private void UpdatePairedTrackerPosition()
+    {
+        TaskTrackerUI paired = GetPairedTracker();
+        if (paired == null || trackerRect == null || paired.trackerRect == null)
+            return;
+
+        TaskTrackerUI main = displayedTaskType == TaskType.Main ? this : paired;
+        TaskTrackerUI side = displayedTaskType == TaskType.Side ? this : paired;
+        if (main.hasActiveTask)
+        {
+            Vector3[] corners = new Vector3[4];
+            main.trackerRect.GetWorldCorners(corners);
+            // RectTransform.GetWorldCorners order: bottom-left, top-left,
+            // top-right, bottom-right. Side uses the same top-right pivot.
+            RectTransform sideParent = side.trackerRect.parent as RectTransform;
+            if (sideParent == null || side.trackerRect.parent != main.trackerRect.parent)
+                return;
+
+            Vector3 gap = sideParent.TransformVector(Vector3.down * TrackerGapInParentSpace);
+            side.trackerRect.position = corners[3] + gap;
+        }
+        else
+        {
+            // Preserve the authored Side-only position when Main has no active task.
+            side.trackerRect.anchoredPosition = side.authoredAnchoredPosition;
+        }
+    }
+
+    private TaskTrackerUI GetPairedTracker()
+    {
+        if (trackerPairResolved)
+            return pairedTracker;
+
+        trackerPairResolved = true;
+        if (trackerRect == null || trackerRect.parent == null)
+            return null;
+
+        TaskTrackerUI[] trackers = trackerRect.parent.GetComponentsInChildren<TaskTrackerUI>(true);
+        foreach (TaskTrackerUI candidate in trackers)
+        {
+            if (candidate != this && candidate.displayedTaskType != displayedTaskType &&
+                candidate.transform.parent == transform.parent)
+            {
+                pairedTracker = candidate;
+                break;
+            }
+        }
+        return pairedTracker;
     }
 
     private void RefreshActiveTitle()

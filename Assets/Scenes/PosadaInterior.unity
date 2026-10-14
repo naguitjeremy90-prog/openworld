@@ -2899,7 +2899,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -48}
-  m_SizeDelta: {x: -32, y: 28}
+  m_SizeDelta: {x: -32, y: 65}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &291191750
 MonoBehaviour:
@@ -3763,7 +3763,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -12, y: -12}
-  m_SizeDelta: {x: 300, y: 84}
+  m_SizeDelta: {x: 300, y: 120}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &383042889
 MonoBehaviour:
@@ -6507,19 +6507,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647310163}
   m_CullTransparentMesh: 1
---- !u!134 &652906941
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1 &657043486
 GameObject:
   m_ObjectHideFlags: 0
@@ -6696,8 +6683,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12, y: -106}
-  m_SizeDelta: {x: 300, y: 84}
+  m_AnchoredPosition: {x: -12, y: -142}
+  m_SizeDelta: {x: 300, y: 120}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &671421028
 MonoBehaviour:
@@ -7350,7 +7337,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -48}
-  m_SizeDelta: {x: -32, y: 28}
+  m_SizeDelta: {x: -32, y: 65}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &719778256
 MonoBehaviour:
@@ -8534,6 +8521,7 @@ GameObject:
   - component: {fileID: 806048481}
   - component: {fileID: 806048480}
   - component: {fileID: 806048479}
+  - component: {fileID: 806048484}
   m_Layer: 0
   m_Name: trigger to room
   m_TagString: Untagged
@@ -8560,6 +8548,7 @@ MonoBehaviour:
   onRequirementFailed:
     m_PersistentCalls:
       m_Calls: []
+  interactionSFX: {fileID: 0}
   highlightRenderer: {fileID: 0}
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
   highlightIntensity: 1.5
@@ -8570,7 +8559,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 806048478}
-  m_Material: {fileID: 652906941}
+  m_Material: {fileID: 1942745869}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -8656,19 +8645,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!134 &816915497
-PhysicsMaterial:
+--- !u!114 &806048484
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806048478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
   m_Name: 
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 4
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 1
 --- !u!1 &854196758
 GameObject:
   m_ObjectHideFlags: 0
@@ -17797,6 +17792,7 @@ GameObject:
   - component: {fileID: 1618710475}
   - component: {fileID: 1618710474}
   - component: {fileID: 2300000010}
+  - component: {fileID: 2300000011}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -17871,7 +17867,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618710472}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2131141684}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -21487,6 +21483,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1936229945}
   m_CullTransparentMesh: 1
+--- !u!134 &1942745869
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1956342546
 GameObject:
   m_ObjectHideFlags: 0
@@ -21624,6 +21633,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1956342546}
   m_CullTransparentMesh: 1
+--- !u!134 &1965306690
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1978326325
 GameObject:
   m_ObjectHideFlags: 0
@@ -22879,6 +22901,19 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1625412197}
   m_SourcePrefab: {fileID: -8670829309088485133, guid: c98ac5b4bc6fedb409e26b2c67fbbff3, type: 3}
+--- !u!134 &2131141684
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &2132145222
 GameObject:
   m_ObjectHideFlags: 0
@@ -22892,6 +22927,7 @@ GameObject:
   - component: {fileID: 2132145225}
   - component: {fileID: 2132145224}
   - component: {fileID: 2132145223}
+  - component: {fileID: 2132145228}
   m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
@@ -22918,6 +22954,7 @@ MonoBehaviour:
   onRequirementFailed:
     m_PersistentCalls:
       m_Calls: []
+  interactionSFX: {fileID: 0}
   highlightRenderer: {fileID: 0}
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
   highlightIntensity: 1.5
@@ -22928,7 +22965,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132145222}
-  m_Material: {fileID: 816915497}
+  m_Material: {fileID: 1965306690}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -23014,6 +23051,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2132145228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132145222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 3
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 1
 --- !u!1 &2133459743
 GameObject:
   m_ObjectHideFlags: 0
@@ -23223,6 +23279,25 @@ MonoBehaviour:
   enableSecondaryChannel: 0
   secondaryRules: []
   dualMarkerGap: 0.15
+--- !u!114 &2300000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618710472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 0
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1981,7 +1981,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -48}
-  m_SizeDelta: {x: -32, y: 28}
+  m_SizeDelta: {x: -32, y: 65}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &210415933
 MonoBehaviour:
@@ -3759,8 +3759,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12, y: -106}
-  m_SizeDelta: {x: 300, y: 84}
+  m_AnchoredPosition: {x: -12, y: -142}
+  m_SizeDelta: {x: 300, y: 120}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &452423263
 MonoBehaviour:
@@ -4331,7 +4331,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -48}
-  m_SizeDelta: {x: -32, y: 28}
+  m_SizeDelta: {x: -32, y: 65}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &517221537
 MonoBehaviour:
@@ -5437,19 +5437,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 547423561}
   m_CullTransparentMesh: 1
---- !u!134 &560726924
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1 &561862505
 GameObject:
   m_ObjectHideFlags: 0
@@ -8056,6 +8043,7 @@ GameObject:
   - component: {fileID: 768743096}
   - component: {fileID: 768743095}
   - component: {fileID: 768743094}
+  - component: {fileID: 768743099}
   m_Layer: 0
   m_Name: trigger back
   m_TagString: Untagged
@@ -8082,6 +8070,7 @@ MonoBehaviour:
   onRequirementFailed:
     m_PersistentCalls:
       m_Calls: []
+  interactionSFX: {fileID: 0}
   highlightRenderer: {fileID: 0}
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
   highlightIntensity: 1.5
@@ -8092,7 +8081,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 768743093}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1900385973}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -8178,6 +8167,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &768743099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768743093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 5
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 1
 --- !u!1 &772607446
 GameObject:
   m_ObjectHideFlags: 0
@@ -10968,7 +10976,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -12, y: -12}
-  m_SizeDelta: {x: 300, y: 84}
+  m_SizeDelta: {x: 300, y: 120}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1044878450
 MonoBehaviour:
@@ -15694,6 +15702,7 @@ GameObject:
   - component: {fileID: 1495499357}
   - component: {fileID: 1495499363}
   - component: {fileID: 1495499362}
+  - component: {fileID: 1495499364}
   m_Layer: 0
   m_Name: Bed Trigger
   m_TagString: Untagged
@@ -15720,6 +15729,7 @@ MonoBehaviour:
   playerAnimator: {fileID: 2127776646}
   wakeReaction: {fileID: 2127776650}
   wakeSelfDialogue: {fileID: 479583307}
+  interactionSFX: {fileID: 0}
 --- !u!65 &1495499358
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15727,7 +15737,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495499356}
-  m_Material: {fileID: 560726924}
+  m_Material: {fileID: 1794069555}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -15944,6 +15954,25 @@ MonoBehaviour:
     audioClip: {fileID: 0}
   audioSource: {fileID: 1495499362}
   endAudioClip: {fileID: 0}
+--- !u!114 &1495499364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1495499356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b54ff2d454f394ea3494f00e9541d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlaalaInteractionSFX
+  interactionType: 6
+  defaults: {fileID: 11400000, guid: 207293ef7b20de645a3e39a24a058a53, type: 2}
+  clipOverride: {fileID: 0}
+  volume: 1
+  pitchVariation: 0
+  spatialBlend: 0
+  transitionSafe: 0
 --- !u!21 &1518100722
 Material:
   serializedVersion: 8
@@ -18975,6 +19004,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1791629439}
   m_CullTransparentMesh: 1
+--- !u!134 &1794069555
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1796633677
 GameObject:
   m_ObjectHideFlags: 0
@@ -20085,6 +20127,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!134 &1900385973
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1903463001
 GameObject:
   m_ObjectHideFlags: 0

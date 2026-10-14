@@ -4,8 +4,15 @@ public class InspectableObject : MonoBehaviour
 {
     [SerializeField] private ObjectViewer objectViewer;
     [SerializeField] private Sprite objectSprite;
+    [SerializeField] private AlaalaInteractionSFX interactionSFX;
 
     private bool isOpen = false;
+
+    private void Awake()
+    {
+        if (interactionSFX == null)
+            interactionSFX = GetComponent<AlaalaInteractionSFX>();
+    }
 
     public void Inspect()
     {
@@ -20,6 +27,8 @@ public class InspectableObject : MonoBehaviour
         {
             objectViewer.OpenObject(objectSprite);
             isOpen = true;
+            if (interactionSFX != null)
+                interactionSFX.PlayAcceptedInteraction();
         }
     }
 

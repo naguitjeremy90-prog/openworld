@@ -251,17 +251,32 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void ResolveInventoryHUD()
     {
-        if (inventoryReveal != null) return;
-        GameObject icon = GameObject.Find("InventoryButton");
+        InventoryHUDItemAttention.Instance?.ConfigureTabBadges(
+            this, allTabButton, questItemsTabButton, keyItemsTabButton, documentsTabButton);
+        GameObject icon = inventoryReveal != null && inventoryReveal.gameObject.scene == gameObject.scene
+            ? inventoryReveal.gameObject
+            : null;
         if (icon == null)
+        {
             foreach (var rect in FindObjectsByType<RectTransform>(FindObjectsInactive.Include))
                 if (rect.name == "InventoryButton" && rect.gameObject.scene == gameObject.scene)
                 {
                     icon = rect.gameObject;
                     break;
                 }
+        }
         if (icon != null && icon != gameObject)
         {
+            InventoryHUDItemAttention.Instance?.Configure(this, icon.transform as RectTransform);
+            if (inventoryReveal != null && inventoryReveal.gameObject == icon)
+            {
+                if (isActiveAndEnabled)
+                {
+                    inventoryReveal.RevealCompleted -= HandleInventoryRevealCompleted;
+                    inventoryReveal.RevealCompleted += HandleInventoryRevealCompleted;
+                }
+                return;
+            }
             GameplayHUDTarget iconTarget = icon.GetComponent<GameplayHUDTarget>();
             if (iconTarget == null)
                 iconTarget = icon.AddComponent<GameplayHUDTarget>();
@@ -270,11 +285,14 @@ public sealed class InventoryUI : MonoBehaviour
                 iconGroup = icon.AddComponent<CanvasGroup>();
             iconTarget.Configure(iconGroup, icon);
 
-            inventoryReveal = icon.GetComponent<GameplayHUDUnlockReveal>();
             if (inventoryReveal == null)
-                inventoryReveal = icon.AddComponent<GameplayHUDUnlockReveal>();
-            iconTarget.GetNormalPresentationState(out float normalAlpha, out bool normalInteractable, out bool normalBlocksRaycasts);
-            inventoryReveal.ConfigureNormalState(iconGroup, normalAlpha, normalInteractable, normalBlocksRaycasts);
+            {
+                inventoryReveal = icon.GetComponent<GameplayHUDUnlockReveal>();
+                if (inventoryReveal == null)
+                    inventoryReveal = icon.AddComponent<GameplayHUDUnlockReveal>();
+                iconTarget.GetNormalPresentationState(out float normalAlpha, out bool normalInteractable, out bool normalBlocksRaycasts);
+                inventoryReveal.ConfigureNormalState(iconGroup, normalAlpha, normalInteractable, normalBlocksRaycasts);
+            }
             GameplaySystemTutorialAnchor.AttachTo(icon, GameplaySystemId.Inventory);
             if (isActiveAndEnabled)
             {
@@ -299,6 +317,7 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void OnDisable()
     {
+        InventoryHUDItemAttention.Instance?.Detach(this);
         GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
         UnbindFromManager();
 
@@ -382,6 +401,10 @@ public sealed class InventoryUI : MonoBehaviour
         IsOpen = true;
         PlayInventorySound(
             inventoryAudioConfig != null ? inventoryAudioConfig.InventoryOpenSound : null);
+        // Activate the hidden slot container before constructing slots so their
+        // Awake methods run before Setup assigns presentation state.
+        if (inventoryRoot != null)
+            inventoryRoot.SetActive(true);
         BindToManager();
         Refresh();
         SetGameplayInputBlocked(true);
@@ -664,6 +687,12 @@ public sealed class InventoryUI : MonoBehaviour
 
         if (detailDescription != null)
             detailDescription.text = item != null ? item.Description : string.Empty;
+
+        if (item != null && (detailIcon != null || detailName != null || detailDescription != null))
+        {
+            if (InventoryItemReadState.MarkRead(item.ItemID))
+                Refresh();
+        }
     }
 
     private void BindToManager()
