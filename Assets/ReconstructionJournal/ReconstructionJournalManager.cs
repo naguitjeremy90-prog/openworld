@@ -65,6 +65,8 @@ public class ReconstructionJournalManager : MonoBehaviour
     public bool IsOpen { get; private set; }
     public bool AttentionRevealPending { get; private set; }
     public JournalTab CurrentTab { get; private set; } = JournalTab.Observations;
+    public RectTransform OpenButtonRectTransform =>
+        openButton != null ? openButton.transform as RectTransform : null;
 
     private GameplayHUDUnlockReveal unlockReveal;
     private JournalHUDEntryPulse entryPulse;

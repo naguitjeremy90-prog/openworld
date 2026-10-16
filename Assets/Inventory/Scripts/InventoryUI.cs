@@ -64,6 +64,11 @@ public sealed class InventoryUI : MonoBehaviour
     [Header("Inventory UI Audio")]
     [SerializeField] private AudioSource inventoryAudioSource;
 
+    [Header("Story Sequence Behavior")]
+    [Tooltip("When enabled, an inventory open request made during a story sequence waits until the sequence ends. Keep disabled unless this scene requires it.")]
+    [SerializeField] private bool deferOpenUntilStorySequenceEnds;
+    private bool openPendingAfterStorySequence;
+
     private readonly List<InventorySlotUI> spawnedSlots = new List<InventorySlotUI>();
     private readonly List<InventoryItemData> filteredItems = new List<InventoryItemData>();
 
@@ -317,6 +322,7 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void OnDisable()
     {
+        openPendingAfterStorySequence = false;
         InventoryHUDItemAttention.Instance?.Detach(this);
         GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
         UnbindFromManager();
@@ -371,6 +377,15 @@ public sealed class InventoryUI : MonoBehaviour
         {
             if (IsOpen)
                 CloseInventory();
+            else if (deferOpenUntilStorySequenceEnds && Input.GetKeyDown(KeyCode.I))
+                openPendingAfterStorySequence = !openPendingAfterStorySequence;
+            return;
+        }
+
+        if (openPendingAfterStorySequence)
+        {
+            openPendingAfterStorySequence = false;
+            OpenInventory();
             return;
         }
 
@@ -386,6 +401,20 @@ public sealed class InventoryUI : MonoBehaviour
         if (!GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory))
             return;
 
+        if (deferOpenUntilStorySequenceEnds && StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            if (IsOpen)
+            {
+                openPendingAfterStorySequence = false;
+                CloseInventory();
+            }
+            else
+            {
+                openPendingAfterStorySequence = !openPendingAfterStorySequence;
+            }
+            return;
+        }
+
         if (IsOpen)
             CloseInventory();
         else
@@ -397,6 +426,12 @@ public sealed class InventoryUI : MonoBehaviour
         if (IsOpen ||
             !GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory))
             return;
+
+        if (deferOpenUntilStorySequenceEnds && StorySequenceCoordinator.IsStorySequenceActive)
+        {
+            openPendingAfterStorySequence = true;
+            return;
+        }
 
         IsOpen = true;
         PlayInventorySound(
@@ -431,6 +466,9 @@ public sealed class InventoryUI : MonoBehaviour
         GameplaySystemId system,
         bool unlocked)
     {
+        if (system == GameplaySystemId.Inventory && !unlocked)
+            openPendingAfterStorySequence = false;
+
         if (system == GameplaySystemId.Inventory && !unlocked && IsOpen)
             CloseInventory();
 

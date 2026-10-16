@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3c486c1d391e14b99eff1a060a7677, type: 3}
+  m_Name: PresentPiliArchivalRizalNovel
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryItemData
+  itemID: present_pili_archival_rizal_novel
+  displayName: "Tala sa Makamisa"
+  icon: {fileID: 21300000, guid: 7d3aba5935f3c7643aa8a13be6355445, type: 3}
+  description: "Isang tala tungkol sa muling pagsusuri sa mga naiwan na sulatin ni Rizal at sa pagkilala sa hindi natapos niyang ikatlong nobela."
+  category: 3

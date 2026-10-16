@@ -26,6 +26,23 @@ public class ClarityTarget : MonoBehaviour
     private Material overlayMaterial;
     private bool overlayResourcesCreated;
 
+    /// <summary>True while this target's existing Clarity overlay is actually enabled.</summary>
+    public bool IsCurrentlyHighlighted
+    {
+        get
+        {
+            foreach (OverlayState state in overlayStates)
+            {
+                if (state.overlay != null && state.overlay.enabled &&
+                    state.source != null && state.source.enabled &&
+                    state.source.gameObject.activeInHierarchy)
+                    return true;
+            }
+
+            return false;
+        }
+    }
+
     private void Reset()
     {
         targetRenderers = GetSupportedRenderersInChildren();
