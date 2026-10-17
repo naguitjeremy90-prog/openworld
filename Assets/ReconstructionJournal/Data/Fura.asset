@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PersonData
   personID: fura
   characterName: Fura
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: e475e29ad81c57e48a3491d9ded17447, type: 3}
   context: 1
   descriptionStages:
   - Isang lalaki sa Pili na tila pamilyar kay Clodio. Pinuna niya ang pag-alis nito

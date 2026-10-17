@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PersonData
   personID: mana_sebia
   characterName: Mana Sebia
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: 6ff6404cc54b025489a9635251c0d5d0, type: 3}
   context: 1
   descriptionStages:
   - Isang matandang babae sa Pili na nakausap ni Capitana Barang pagkatapos ng misa.

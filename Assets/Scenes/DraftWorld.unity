@@ -370,6 +370,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7039271}
   m_CullTransparentMesh: 1
+--- !u!114 &7592489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973718972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  conversationStates:
+  - stateName: Post-Part-1 - Mang Kardo
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: main_investigate_pili
+    requiredSessionStateFlagIds:
+    - task_progress:main_investigate_pili:gather_information:mang_kardo
+    conversation: {fileID: 2008934584}
+    priority: 100
+  enableDebugOverride: 0
+  debugConversation: {fileID: 0}
 --- !u!1 &9539153
 GameObject:
   m_ObjectHideFlags: 0
@@ -1250,6 +1272,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
   taskId: aling_ika_errand
   requiredStageId: 
+  additionalTaskId: 
+  additionalStageId: 
   useStoryFlagEligibility: 1
   requiredStoryFlagId: aling_ika_payment_received
   expectedStoryFlagValue: 1
@@ -2384,6 +2408,65 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.6066992, y: 1.5822803, z: 0.7485755}
   m_Center: {x: -3.0604348, y: 0.776824, z: 46.979076}
+--- !u!1 &96264585
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 96264586}
+  - component: {fileID: 96264587}
+  m_Layer: 0
+  m_Name: Post-Part-1 Conversation - Toto
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &96264586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96264585}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1976315235}
+  m_Father: {fileID: 1220955099}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &96264587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96264585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Nahanap
+    mo na ba ang sagot na hinahanap mo? Ang dami mo nang nakausap!","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Toto","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":1}]}'
+  saveVersion: 110
+  DefaultName: Toto
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 1976315236}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &96404017
 GameObject:
   m_ObjectHideFlags: 0
@@ -3965,6 +4048,7 @@ MonoBehaviour:
   triggerOnce: 1
   autoStartOnEnter: 1
   treatAsStorySequence: 1
+  blockingCompletedTaskId: main_investigate_pili
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -4005,6 +4089,8 @@ MonoBehaviour:
   selfDialogueTrigger: {fileID: 140377534}
   treatAsStorySequence: 1
   eventId: DraftWorld.OverheardMariaNene
+  suppressWhenTaskCompleted: main_investigate_pili
+  requireNighttime: 0
   OnFocusFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -4352,6 +4438,7 @@ MonoBehaviour:
   triggerOnce: 1
   autoStartOnEnter: 1
   treatAsStorySequence: 0
+  blockingCompletedTaskId: 
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -4740,6 +4827,79 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &181415223
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 181415224}
+  - component: {fileID: 181415225}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &181415224
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181415223}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.987285, z: -0, w: -0.15896033}
+  m_LocalPosition: {x: 30.59326, y: 0.00000071525574, z: -4.2560554}
+  m_LocalScale: {x: 0.13008878, y: 1, z: 0.10554231}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1736558649}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &181415225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181415223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
+--- !u!114 &184081277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990274568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  conversationStates:
+  - stateName: Post-Part-1 - Mang Nardo
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: main_investigate_pili
+    requiredSessionStateFlagIds:
+    - task_progress:main_investigate_pili:gather_information:mang_nardo
+    conversation: {fileID: 504636230}
+    priority: 100
+  enableDebugOverride: 0
+  debugConversation: {fileID: 0}
 --- !u!1 &184255894
 GameObject:
   m_ObjectHideFlags: 0
@@ -8143,6 +8303,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
+--- !u!114 &311982528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377387055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  conversationStates:
+  - stateName: Post-Part-1 - Mang Iko
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: main_investigate_pili
+    requiredSessionStateFlagIds:
+    - task_progress:main_investigate_pili:gather_information:mang_iko
+    conversation: {fileID: 2084972014}
+    priority: 100
+  enableDebugOverride: 0
+  debugConversation: {fileID: 0}
 --- !u!1 &315377627
 GameObject:
   m_ObjectHideFlags: 0
@@ -9315,6 +9497,7 @@ GameObject:
   - component: {fileID: 377387060}
   - component: {fileID: 2300000006}
   - component: {fileID: 1593976786}
+  - component: {fileID: 311982528}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -9334,7 +9517,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5.7}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2084972013}
   m_Father: {fileID: 1593871885}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &377387057
@@ -11788,6 +11972,66 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21a364ddeffc797439f2a5721660b0e6, type: 3}
+--- !u!1 &504636228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 504636229}
+  - component: {fileID: 504636230}
+  m_Layer: 0
+  m_Name: Post-Part-1 Conversation - Mang Nardo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &504636229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504636228}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1093018604}
+  m_Father: {fileID: 1990274569}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &504636230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504636228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Mukhang
+    marami ka nang nakausap. May nahanap ka bang kasagutan?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Mang
+    Nardo","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":1}]}'
+  saveVersion: 110
+  DefaultName: Mang Nardo
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 1093018605}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &504926924
 GameObject:
   m_ObjectHideFlags: 0
@@ -11865,6 +12109,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 504926924}
   m_CullTransparentMesh: 1
+--- !u!1 &510673808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 510673809}
+  - component: {fileID: 510673810}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &510673809
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510673808}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.9999948, z: -0, w: 0.0032256546}
+  m_LocalPosition: {x: 515.00146, y: 0.0000009536743, z: 14.397012}
+  m_LocalScale: {x: 0.99980426, y: 1, z: 0.1754446}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2084972013}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &510673810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510673808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
 --- !u!1 &515486807
 GameObject:
   m_ObjectHideFlags: 0
@@ -13354,6 +13649,57 @@ MonoBehaviour:
   isAlert: 0
   m_InputValidator: {fileID: 0}
   m_ShouldActivateOnSelect: 1
+--- !u!1 &567906644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 567906645}
+  - component: {fileID: 567906646}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &567906645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567906644}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.79649055, z: -0, w: 0.604651}
+  m_LocalPosition: {x: 77.031555, y: -0.63372827, z: 68.93515}
+  m_LocalScale: {x: 0.18655244, y: 1, z: 0.74650425}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1432518676}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &567906646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567906644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
 --- !u!1 &576580445
 GameObject:
   m_ObjectHideFlags: 0
@@ -14789,6 +15135,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644726432}
   m_CullTransparentMesh: 1
+--- !u!1 &653967588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 653967589}
+  - component: {fileID: 653967590}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &653967589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653967588}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.9979078, z: -0, w: -0.064653724}
+  m_LocalPosition: {x: 320.22964, y: -0.24999928, z: 24.529388}
+  m_LocalScale: {x: 0.92742205, y: 1, z: 0.17788072}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1038440540}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &653967590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653967588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
 --- !u!1 &659623456
 GameObject:
   m_ObjectHideFlags: 0
@@ -15796,6 +16193,10 @@ MonoBehaviour:
   ensureInventoryForDirectTesting: 1
   inventoryManagerPrefab: {fileID: 8043043054039635776, guid: 10f261cac51f5f7429af34922e8bc746, type: 3}
   unlockInventoryForDirectTesting: 1
+  enableDirectJournalTesting: 0
+  suppressJournalTutorialForTesting: 0
+  ensureTaskManagerForTesting: 0
+  taskManagerPrefab: {fileID: 0}
 --- !u!4 &707748101
 Transform:
   m_ObjectHideFlags: 0
@@ -17087,6 +17488,28 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5328012943165257567, guid: d0c7d390ccb02be4398aaefed010e319, type: 3}
+--- !u!114 &757686562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789395900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  conversationStates:
+  - stateName: Post-Part-1 - Aling Maria
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: main_investigate_pili
+    requiredSessionStateFlagIds:
+    - task_progress:main_investigate_pili:gather_information:questioned_maria_nene
+    conversation: {fileID: 1736558650}
+    priority: 100
+  enableDebugOverride: 0
+  debugConversation: {fileID: 0}
 --- !u!1 &758248275
 GameObject:
   m_ObjectHideFlags: 0
@@ -17333,6 +17756,7 @@ GameObject:
   - component: {fileID: 789395906}
   - component: {fileID: 2300000001}
   - component: {fileID: 2106354618}
+  - component: {fileID: 757686562}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -17352,7 +17776,8 @@ Transform:
   m_LocalPosition: {x: -0.4, y: 0, z: 0.54}
   m_LocalScale: {x: 7.4677, y: 1, z: 9.694226}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1736558649}
   m_Father: {fileID: 613717463}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &789395902
@@ -20358,6 +20783,7 @@ MonoBehaviour:
   triggerOnce: 0
   autoStartOnEnter: 0
   treatAsStorySequence: 0
+  blockingCompletedTaskId: 
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -22338,6 +22764,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1036869860}
   m_CullTransparentMesh: 1
+--- !u!1 &1038440539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1038440540}
+  - component: {fileID: 1038440541}
+  m_Layer: 0
+  m_Name: Post-Part-1 Conversation - Mang Tibo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1038440540
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038440539}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 653967589}
+  m_Father: {fileID: 1801965140}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1038440541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038440539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Totoo
+    bang may lumang sulatin na natagpuan sa simbahan?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Mang
+    Tibo","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":1}]}'
+  saveVersion: 110
+  DefaultName: Mang Tibo
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 653967590}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1038889271 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5381386135662447605, guid: 21a364ddeffc797439f2a5721660b0e6, type: 3}
@@ -23126,6 +23612,7 @@ MonoBehaviour:
   triggerOnce: 0
   autoStartOnEnter: 0
   treatAsStorySequence: 0
+  blockingCompletedTaskId: 
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -23798,6 +24285,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1092320562}
   m_CullTransparentMesh: 1
+--- !u!1 &1093018603
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1093018604}
+  - component: {fileID: 1093018605}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1093018604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093018603}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.99987245, z: -0, w: 0.01597538}
+  m_LocalPosition: {x: 508.456, y: 0.0000009536743, z: 16.36776}
+  m_LocalScale: {x: 0.9952257, y: 1, z: 0.1755863}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 504636229}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1093018605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093018603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
 --- !u!4 &1100274009 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7513407531133588612, guid: e7ed910afa9718345a08819c3b2893d1, type: 3}
@@ -24771,6 +25309,57 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78bbcd31256d7c940927b14a4bca1bd6, type: 3}
+--- !u!1 &1151116844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1151116845}
+  - component: {fileID: 1151116846}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1151116845
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151116844}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.17450175, z: -0, w: 0.9846569}
+  m_LocalPosition: {x: -348.518, y: -0.0000076293945, z: 9.917866}
+  m_LocalScale: {x: 0.6430687, y: 1, z: 0.19436511}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2008934583}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1151116846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151116844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
 --- !u!4 &1157111125 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 466138, guid: 9f80f1d79ad11614cb6c1d85400f7f27, type: 3}
@@ -26256,6 +26845,7 @@ GameObject:
   - component: {fileID: 1220955102}
   - component: {fileID: 2300000005}
   - component: {fileID: 2300000010}
+  - component: {fileID: 2300000014}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -26275,7 +26865,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5.7}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 96264586}
   m_Father: {fileID: 22305821}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1220955100
@@ -29087,6 +29678,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ReconstructionReflections
   allReflections:
   - {fileID: 11400000, guid: 892ae0c3eef07ba44a6a4861ef47eea8, type: 2}
+  - {fileID: 11400000, guid: 92ccf4afdd034bc880e629a23b5ca186, type: 2}
   listContent: {fileID: 181309971}
   listButtonPrefab: {fileID: 6598735624607580097, guid: c99157fdfb1482b40bda112f7c0fd0a6, type: 3}
   emptyListText: {fileID: 1090205095}
@@ -30159,6 +30751,8 @@ MonoBehaviour:
   selfDialogueTrigger: {fileID: 1411860942}
   treatAsStorySequence: 0
   eventId: DraftWorld.PosadaIntro
+  suppressWhenTaskCompleted: 
+  requireNighttime: 1
   OnFocusFinished:
     m_PersistentCalls:
       m_Calls:
@@ -30284,6 +30878,7 @@ MonoBehaviour:
   triggerOnce: 1
   autoStartOnEnter: 0
   treatAsStorySequence: 0
+  blockingCompletedTaskId: 
   OnConversationFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -30703,6 +31298,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 683920640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1432518675
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1432518676}
+  - component: {fileID: 1432518677}
+  m_Layer: 0
+  m_Name: Post-Part-1 Conversation - Nena
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1432518676
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432518675}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 567906645}
+  m_Father: {fileID: 1732385627}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1432518677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432518675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"May
+    natuklasan ka na ba tungkol sa Makamisa?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Nena","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":1}]}'
+  saveVersion: 110
+  DefaultName: Nena
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 567906646}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1438175304
 GameObject:
   m_ObjectHideFlags: 0
@@ -34308,6 +34962,8 @@ MonoBehaviour:
   selfDialogueTrigger: {fileID: 0}
   treatAsStorySequence: 0
   eventId: DraftWorld.MaestroBenFocus
+  suppressWhenTaskCompleted: 
+  requireNighttime: 0
   OnFocusFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -34507,6 +35163,28 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1619870106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732385626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  conversationStates:
+  - stateName: Post-Part-1 - Nena
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: main_investigate_pili
+    requiredSessionStateFlagIds:
+    - task_progress:main_investigate_pili:gather_information:nena
+    conversation: {fileID: 1432518677}
+    priority: 100
+  enableDebugOverride: 0
+  debugConversation: {fileID: 0}
 --- !u!1 &1626591245
 GameObject:
   m_ObjectHideFlags: 0
@@ -36505,6 +37183,7 @@ GameObject:
   - component: {fileID: 1732385630}
   - component: {fileID: 2300000004}
   - component: {fileID: 1498149229}
+  - component: {fileID: 1619870106}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -36524,7 +37203,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5.7}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1432518676}
   m_Father: {fileID: 1302816}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1732385628
@@ -36600,6 +37280,66 @@ MonoBehaviour:
   amount: 1
   npcConversationTrigger: {fileID: 1732385628}
   selfDialogueTrigger: {fileID: 0}
+--- !u!1 &1736558648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1736558649}
+  - component: {fileID: 1736558650}
+  m_Layer: 0
+  m_Name: Post-Part-1 Conversation - Aling Maria
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1736558649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736558648}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 181415224}
+  m_Father: {fileID: 789395901}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1736558650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736558648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Nabalitaan
+    kong may nangyari sa iyo sa simbahan. Mabuti at maayos ka na.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Aling
+    Maria","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":1}]}'
+  saveVersion: 110
+  DefaultName: Aling Maria
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 181415225}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1737924136
 GameObject:
   m_ObjectHideFlags: 0
@@ -37547,6 +38287,7 @@ GameObject:
   - component: {fileID: 1801965144}
   - component: {fileID: 2300000007}
   - component: {fileID: 2300000012}
+  - component: {fileID: 2300000015}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -37566,7 +38307,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5.7}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1038440540}
   m_Father: {fileID: 1045004945}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1801965141
@@ -41902,6 +42644,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
   taskId: aling_ika_errand
   requiredStageId: 
+  additionalTaskId: 
+  additionalStageId: 
   useStoryFlagEligibility: 1
   requiredStoryFlagId: aling_ika_payment_received
   expectedStoryFlagValue: 0
@@ -41977,6 +42721,7 @@ GameObject:
   - component: {fileID: 1973718977}
   - component: {fileID: 2300000002}
   - component: {fileID: 665156164}
+  - component: {fileID: 7592489}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -41996,7 +42741,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5.7}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2008934583}
   m_Father: {fileID: 1968608780}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1973718974
@@ -42072,6 +42818,57 @@ MonoBehaviour:
   amount: 1
   npcConversationTrigger: {fileID: 1973718974}
   selfDialogueTrigger: {fileID: 0}
+--- !u!1 &1976315234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1976315235}
+  - component: {fileID: 1976315236}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1976315235
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976315234}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.9998834, z: -0, w: 0.015272879}
+  m_LocalPosition: {x: 417.82736, y: -1.351016, z: 9.144705}
+  m_LocalScale: {x: 0.99563456, y: 1, z: 0.17557359}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 96264586}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1976315236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976315234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
 --- !u!1 &1980112864
 GameObject:
   m_ObjectHideFlags: 0
@@ -42668,6 +43465,7 @@ GameObject:
   - component: {fileID: 1990274573}
   - component: {fileID: 2300000003}
   - component: {fileID: 560150428}
+  - component: {fileID: 184081277}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -42687,7 +43485,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5.7}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 504636229}
   m_Father: {fileID: 1771224929}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1990274570
@@ -42933,6 +43732,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 683920640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2008934582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2008934583}
+  - component: {fileID: 2008934584}
+  m_Layer: 0
+  m_Name: Post-Part-1 Conversation - Mang Kardo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2008934583
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008934582}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1151116845}
+  m_Father: {fileID: 1973718973}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2008934584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008934582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"May
+    kumakalat na balita tungkol sa lumang sulatin sa simbahan. May nalaman ka ba
+    roon?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Mang
+    Kardo","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":1}]}'
+  saveVersion: 110
+  DefaultName: Mang Kardo
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 1151116846}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &2009039297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44017,6 +44877,66 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -3664459865192933100, guid: a1362d6e41505d0499d32de8af6b2f4b, type: 3}
+--- !u!1 &2084972012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2084972013}
+  - component: {fileID: 2084972014}
+  m_Layer: 0
+  m_Name: Post-Part-1 Conversation - Mang Iko
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2084972013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084972012}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 510673809}
+  m_Father: {fileID: 377387056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2084972014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084972012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Nahanap
+    mo ba ang sagot tungkol sa Makamisa na hinahanap mo?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Mang
+    Iko","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":1}]}'
+  saveVersion: 110
+  DefaultName: Mang Iko
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 510673810}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2086853657
 GameObject:
   m_ObjectHideFlags: 0
@@ -45680,6 +46600,50 @@ MonoBehaviour:
   pitchVariation: 0
   spatialBlend: 0
   transitionSafe: 0
+--- !u!114 &2300000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220955098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  conversationStates:
+  - stateName: Post-Part-1 - Toto
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: main_investigate_pili
+    requiredSessionStateFlagIds:
+    - task_progress:main_investigate_pili:gather_information:toto
+    conversation: {fileID: 96264587}
+    priority: 100
+  enableDebugOverride: 0
+  debugConversation: {fileID: 0}
+--- !u!114 &2300000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801965139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  conversationStates:
+  - stateName: Post-Part-1 - Mang Tibo
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: main_investigate_pili
+    requiredSessionStateFlagIds:
+    - task_progress:main_investigate_pili:gather_information:mang_tibo
+    conversation: {fileID: 1038440541}
+    priority: 100
+  enableDebugOverride: 0
+  debugConversation: {fileID: 0}
 --- !u!1 &2400000100
 GameObject:
   m_ObjectHideFlags: 0
@@ -45746,6 +46710,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
   taskId: main_investigate_pili
   requiredStageId: find_knowledgeable_person
+  additionalTaskId: 
+  additionalStageId: 
   useStoryFlagEligibility: 0
   requiredStoryFlagId: 
   expectedStoryFlagValue: 1
@@ -45889,6 +46855,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
   taskId: main_investigate_pili
   requiredStageId: maestro_ben_lead
+  additionalTaskId: main_visit_maestro_ben
+  additionalStageId: visit_maestro_ben
   useStoryFlagEligibility: 0
   requiredStoryFlagId: 
   expectedStoryFlagValue: 1
@@ -46032,6 +47000,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveNavigationAdapter
   taskId: main_investigate_pili
   requiredStageId: investigate_church_document
+  additionalTaskId: 
+  additionalStageId: 
   useStoryFlagEligibility: 0
   requiredStoryFlagId: 
   expectedStoryFlagValue: 1

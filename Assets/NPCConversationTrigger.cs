@@ -89,6 +89,13 @@ public class NPCConversationTrigger : MonoBehaviour
         repeatConversation = nextRepeatConversation;
     }
 
+    /// <summary>Updates the character transforms used for normal conversation-facing behavior.</summary>
+    public void SetFacingTransforms(Transform nextNpcTransform, Transform nextPlayerTransform)
+    {
+        npcTransform = nextNpcTransform;
+        playerTransform = nextPlayerTransform;
+    }
+
     public bool OwnsCameraFocus(
         CameraFocusManager manager,
         CameraFocusPoint point)

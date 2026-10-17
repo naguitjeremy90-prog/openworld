@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PersonData
   personID: don_paquito
   characterName: Don Paquito
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: 1651efd3412e8b944a922c990b7379ed, type: 3}
   context: 1
   descriptionStages:
   - Isang lalaki sa Pili na nakipagtalo kay Dr. Lopez tungkol sa kilos ng Padre.

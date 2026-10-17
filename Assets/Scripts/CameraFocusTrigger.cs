@@ -21,6 +21,10 @@ public class CameraFocusTrigger : MonoBehaviour
     [Tooltip("Optional runtime ID that keeps this event completed across scene reloads.")]
     [SerializeField] private string eventId;
 
+    [Header("Eligibility (Optional)")]
+    [SerializeField] private string suppressWhenTaskCompleted;
+    [SerializeField] private bool requireNighttime;
+
     [Header("After Focus")]
     public UnityEvent OnFocusFinished;
 
@@ -76,7 +80,9 @@ public class CameraFocusTrigger : MonoBehaviour
 
     public void TriggerFocus()
     {
-        if (hasTriggered || IsEventCompleted())
+        // Check eligibility before changing one-shot state, acquiring a story token,
+        // registering an event ID, or asking the focus manager to lock the player.
+        if (!IsEligible() || hasTriggered || IsEventCompleted())
             return;
 
         hasTriggered = true;
@@ -106,6 +112,24 @@ public class CameraFocusTrigger : MonoBehaviour
 
         if (!focusStarted)
             ReleaseStorySequence();
+    }
+
+    private bool IsEligible()
+    {
+        if (requireNighttime && GameFlags.isMorning)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(suppressWhenTaskCompleted))
+            return true;
+
+        string taskId = suppressWhenTaskCompleted.Trim();
+        TaskManager taskManager = TaskManager.Instance;
+        if (taskManager != null)
+            return taskManager.GetTaskState(taskId) != TaskState.Completed;
+
+        // TaskManager restores this same completion key from SessionStoryState.
+        // Reading it directly keeps the gate safe if this trigger runs first.
+        return !SessionStoryState.GetFlag("task_completed:" + taskId);
     }
 
     private void HandleFocusStarted(CameraFocusPoint startedPoint, UnityEvent requestCallback)

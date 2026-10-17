@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FragmentData
   fragmentID: ang_lumang_sulatin
   title: Ang Lumang Sulatin
-  fragmentImage: {fileID: 0}
+  fragmentImage: {fileID: 21300000, guid: 74a166671ec008c45aab400ab92bcb4b, type: 3}
   recoveredIn: 0
   relatedTo: 1
   interpretationStages:

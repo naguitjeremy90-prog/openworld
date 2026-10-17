@@ -7,7 +7,9 @@ public enum ReflectionTheme
     BlameOrJudgment,
     Authority,
     ConformityOrPressure,
-    Uncertainty
+    Uncertainty,
+    BlessingOrRejection,
+    VoiceOrNotBeingHeard
 }
 
 [System.Serializable]

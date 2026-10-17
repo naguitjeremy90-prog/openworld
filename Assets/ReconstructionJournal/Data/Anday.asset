@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PersonData
   personID: anday
   characterName: Anday
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: 235739d7cbd205945a1862e6fe5aa2ce, type: 3}
   context: 1
   descriptionStages:
   - Isang dalagang katulong sa bahay nina Capitan Panchong at Capitana Barang. Nais niyang ipabasbas ang kanyang anak kay Padre Agaton, ngunit tumanggi ang pari.

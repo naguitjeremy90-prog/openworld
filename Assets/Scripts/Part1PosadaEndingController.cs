@@ -188,13 +188,11 @@ public sealed class Part1PosadaEndingController : MonoBehaviour
 
         yield return PlaySelfDialogue(posadaDialogue, "POSADA!!!", BeginPosadaVictory);
 
-        if (fadeController != null)
-            yield return fadeController.FadeToBlack();
-
-        if (rollingCredits != null)
-            rollingCredits.BeginCredits();
-        else
-            Debug.LogError("Part 1 Posada ending has no AlaalaRollingCredits prefab reference.", this);
+        // The former fade led directly into the temporary beta credits. Keep
+        // the room visible and return to the normal gameplay state instead.
+        RestoreStandingLocomotion();
+        storyToken?.Release();
+        storyToken = null;
     }
 
     private void PlaceMiguelAtWakePosition()

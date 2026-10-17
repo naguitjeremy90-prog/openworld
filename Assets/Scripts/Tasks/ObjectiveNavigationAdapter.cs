@@ -10,6 +10,9 @@ public sealed class ObjectiveNavigationAdapter : MonoBehaviour
     [Header("Objective condition")]
     [SerializeField] private string taskId;
     [SerializeField] private string requiredStageId;
+    [Tooltip("Optional additional exact task/stage pair that can activate this same destination.")]
+    [SerializeField] private string additionalTaskId = string.Empty;
+    [SerializeField] private string additionalStageId = string.Empty;
     [Tooltip("Opt in for stage-less objectives. Exact-stage matching remains the default.")]
     [SerializeField] private bool useStoryFlagEligibility = false;
     [SerializeField] private string requiredStoryFlagId = string.Empty;
@@ -101,16 +104,32 @@ public sealed class ObjectiveNavigationAdapter : MonoBehaviour
 
     private bool IsObjectiveEligible()
     {
-        if (boundTaskManager == null || string.IsNullOrWhiteSpace(taskId) ||
-            boundTaskManager.GetTaskState(taskId) != TaskState.Active)
+        if (boundTaskManager == null)
             return false;
 
-        if (useStoryFlagEligibility)
-            return !string.IsNullOrWhiteSpace(requiredStoryFlagId) &&
-                SessionStoryState.GetFlag(requiredStoryFlagId.Trim()) == expectedStoryFlagValue;
+        bool primaryMatch = false;
+        if (!string.IsNullOrWhiteSpace(taskId) &&
+            boundTaskManager.GetTaskState(taskId) == TaskState.Active)
+        {
+            if (useStoryFlagEligibility)
+            {
+                primaryMatch = !string.IsNullOrWhiteSpace(requiredStoryFlagId) &&
+                    SessionStoryState.GetFlag(requiredStoryFlagId.Trim()) == expectedStoryFlagValue;
+            }
+            else
+            {
+                primaryMatch = !string.IsNullOrWhiteSpace(requiredStageId) &&
+                    boundTaskManager.IsCurrentStage(taskId, requiredStageId);
+            }
+        }
 
-        return !string.IsNullOrWhiteSpace(requiredStageId) &&
-            boundTaskManager.IsCurrentStage(taskId, requiredStageId);
+        bool additionalPairConfigured = !string.IsNullOrWhiteSpace(additionalTaskId) &&
+            !string.IsNullOrWhiteSpace(additionalStageId);
+        bool additionalMatch = additionalPairConfigured &&
+            boundTaskManager.GetTaskState(additionalTaskId) == TaskState.Active &&
+            boundTaskManager.IsCurrentStage(additionalTaskId, additionalStageId);
+
+        return primaryMatch || additionalMatch;
     }
 
     private void RefreshRegistration()

@@ -4244,6 +4244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ReconstructionReflections
   allReflections:
   - {fileID: 11400000, guid: 892ae0c3eef07ba44a6a4861ef47eea8, type: 2}
+  - {fileID: 11400000, guid: 92ccf4afdd034bc880e629a23b5ca186, type: 2}
   listContent: {fileID: 1142604273}
   listButtonPrefab: {fileID: 6598735624607580097, guid: c99157fdfb1482b40bda112f7c0fd0a6, type: 3}
   emptyListText: {fileID: 1567469249}
@@ -7984,7 +7985,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'PAGSUSURI [C]'
+  m_text: '[C]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}
   m_sharedMaterial: {fileID: -5251486555908989691, guid: 449a2d289af7b34498858dc1bfab5eda, type: 2}

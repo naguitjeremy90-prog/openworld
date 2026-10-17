@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PersonData
   personID: capitana_barang
   characterName: Capitana Barang
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: 0279c0a4d0a02fa4b802ad97360db710, type: 3}
   context: 1
   descriptionStages:
   - Isang babae sa Pili na nakausap ni Mana Sebia pagkatapos ng misa. Siya ang nagpahiram

@@ -112,6 +112,15 @@ MonoBehaviour:
       objectiveText: Bumalik kay Anday.
       requiredCount: 0
       allowedProgressIds: []
+  - taskId: main_visit_maestro_ben
+    title: Pagbalik kay Maestro Ben
+    startingObjective: Puntahan si Maestro Ben.
+    taskType: 0
+    stages:
+    - stageId: visit_maestro_ben
+      objectiveText: Puntahan si Maestro Ben.
+      requiredCount: 0
+      allowedProgressIds: []
   - taskId: side_kutsero_pasabi
     title: Pasabi ng Kutsero
     startingObjective: Ipaabot ang mensahe ng kutsero sa tindera.

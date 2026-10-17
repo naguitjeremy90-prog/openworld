@@ -19,6 +19,7 @@ public sealed class RandomHouseResidentLeadController : MonoBehaviour
 
     [SerializeField] private NPCConversation leadConversation;
     [SerializeField] private NPCConversation reminderConversation;
+    [SerializeField] private NPCConversation postPart1Conversation;
     private bool leadAttemptActive;
 
     private void Awake()
@@ -64,7 +65,10 @@ public sealed class RandomHouseResidentLeadController : MonoBehaviour
             return;
 
         bool isLead = IsLeadEligible();
-        NPCConversation conversation = isLead ? leadConversation :
+        bool isPostPart1 = postPart1Conversation != null &&
+                           IsPostPart1ConversationEligible();
+        NPCConversation conversation = isPostPart1 ? postPart1Conversation :
+            isLead ? leadConversation :
             SessionStoryState.GetFlag(LeadFlag) ? reminderConversation : null;
         if (conversation == null)
             return;
@@ -87,6 +91,17 @@ public sealed class RandomHouseResidentLeadController : MonoBehaviour
         return !SessionStoryState.GetFlag(LeadFlag) && manager != null &&
                manager.GetTaskState(TaskId) == TaskState.Active &&
                manager.IsCurrentStage(TaskId, LeadStage);
+    }
+
+    private static bool IsPostPart1ConversationEligible()
+    {
+        TaskManager manager = TaskManager.Instance;
+        bool investigationCompleted = manager != null
+            ? manager.GetTaskState(TaskId) == TaskState.Completed
+            : SessionStoryState.GetFlag("task_completed:" + TaskId);
+
+        return investigationCompleted &&
+               SessionStoryState.GetFlag("randomhouse_resident_information_completed");
     }
 
     private bool CanRemainInLead()

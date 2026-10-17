@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198ae66b3d9224645b06ef07a3127935, type: 3}
+  m_Name: Anday_Story_Reflection
+  m_EditorClassIdentifier: Assembly-CSharp::ReflectionData
+  reflectionID: anday_story_reflection
+  title: Ang Kuwento ni Anday
+  context: 1
+  prompt: Ano sa tingin mo ang pinakamabigat na pinagdaanan ni Anday, at bakit?
+  suggestedResponses:
+  - Sa tingin ko, pinakamabigat para kay Anday ang...
+  - Para sa akin, nakaapekto sa kaniya ang paghusga ng iba dahil...
+  - Sa tingin ko, mahalaga ang pagtanggi sa pagbabasbas dahil...
+  - Hindi lang isang bagay ang nakaapekto kay Anday. Para sa akin...
+  themeResponses:
+  - theme: 1
+    journalFollowUp: Minsan, ang paghusga ng ibang tao ay nagiging dagdag na pasanin sa isang tao. Sa karanasan ni Anday, mahalagang isipin kung paano siya nakita at pinakitunguhan ng mga nasa paligid niya.
+    priority: 4
+  - theme: 5
+    journalFollowUp: Ang pagtanggi sa pagbabasbas sa kaniyang anak ay mahalagang bahagi ng naranasan ni Anday. Ipinapakita nito kung paano nakaaapekto ang pagtanggap o pagtanggi ng iba sa buhay ng isang tao.
+    priority: 3
+  - theme: 6
+    journalFollowUp: Kapag ibang tao ang laging nagsasalita tungkol sa isang tao, maaaring matabunan ang sarili niyang pananaw. Mahalagang isipin kung gaano natin tunay na narinig si Anday.
+    priority: 2
+  - theme: 4
+    journalFollowUp: Hindi kailangang malinaw agad ang sagot. Ang mahalaga ay pag-isipan kung anong bahagi ng karanasan ni Anday ang pinaka tumatak at bakit.
+    priority: 1

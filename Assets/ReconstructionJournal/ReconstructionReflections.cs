@@ -58,8 +58,21 @@ public class ReconstructionReflections : MonoBehaviour
     private static readonly string[] UncertaintyKeywords =
     {
         "hindi sigurado", "di sigurado", "di sure", "hindi sure", "baka",
+        "hindi ko alam", "di ko alam", "di ko sure", "hindi ko sure",
         "marahil", "siguro", "sigurado", "maaaring", "unsure", "not sure",
         "maybe", "perhaps"
+    };
+
+    private static readonly string[] BlessingOrRejectionKeywords =
+    {
+        "basbas", "pagbabasbas", "tinanggihan", "pagtanggi", "reject",
+        "rejected", "blessing"
+    };
+
+    private static readonly string[] VoiceOrNotBeingHeardKeywords =
+    {
+        "boses", "marinig", "magsalita", "ipagtanggol", "depensa",
+        "heard", "voice", "defend"
     };
 
     [Header("Available Reflections")]
@@ -662,6 +675,16 @@ public class ReconstructionReflections : MonoBehaviour
             tokens,
             ReflectionTheme.Uncertainty,
             UncertaintyKeywords);
+        AddThemeIfMatched(
+            themes,
+            tokens,
+            ReflectionTheme.BlessingOrRejection,
+            BlessingOrRejectionKeywords);
+        AddThemeIfMatched(
+            themes,
+            tokens,
+            ReflectionTheme.VoiceOrNotBeingHeard,
+            VoiceOrNotBeingHeardKeywords);
 
         return themes;
     }

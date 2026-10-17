@@ -15,6 +15,9 @@ public class SelfDialogueTrigger : MonoBehaviour
     [Header("Presentation (Optional)")]
     [SerializeField] private bool treatAsStorySequence;
 
+    [Header("Eligibility (Optional)")]
+    [SerializeField] private string blockingCompletedTaskId;
+
     private bool hasTriggered = false;
     private bool conversationStarted = false;
     private StorySequenceToken storySequenceToken;
@@ -59,6 +62,12 @@ public class SelfDialogueTrigger : MonoBehaviour
 
         if (myConversation == null)
             return;
+
+        if (!string.IsNullOrWhiteSpace(blockingCompletedTaskId) &&
+            SessionStoryState.GetFlag("task_completed:" + blockingCompletedTaskId.Trim()))
+        {
+            return;
+        }
 
         conversationStarted = true;
         hasTriggered = true;

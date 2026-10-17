@@ -12,6 +12,10 @@ public sealed class PagsusuriDevelopmentTesting : MonoBehaviour
     [SerializeField] private bool ensureInventoryForDirectTesting = true;
     [SerializeField] private InventoryManager inventoryManagerPrefab;
     [SerializeField] private bool unlockInventoryForDirectTesting = true;
+    [SerializeField] private bool enableDirectJournalTesting;
+    [SerializeField] private bool suppressJournalTutorialForTesting;
+    [SerializeField] private bool ensureTaskManagerForTesting;
+    [SerializeField] private TaskManager taskManagerPrefab;
 
     private void Start()
     {
@@ -31,6 +35,21 @@ public sealed class PagsusuriDevelopmentTesting : MonoBehaviour
             else
             {
                 Instantiate(inventoryManagerPrefab.gameObject);
+            }
+        }
+
+        if (ensureTaskManagerForTesting && TaskManager.Instance == null)
+        {
+            if (taskManagerPrefab == null ||
+                !UnityEditor.EditorUtility.IsPersistent(taskManagerPrefab))
+            {
+                Debug.LogError(
+                    "Direct task tracker testing requires the TaskManager prefab asset.",
+                    this);
+            }
+            else
+            {
+                Instantiate(taskManagerPrefab.gameObject);
             }
         }
 
@@ -61,6 +80,22 @@ public sealed class PagsusuriDevelopmentTesting : MonoBehaviour
         GameplaySystemState.SetUnlocked(
             GameplaySystemId.Clarity,
             true);
+
+        if (enableDirectJournalTesting)
+        {
+            if (suppressJournalTutorialForTesting)
+            {
+                GameplaySystemTutorialManager tutorialManager =
+                    GameplaySystemTutorialManager.Instance;
+                if (tutorialManager != null)
+                {
+                    tutorialManager.SuppressTutorialForDevelopment(
+                        GameplaySystemId.Journal);
+                }
+            }
+
+            GameplaySystemState.SetUnlocked(GameplaySystemId.Journal, true);
+        }
 #endif
     }
 }
