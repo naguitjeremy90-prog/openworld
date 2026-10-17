@@ -173,8 +173,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneMenuUISoundPlayer
   hoverClip: {fileID: 8300000, guid: b43d102aac6b145468dcaa94a5cccae1, type: 3}
   clickClip: {fileID: 8300000, guid: 92d9128629e9e7a45afd47f4eff2c461, type: 3}
-  hoverVolume: 0.753
-  clickVolume: 0.809
+  hoverVolume: 0.351
+  clickVolume: 0.372
 --- !u!1 &318434024040952663
 GameObject:
   m_ObjectHideFlags: 0

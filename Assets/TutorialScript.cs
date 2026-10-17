@@ -1,6 +1,7 @@
 using System.Collections;
 using DialogueEditor;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class TutorialStartDelay : MonoBehaviour
@@ -15,9 +16,14 @@ public class TutorialStartDelay : MonoBehaviour
     private const string RunCompletionFlag = "draftworld_run_tutorial_complete";
     private const string JumpCompletionFlag = "draftworld_jump_tutorial_complete";
     private const float MovementThreshold = 0.15f;
-    private const string MovementText = "Pindutin ang WASD para gumalaw.";
-    private const string RunText = "Hawakan ang Left Shift habang gumagalaw para tumakbo.";
-    private const string JumpText = "Pindutin ang Space para tumalon.";
+    [SerializeField] private TMP_Text prefixText;
+    [SerializeField] private Image keyImage;
+    [SerializeField] private TMP_Text suffixText;
+    [SerializeField] private Sprite wasdSprite;
+    [SerializeField] private Sprite runSprite;
+    [SerializeField] private Sprite jumpSprite;
+    [SerializeField] private float runImageHeight = 19f;
+    [SerializeField] private float jumpImageHeight = 16f;
 
     private bool completionReady;
     private bool completionNotificationCancelled;
@@ -26,7 +32,7 @@ public class TutorialStartDelay : MonoBehaviour
     private bool successfulJumpObserved;
     private bool observedRunStoppedAfterReveal;
 
-    private TMP_Text promptText;
+    private LayoutElement keyLayout;
     private Supercyan.FreeSample.SimpleSampleCharacterControl playerController;
     private InventoryUI inventoryUI;
     private ReconstructionJournalManager journal;
@@ -45,21 +51,24 @@ public class TutorialStartDelay : MonoBehaviour
         {
             moveTextGroup.interactable = false;
             moveTextGroup.blocksRaycasts = false;
-            promptText = moveTextGroup.GetComponent<TMP_Text>();
+            keyLayout = keyImage != null ? keyImage.GetComponent<LayoutElement>() : null;
         }
 
         if (player != null)
             playerController = player.GetComponent<Supercyan.FreeSample.SimpleSampleCharacterControl>();
 
-        if (promptText == null)
-            Debug.LogError("MovementPrompt requires its existing TextMeshProUGUI component.", this);
+        if (prefixText == null || keyImage == null || suffixText == null || keyLayout == null)
+            Debug.LogError("MovementPrompt requires PrefixText, KeyImage with LayoutElement, and SuffixText references.", this);
+        if (wasdSprite == null || runSprite == null || jumpSprite == null)
+            Debug.LogError("MovementPrompt requires assigned WASD, run, and jump Sprites.", this);
         if (playerController == null)
             Debug.LogError("MovementPrompt could not find SimpleSampleCharacterControl on its player.", this);
     }
 
     private IEnumerator Start()
     {
-        if (moveTextGroup == null || player == null)
+        if (moveTextGroup == null || player == null || prefixText == null || keyImage == null ||
+            suffixText == null || keyLayout == null || wasdSprite == null || runSprite == null || jumpSprite == null)
             yield break;
 
         // Let scene startup establish its story/dialogue ownership first.
@@ -76,11 +85,11 @@ public class TutorialStartDelay : MonoBehaviour
             completionReady = true;
         }
 
-        if (playerController == null || promptText == null)
+        if (playerController == null || prefixText == null || keyImage == null || suffixText == null)
             yield break;
 
         if (!SessionStoryState.GetFlag(RunCompletionFlag))
-            yield return RunTutorialStep(RunText, RunCompletionFlag);
+            yield return RunTutorialStep("Pindutin ang", runSprite, "habang gumagalaw para tumakbo.", runImageHeight, RunCompletionFlag);
 
         if (!SessionStoryState.GetFlag(JumpCompletionFlag))
             yield return RunJumpTutorial();
@@ -96,7 +105,7 @@ public class TutorialStartDelay : MonoBehaviour
         }
 
         Vector3 startPosition = player.position;
-        ShowPrompt(MovementText);
+        ShowPrompt("Pindutin ang", wasdSprite, "para gumalaw.", 36f);
         bool waitingForSafety = false;
         bool movementCompleted = false;
 
@@ -114,7 +123,7 @@ public class TutorialStartDelay : MonoBehaviour
             {
                 // Movement during a story/dialogue or modal UI must not finish onboarding.
                 startPosition = player.position;
-                ShowPrompt(MovementText);
+                ShowPrompt("Pindutin ang", wasdSprite, "para gumalaw.", 36f);
                 waitingForSafety = false;
             }
 
@@ -158,13 +167,13 @@ public class TutorialStartDelay : MonoBehaviour
         }
     }
 
-    private IEnumerator RunTutorialStep(string text, string completionFlag)
+    private IEnumerator RunTutorialStep(string prefix, Sprite sprite, string suffix, float imageHeight, string completionFlag)
     {
         yield return WaitUntilGameplaySafe();
 
         bool shiftReleasedAfterReveal = !Input.GetKey(KeyCode.LeftShift);
         observedRunStoppedAfterReveal = playerController == null || !playerController.IsRunning;
-        ShowPrompt(text);
+        ShowPrompt(prefix, sprite, suffix, imageHeight);
 
         bool waitingForSafety = false;
         while (!SessionStoryState.GetFlag(completionFlag) && isActiveAndEnabled)
@@ -182,7 +191,7 @@ public class TutorialStartDelay : MonoBehaviour
                 // Requiring a release after each interruption rejects held Shift input.
                 shiftReleasedAfterReveal = !Input.GetKey(KeyCode.LeftShift);
                 observedRunStoppedAfterReveal = playerController == null || !playerController.IsRunning;
-                ShowPrompt(text);
+                ShowPrompt(prefix, sprite, suffix, imageHeight);
                 waitingForSafety = false;
             }
 
@@ -226,13 +235,13 @@ public class TutorialStartDelay : MonoBehaviour
             {
                 // Resume this step, but only accept a fresh Space press after it is visible.
                 BeginObservingJump();
-                ShowPrompt(JumpText);
+                ShowPrompt("Pindutin ang", jumpSprite, "para tumalon.", 16f);
                 waitingForSafety = false;
             }
             else if (!jumpStepActive)
             {
                 BeginObservingJump();
-                ShowPrompt(JumpText);
+                ShowPrompt("Pindutin ang", jumpSprite, "para tumalon.", jumpImageHeight);
             }
 
             if (successfulJumpObserved)
@@ -304,10 +313,19 @@ public class TutorialStartDelay : MonoBehaviour
         }
     }
 
-    private void ShowPrompt(string text)
+    private void ShowPrompt(string prefix, Sprite sprite, string suffix, float imageHeight)
     {
-        if (promptText != null)
-            promptText.text = text;
+        prefixText.text = prefix;
+        suffixText.text = suffix;
+        keyImage.sprite = sprite;
+        keyImage.preserveAspect = true;
+
+        float aspect = sprite.rect.width / Mathf.Max(1f, sprite.rect.height);
+        float imageWidth = imageHeight * aspect;
+        keyImage.rectTransform.sizeDelta = new Vector2(imageWidth, imageHeight);
+        keyLayout.preferredWidth = imageWidth;
+        keyLayout.preferredHeight = imageHeight;
+
         moveTextGroup.alpha = 0f;
         moveTextGroup.gameObject.SetActive(true);
     }

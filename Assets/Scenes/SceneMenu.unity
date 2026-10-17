@@ -3708,8 +3708,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneMenuUISoundPlayer
   hoverClip: {fileID: 8300000, guid: b43d102aac6b145468dcaa94a5cccae1, type: 3}
   clickClip: {fileID: 8300000, guid: 92d9128629e9e7a45afd47f4eff2c461, type: 3}
-  hoverVolume: 0.753
-  clickVolume: 0.809
+  hoverVolume: 0.337
+  clickVolume: 0.372
 --- !u!82 &871554063
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4009,6 +4009,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   objectViewer: {fileID: 0}
   objectSprite: {fileID: 21300000, guid: 77a523f582884a24a82df688f1e23223, type: 3}
+  interactionSFX: {fileID: 0}
 --- !u!114 &905618615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4052,6 +4053,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  availabilityCondition: {fileID: 0}
 --- !u!65 &905618616
 BoxCollider:
   m_ObjectHideFlags: 0

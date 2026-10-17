@@ -8,6 +8,7 @@ public sealed class MiguelFindKutseroTransition : MonoBehaviour
     private const float FadeToBlackDuration = 0.7f;
     private const float BlackHoldDuration = 0.4f;
     private const float FadeFromBlackDuration = 0.7f;
+    private const float MovementHandoffTimeout = 0.75f;
     private const string MainTaskId = "main_investigate_pili";
     private const string FindKutseroStageId = "find_kutsero";
     private const string CompletedFlag = "newmakamisa_miguel_find_kutsero_transition_complete";
@@ -81,14 +82,13 @@ public sealed class MiguelFindKutseroTransition : MonoBehaviour
         bool relocationCompleted = false;
         try
         {
-            previousMovementEnabled = miguelMovementBehaviour.enabled;
-            movementStateCaptured = true;
-            miguelMovementBehaviour.enabled = false;
-
             previousRigidbodyKinematic = miguelRigidbody.isKinematic;
             rigidbodyStateCaptured = true;
-            miguelRigidbody.linearVelocity = Vector3.zero;
-            miguelRigidbody.angularVelocity = Vector3.zero;
+            if (!previousRigidbodyKinematic)
+            {
+                miguelRigidbody.linearVelocity = Vector3.zero;
+                miguelRigidbody.angularVelocity = Vector3.zero;
+            }
             miguelRigidbody.isKinematic = true;
 
             ConversationManager conversation = ConversationManager.Instance;
@@ -98,6 +98,72 @@ public sealed class MiguelFindKutseroTransition : MonoBehaviour
                 conversation = ConversationManager.Instance;
                 yield return null;
             }
+
+            // ConversationManager signals its end before subscribers finish.
+            // Wait for the movement lock to release and for its controller state
+            // to become available before capturing the state for cleanup.
+            DialogueMovementLock dialogueMovementLock =
+                FindFirstObjectByType<DialogueMovementLock>(FindObjectsInactive.Include);
+            float handoffElapsed = 0f;
+            bool conversationClosed;
+            bool dialogueLockReleased;
+            do
+            {
+                yield return null;
+                handoffElapsed += Time.unscaledDeltaTime;
+
+                conversation = ConversationManager.Instance;
+                conversationClosed = conversation == null ||
+                    !conversation.isActiveAndEnabled || !conversation.IsConversationActive;
+                dialogueLockReleased = dialogueMovementLock != null &&
+                    !dialogueMovementLock.OwnsConversationLock;
+
+                if (conversationClosed && dialogueLockReleased &&
+                    miguelMovementBehaviour.enabled)
+                    break;
+            }
+            while (handoffElapsed < MovementHandoffTimeout);
+
+            conversation = ConversationManager.Instance;
+            conversationClosed = conversation == null ||
+                !conversation.isActiveAndEnabled || !conversation.IsConversationActive;
+            dialogueLockReleased = dialogueMovementLock != null &&
+                !dialogueMovementLock.OwnsConversationLock;
+
+            if (!conversationClosed || !dialogueLockReleased ||
+                storyToken == null || !storyToken.IsValid)
+            {
+                Debug.LogWarning(
+                    "Miguel find_kutsero transition could not complete the movement handoff safely; " +
+                    "the conversation, dialogue lock, or transition story token is still active.", this);
+                yield break;
+            }
+
+            bool movementWasEnabledAtCapture = miguelMovementBehaviour.enabled;
+            previousMovementEnabled = movementWasEnabledAtCapture;
+            if (!previousMovementEnabled)
+            {
+                // This fallback is limited to the completed Anday handoff: the
+                // conversation and its movement lock are released, and this
+                // transition still owns its story token.
+                previousMovementEnabled = true;
+                Debug.LogWarning(
+                    "Miguel find_kutsero handoff timed out with movement disabled after the dialogue lock " +
+                    "released; cleanup will restore the normal controllable state.", this);
+            }
+
+#if UNITY_EDITOR
+            Debug.Log(
+                "[FindKutseroMovementAudit] capture conversationActive=" +
+                (conversation != null && conversation.isActiveAndEnabled && conversation.IsConversationActive) +
+                " dialogueLockOwns=" +
+                (dialogueMovementLock != null && dialogueMovementLock.OwnsConversationLock) +
+                " movementEnabled=" + movementWasEnabledAtCapture +
+                " previousMovementEnabled=" + previousMovementEnabled,
+                this);
+#endif
+            movementStateCaptured = true;
+            miguelMovementBehaviour.enabled = false;
 
             fadeRecoveryNeeded = true;
             yield return FadeToBlackForTransition();
@@ -121,8 +187,6 @@ public sealed class MiguelFindKutseroTransition : MonoBehaviour
 
             miguelRigidbody.position = miguelRigidbody.transform.position;
             miguelRigidbody.rotation = miguelRigidbody.transform.rotation;
-            miguelRigidbody.linearVelocity = Vector3.zero;
-            miguelRigidbody.angularVelocity = Vector3.zero;
             Physics.SyncTransforms();
 
             ClearStaleKalesaRestoreState();
@@ -175,14 +239,26 @@ public sealed class MiguelFindKutseroTransition : MonoBehaviour
     {
         if (rigidbodyStateCaptured && miguelRigidbody != null)
         {
-            miguelRigidbody.linearVelocity = Vector3.zero;
-            miguelRigidbody.angularVelocity = Vector3.zero;
             miguelRigidbody.isKinematic = previousRigidbodyKinematic;
+            if (!previousRigidbodyKinematic)
+            {
+                miguelRigidbody.linearVelocity = Vector3.zero;
+                miguelRigidbody.angularVelocity = Vector3.zero;
+            }
         }
         rigidbodyStateCaptured = false;
 
         if (movementStateCaptured && miguelMovementBehaviour != null)
+        {
             miguelMovementBehaviour.enabled = previousMovementEnabled;
+#if UNITY_EDITOR
+            Debug.Log(
+                "[FindKutseroMovementAudit] cleanup restored movementEnabled=" +
+                miguelMovementBehaviour.enabled + " from previousMovementEnabled=" +
+                previousMovementEnabled,
+                this);
+#endif
+        }
         movementStateCaptured = false;
 
         storyToken?.Release();

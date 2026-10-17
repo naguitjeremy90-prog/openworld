@@ -10,6 +10,8 @@ public class DialogueMovementLock : MonoBehaviour
     private bool previousMovementEnabled;
     private bool capturedMovementState;
 
+    public bool OwnsConversationLock => ownsConversationLock;
+
     private void OnEnable()
     {
         ConversationManager.OnConversationStarted += LockMovement;
