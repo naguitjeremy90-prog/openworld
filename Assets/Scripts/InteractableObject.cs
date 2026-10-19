@@ -52,6 +52,8 @@ public class InteractableObject : MonoBehaviour
             RefreshPrompt();
 
         if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            !InventoryDocumentViewer.IsAnyOpen &&
+            !ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay &&
             playerNear && Input.GetKeyDown(KeyCode.E))
         {
             if (!IsInteractionAvailable())

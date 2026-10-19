@@ -186,6 +186,18 @@ namespace Supercyan.FreeSample
                 return;
             }
 
+            if (ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay)
+            {
+                m_jumpInput = false;
+                return;
+            }
+
+            if (InventoryDocumentViewer.IsAnyOpen)
+            {
+                m_jumpInput = false;
+                return;
+            }
+
             if (!m_jumpInput && Input.GetKey(KeyCode.Space))
             {
                 m_jumpInput = true;
@@ -214,6 +226,22 @@ namespace Supercyan.FreeSample
                     m_animator.SetBool("Grounded", m_isGrounded);
                 }
 
+                return;
+            }
+
+            if (InventoryDocumentViewer.IsAnyOpen)
+            {
+                m_currentV = 0f;
+                m_currentH = 0f;
+                m_currentDirection = Vector3.zero;
+                m_jumpInput = false;
+                IsMoving = false;
+                IsRunning = false;
+                if (m_animator)
+                {
+                    m_animator.SetFloat("MoveSpeed", 0f);
+                    m_animator.SetBool("Grounded", m_isGrounded);
+                }
                 return;
             }
 
@@ -249,15 +277,18 @@ namespace Supercyan.FreeSample
 
         private void TankUpdate()
         {
-            float v = Input.GetAxis("Vertical");
-            float h = Input.GetAxis("Horizontal");
+            bool suppressInput =
+                InventoryDocumentViewer.IsAnyOpen ||
+                ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay;
+            float v = suppressInput ? 0f : Input.GetAxis("Vertical");
+            float h = suppressInput ? 0f : Input.GetAxis("Horizontal");
 
             if (m_lockVerticalMovement)
             {
                 v = 0;
             }
 
-            bool walk = Input.GetKey(KeyCode.LeftShift);
+            bool walk = !suppressInput && Input.GetKey(KeyCode.LeftShift);
 
             if (v < 0)
             {
@@ -275,17 +306,12 @@ namespace Supercyan.FreeSample
                 v *= m_walkScale;
             }
 
-            m_currentV = Mathf.Lerp(
-                m_currentV,
-                v,
-                Time.deltaTime * m_interpolation
-            );
-
-            m_currentH = Mathf.Lerp(
-                m_currentH,
-                h,
-                Time.deltaTime * m_interpolation
-            );
+            m_currentV = suppressInput ? 0f : Mathf.Lerp(
+                m_currentV, v, Time.deltaTime * m_interpolation);
+            m_currentH = suppressInput ? 0f : Mathf.Lerp(
+                m_currentH, h, Time.deltaTime * m_interpolation);
+            if (suppressInput)
+                m_currentDirection = Vector3.zero;
 
             IsMoving = Mathf.Abs(m_currentV) >= LocomotionStateMovementThreshold;
             IsRunning = IsMoving && !walk;
@@ -312,8 +338,11 @@ namespace Supercyan.FreeSample
 
         private void DirectUpdate()
         {
-            float v = Input.GetAxis("Vertical");
-            float h = Input.GetAxis("Horizontal");
+            bool suppressInput =
+                InventoryDocumentViewer.IsAnyOpen ||
+                ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay;
+            float v = suppressInput ? 0f : Input.GetAxis("Vertical");
+            float h = suppressInput ? 0f : Input.GetAxis("Horizontal");
 
             if (m_lockVerticalMovement)
             {
@@ -331,23 +360,18 @@ namespace Supercyan.FreeSample
 
             // Default = walk.
             // Hold Shift = run.
-            if (!Input.GetKey(KeyCode.LeftShift))
+            if (suppressInput || !Input.GetKey(KeyCode.LeftShift))
             {
                 v *= m_walkScale;
                 h *= m_walkScale;
             }
 
-            m_currentV = Mathf.Lerp(
-                m_currentV,
-                v,
-                Time.deltaTime * m_interpolation
-            );
-
-            m_currentH = Mathf.Lerp(
-                m_currentH,
-                h,
-                Time.deltaTime * m_interpolation
-            );
+            m_currentV = suppressInput ? 0f : Mathf.Lerp(
+                m_currentV, v, Time.deltaTime * m_interpolation);
+            m_currentH = suppressInput ? 0f : Mathf.Lerp(
+                m_currentH, h, Time.deltaTime * m_interpolation);
+            if (suppressInput)
+                m_currentDirection = Vector3.zero;
 
             Vector3 direction =
                 camera.forward * m_currentV +
@@ -356,7 +380,7 @@ namespace Supercyan.FreeSample
             float directionLength = direction.magnitude;
 
             IsMoving = directionLength >= LocomotionStateMovementThreshold;
-            IsRunning = IsMoving && Input.GetKey(KeyCode.LeftShift);
+            IsRunning = !suppressInput && IsMoving && Input.GetKey(KeyCode.LeftShift);
 
             direction.y = 0;
 

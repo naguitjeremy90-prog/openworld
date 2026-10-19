@@ -72,6 +72,8 @@ public class SleepInteraction : MonoBehaviour
     private void Update()
     {
         if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            !InventoryDocumentViewer.IsAnyOpen &&
+            !ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay &&
             playerNear && Input.GetKeyDown(KeyCode.E) && !hasSlept &&
             !sleepSequenceRunning)
         {

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3c486c1d391e14b99eff1a060a7677, type: 3}
+  m_Name: ChurchLumangSulatin
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryItemData
+  itemID: church_lumang_sulatin
+  displayName: Lumang Sulatin
+  icon: {fileID: 21300000, guid: f578a3e595501ac4c857c90a223f4703, type: 3}
+  description: Isang lumang sulating natagpuan sa simbahan. Naglalaman ito ng mga bakas ng isang hindi natapos na akda.
+  category: 3
+  storyPages: []

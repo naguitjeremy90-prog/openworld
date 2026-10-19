@@ -23,6 +23,18 @@ public class ReflectionThemeResponse
     public int priority;
 }
 
+[System.Serializable]
+public class ReflectionEntryThemeMapping
+{
+    public string themeId;
+    public List<string> keywords = new List<string>();
+
+    [TextArea(2, 5)]
+    public string response;
+
+    public int priority;
+}
+
 [CreateAssetMenu(
     fileName = "New Reflection",
     menuName = "Reconstruction Journal/Reflection")]
@@ -40,6 +52,12 @@ public class ReflectionData : ScriptableObject
 
     public List<ReflectionThemeResponse> themeResponses =
         new List<ReflectionThemeResponse>();
+
+    public List<ReflectionEntryThemeMapping> entryThemeMappings =
+        new List<ReflectionEntryThemeMapping>();
+
+    [TextArea(2, 5)]
+    public string entryThemeFallback;
 
     public string GetContextLabel()
     {

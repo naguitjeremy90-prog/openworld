@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 974a5c0b3f76e0446ab0c772af243dbb, type: 3}
+  m_Name: Ang_Kuwento_Nina_Cecilia_At_Ysagani
+  m_EditorClassIdentifier: Assembly-CSharp::FragmentData
+  fragmentID: ang_kuwento_nina_cecilia_at_ysagani
+  title: Ang Kuwento nina Cecilia at Ysagani
+  fragmentImage: {fileID: 21300000, guid: 9d9b1cce7f6671648b134fa682c2b899, type: 3}
+  recoveredIn: 0
+  relatedTo: 1
+  interpretationStages:
+  - Inilalarawan sa mga natitirang bahagi ng Makamisa ang pagkakaugnay nina Cecilia at Ysagani sa pamamagitan ng mga kasulatang may kinalaman sa pamana ni Doña Orang. Nagkaroon ng interes si Cecilia kay Ysagani, ngunit hindi malinaw kung saan hahantong ang kanilang kuwento. Ang pahina ay ilustradong pagbasa sa akda, hindi orihinal na manuskrito.

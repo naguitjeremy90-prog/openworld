@@ -169,6 +169,7 @@ public sealed class AlaalaPauseMenuController : MonoBehaviour
 
     private bool HandleExistingFullscreenBack()
     {
+        if (InventoryDocumentViewer.TryCloseTopmost()) return true;
         ClarityDocumentViewer document = FindAnyObjectByType<ClarityDocumentViewer>();
         if (document != null && document.IsOpen) { document.CloseDocument(); return true; }
         ReconstructionJournalManager journal = ReconstructionJournalManager.Instance;

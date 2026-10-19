@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -74,6 +75,8 @@ public sealed class InventoryUI : MonoBehaviour
 
     private InventoryManager boundManager;
     private InventoryItemData selectedItem;
+    private InventoryDocumentViewer documentViewer;
+    private InventoryDocumentPreview documentPreview;
     private Coroutine fadeRoutine;
     private Coroutine inventoryRevealRoutine;
     private GameplayHUDUnlockReveal inventoryReveal;
@@ -93,6 +96,9 @@ public sealed class InventoryUI : MonoBehaviour
     private AudioClip lastTabSwitchClip;
 
     public bool IsOpen { get; private set; }
+    public event Action<InventoryUI> InventoryClosed;
+    public InventoryItemData SelectedItem => selectedItem;
+    public InventoryDocumentViewer DocumentViewer => documentViewer;
     public bool IsTutorialUIAvailable => isActiveAndEnabled && inventoryRoot != null &&
         canvasGroup != null && slotContainer != null && slotPrefab != null &&
         (inventoryRoot.transform.parent == null || inventoryRoot.transform.parent.gameObject.activeInHierarchy);
@@ -213,6 +219,7 @@ public sealed class InventoryUI : MonoBehaviour
             inventoryRoot = canvasGroup.gameObject;
 
         ConfigureWindowCanvas();
+        ConfigureDocumentPreview();
 
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseInventory);
@@ -226,9 +233,13 @@ public sealed class InventoryUI : MonoBehaviour
         SetVisibleImmediately(false);
         ClearDetails();
 
-        GameplayHUDTarget target = GetComponent<GameplayHUDTarget>();
+        GameplayHUDTarget target = inventoryRoot != null
+            ? inventoryRoot.GetComponent<GameplayHUDTarget>()
+            : null;
         if (target == null)
-            target = gameObject.AddComponent<GameplayHUDTarget>();
+            target = GetComponent<GameplayHUDTarget>();
+        if (target == null)
+            target = (inventoryRoot != null ? inventoryRoot : gameObject).AddComponent<GameplayHUDTarget>();
         target.Configure(canvasGroup, inventoryRoot);
 
         ResolveInventoryHUD();
@@ -322,6 +333,8 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void OnDisable()
     {
+        documentViewer?.CloseSilently();
+        documentPreview?.ResetHover();
         openPendingAfterStorySequence = false;
         InventoryHUDItemAttention.Instance?.Detach(this);
         GameplaySystemState.UnlockChanged -= HandleSystemUnlockChanged;
@@ -365,6 +378,8 @@ public sealed class InventoryUI : MonoBehaviour
 
     private void Update()
     {
+        bool inventoryInputDetected = Input.GetKeyDown(KeyCode.I);
+
         // A disabled/destroyed HUD root stops its own reveal coroutine without a completion event.
         if (ownsInventoryReveal && (inventoryReveal == null || !inventoryReveal.isActiveAndEnabled))
         {
@@ -377,10 +392,16 @@ public sealed class InventoryUI : MonoBehaviour
         {
             if (IsOpen)
                 CloseInventory();
-            else if (deferOpenUntilStorySequenceEnds && Input.GetKeyDown(KeyCode.I))
+            else if (deferOpenUntilStorySequenceEnds && inventoryInputDetected)
                 openPendingAfterStorySequence = !openPendingAfterStorySequence;
             return;
         }
+
+        if (documentViewer != null && documentViewer.IsOpen)
+            return;
+
+        if (ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay)
+            return;
 
         if (openPendingAfterStorySequence)
         {
@@ -392,7 +413,7 @@ public sealed class InventoryUI : MonoBehaviour
         if (boundManager == null)
             BindToManager();
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (inventoryInputDetected)
             ToggleInventory();
     }
 
@@ -423,19 +444,63 @@ public sealed class InventoryUI : MonoBehaviour
 
     public void OpenInventory()
     {
+        OpenInventoryInternal(true);
+    }
+
+    /// <summary>Opens Inventory for an acquired item without replaying the Inventory tutorial.</summary>
+    public bool OpenInventoryAndSelectItem(InventoryItemData item)
+    {
+        if (item == null)
+            return false;
+
+        if (!IsOpen && deferOpenUntilStorySequenceEnds && StorySequenceCoordinator.IsStorySequenceActive)
+            return false;
+
+        if (!IsOpen && !OpenInventoryInternal(false))
+            return false;
+
+        if (boundManager == null)
+            BindToManager();
+        if (boundManager == null || !boundManager.HasItem(item.ItemID))
+            return false;
+
+        if (!MatchesCurrentFilter(item))
+        {
+            if (item.Category == ItemCategory.Document)
+                ShowDocuments();
+            else
+                ShowAllItems();
+        }
+
+        int itemIndex = filteredItems.FindIndex(candidate =>
+            candidate != null && candidate.ItemID == item.ItemID);
+        if (itemIndex < 0)
+            return false;
+
+        if (enablePagination && currentPageIndex != itemIndex / SlotsPerPage)
+        {
+            currentPageIndex = itemIndex / SlotsPerPage;
+            Refresh();
+        }
+
+        SelectItem(item);
+        return true;
+    }
+
+    private bool OpenInventoryInternal(bool notifyTutorial)
+    {
         if (IsOpen ||
             !GameplaySystemState.IsUnlocked(GameplaySystemId.Inventory))
-            return;
+            return IsOpen;
 
         if (deferOpenUntilStorySequenceEnds && StorySequenceCoordinator.IsStorySequenceActive)
         {
             openPendingAfterStorySequence = true;
-            return;
+            return false;
         }
 
         IsOpen = true;
-        PlayInventorySound(
-            inventoryAudioConfig != null ? inventoryAudioConfig.InventoryOpenSound : null);
+        PlayInventorySound(inventoryAudioConfig != null ? inventoryAudioConfig.InventoryOpenSound : null);
         // Activate the hidden slot container before constructing slots so their
         // Awake methods run before Setup assigns presentation state.
         if (inventoryRoot != null)
@@ -444,8 +509,9 @@ public sealed class InventoryUI : MonoBehaviour
         Refresh();
         SetGameplayInputBlocked(true);
         FadeTo(1f, false);
-        if (GameplaySystemTutorialManager.HasInstance)
+        if (notifyTutorial && GameplaySystemTutorialManager.HasInstance)
             GameplaySystemTutorialManager.Instance.NotifySystemOpened(GameplaySystemId.Inventory);
+        return true;
     }
 
     public void CloseInventory()
@@ -453,13 +519,15 @@ public sealed class InventoryUI : MonoBehaviour
         if (!IsOpen)
             return;
 
+        documentViewer?.Close();
+        documentPreview?.ResetHover();
         IsOpen = false;
-        PlayInventorySound(
-            inventoryAudioConfig != null ? inventoryAudioConfig.InventoryCloseSound : null);
+        PlayInventorySound(inventoryAudioConfig != null ? inventoryAudioConfig.InventoryCloseSound : null);
         SetGameplayInputBlocked(false);
         FadeTo(0f, true);
         if (GameplaySystemTutorialManager.HasInstance)
             GameplaySystemTutorialManager.Instance.NotifySystemClosed(GameplaySystemId.Inventory);
+        InventoryClosed?.Invoke(this);
     }
 
     private void HandleSystemUnlockChanged(
@@ -711,6 +779,9 @@ public sealed class InventoryUI : MonoBehaviour
 
     public void SelectItem(InventoryItemData item)
     {
+        if (selectedItem != item)
+            documentViewer?.Close();
+        documentPreview?.ResetHover();
         selectedItem = item;
 
         if (detailIcon != null)
@@ -719,6 +790,11 @@ public sealed class InventoryUI : MonoBehaviour
             detailIcon.enabled = item != null && item.Icon != null;
             detailIcon.preserveAspect = true;
         }
+
+        documentPreview?.SetEligible(
+            item != null &&
+            item.Category == ItemCategory.Document &&
+            item.Icon != null);
 
         if (detailName != null)
             detailName.text = item != null ? item.DisplayName : string.Empty;
@@ -731,6 +807,44 @@ public sealed class InventoryUI : MonoBehaviour
             if (InventoryItemReadState.MarkRead(item.ItemID))
                 Refresh();
         }
+    }
+
+    public void OpenSelectedDocumentPreview()
+    {
+        if (!IsOpen ||
+            selectedItem == null ||
+            selectedItem.Category != ItemCategory.Document ||
+            selectedItem.Icon == null ||
+            documentViewer == null)
+        {
+            return;
+        }
+
+        documentPreview?.ResetHover();
+        Sprite[] storyPages = selectedItem.StoryPages;
+        if (storyPages != null && storyPages.Length > 0)
+            documentViewer.OpenPages(storyPages, selectedItem.ItemID);
+        else
+            documentViewer.Open(selectedItem.Icon);
+    }
+
+    private void ConfigureDocumentPreview()
+    {
+        if (inventoryRoot == null)
+            return;
+
+        documentViewer = GetComponent<InventoryDocumentViewer>();
+        if (documentViewer == null)
+            documentViewer = gameObject.AddComponent<InventoryDocumentViewer>();
+        documentViewer.Configure(inventoryRoot.transform);
+
+        if (detailIcon == null)
+            return;
+
+        documentPreview = detailIcon.GetComponent<InventoryDocumentPreview>();
+        if (documentPreview == null)
+            documentPreview = detailIcon.gameObject.AddComponent<InventoryDocumentPreview>();
+        documentPreview.Configure(detailIcon, this);
     }
 
     private void BindToManager()

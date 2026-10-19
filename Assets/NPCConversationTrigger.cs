@@ -165,6 +165,7 @@ public class NPCConversationTrigger : MonoBehaviour
             RefreshPrompt(talkText);
 
         if (!StorySequenceCoordinator.IsStorySequenceActive &&
+            !ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay &&
             activeConversationTrigger == null && IsInteractionCandidate() &&
             IsClosestAvailableTrigger() &&
             Input.GetKeyDown(KeyCode.E))

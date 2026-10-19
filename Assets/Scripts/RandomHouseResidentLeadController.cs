@@ -54,7 +54,9 @@ public sealed class RandomHouseResidentLeadController : MonoBehaviour
         // Run before the existing trigger's Update. Its normal interaction path remains
         // untouched until this follow-up is eligible; the programmatic API preserves
         // facing/camera behavior without setting the original first-conversation flag.
-        if (!Input.GetKeyDown(KeyCode.E) || Time.timeScale <= 0f ||
+        if (InventoryDocumentViewer.IsAnyOpen ||
+            ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay ||
+            !Input.GetKeyDown(KeyCode.E) || Time.timeScale <= 0f ||
             conversationTrigger == null || !conversationTrigger.isActiveAndEnabled ||
             conversationTrigger.IsTalking || StorySequenceCoordinator.IsStorySequenceActive ||
             !IsPlayerInside())

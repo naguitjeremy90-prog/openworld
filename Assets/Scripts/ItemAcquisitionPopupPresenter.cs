@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -20,15 +21,18 @@ public sealed class ItemAcquisitionPopupPresenter : MonoBehaviour
         public Sprite Icon;
         public string DisplayName;
         public ItemAcquisitionPopupDestination Destination;
+        public Action<bool> Completion;
 
         public PresentationRequest(
             Sprite icon,
             string displayName,
-            ItemAcquisitionPopupDestination destination)
+            ItemAcquisitionPopupDestination destination,
+            Action<bool> completion)
         {
             Icon = icon;
             DisplayName = displayName;
             Destination = destination;
+            Completion = completion;
         }
     }
 
@@ -61,11 +65,16 @@ public sealed class ItemAcquisitionPopupPresenter : MonoBehaviour
     private Canvas parentCanvas;
     private AudioSource audioSource;
     private Coroutine presentationRoutine;
+    private PresentationRequest activeRequest;
+    private bool hasActiveRequest;
     private Vector3 baseScale = Vector3.one;
     private Vector2 homePosition;
     private Transform confettiContainer;
     private GameObject confettiInstance;
     private ParticleSystem[] confettiSystems;
+
+    public bool IsPresentingOrQueued =>
+        presentationRoutine != null || hasActiveRequest || requests.Count > 0;
 
     private void Awake()
     {
@@ -119,7 +128,17 @@ public sealed class ItemAcquisitionPopupPresenter : MonoBehaviour
         string displayName,
         ItemAcquisitionPopupDestination destination)
     {
-        requests.Enqueue(new PresentationRequest(icon, displayName, destination));
+        Enqueue(icon, displayName, destination, null);
+    }
+
+    /// <summary>Adds a presentation with an optional completion callback for this queued request.</summary>
+    public void Enqueue(
+        Sprite icon,
+        string displayName,
+        ItemAcquisitionPopupDestination destination,
+        Action<bool> completion)
+    {
+        requests.Enqueue(new PresentationRequest(icon, displayName, destination, completion));
         if (presentationRoutine == null && isActiveAndEnabled)
             presentationRoutine = StartCoroutine(ProcessQueue());
         else if (!gameObject.activeSelf)
@@ -134,6 +153,8 @@ public sealed class ItemAcquisitionPopupPresenter : MonoBehaviour
                 yield return null;
 
             PresentationRequest request = requests.Dequeue();
+            activeRequest = request;
+            hasActiveRequest = true;
             PlayConfetti();
             if (itemIcon != null)
                 itemIcon.sprite = request.Icon;
@@ -183,6 +204,9 @@ public sealed class ItemAcquisitionPopupPresenter : MonoBehaviour
                 yield return AnimateFadeOut();
 
             ResetVisual();
+            hasActiveRequest = false;
+            activeRequest = default;
+            InvokeCompletion(request.Completion, true);
         }
 
         presentationRoutine = null;
@@ -401,10 +425,66 @@ public sealed class ItemAcquisitionPopupPresenter : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        presentationRoutine = null;
+        CancelCallbacksAndPreserveRequests();
+    }
+
     private void OnDestroy()
     {
+        CancelCallbacksAndPreserveRequests(false);
         if (confettiContainer != null)
             Destroy(confettiContainer.gameObject);
+    }
+
+    private void CancelCallbacksAndPreserveRequests(bool preserveRequests = true)
+    {
+        List<PresentationRequest> interrupted = new List<PresentationRequest>();
+        List<Action<bool>> callbacks = new List<Action<bool>>();
+
+        if (hasActiveRequest)
+        {
+            if (activeRequest.Completion != null)
+                callbacks.Add(activeRequest.Completion);
+            activeRequest.Completion = null;
+            interrupted.Add(activeRequest);
+            activeRequest = default;
+            hasActiveRequest = false;
+        }
+
+        while (requests.Count > 0)
+        {
+            PresentationRequest request = requests.Dequeue();
+            if (request.Completion != null)
+                callbacks.Add(request.Completion);
+            request.Completion = null;
+            interrupted.Add(request);
+        }
+
+        if (preserveRequests)
+        {
+            for (int i = 0; i < interrupted.Count; i++)
+                requests.Enqueue(interrupted[i]);
+        }
+
+        for (int i = 0; i < callbacks.Count; i++)
+            InvokeCompletion(callbacks[i], false);
+    }
+
+    private void InvokeCompletion(Action<bool> completion, bool completed)
+    {
+        if (completion == null)
+            return;
+
+        try
+        {
+            completion(completed);
+        }
+        catch (Exception exception)
+        {
+            Debug.LogException(exception, this);
+        }
     }
 
     private static float EaseOutCubic(float value)

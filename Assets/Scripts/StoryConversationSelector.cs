@@ -18,6 +18,15 @@ public sealed class StoryConversationSelector : MonoBehaviour
         [Tooltip("Optional task that must be completed for this state to be eligible.")]
         [SerializeField] private string requiredCompletedTaskId;
 
+        [Tooltip("Optional task that must currently be active for this state to be eligible.")]
+        [SerializeField] private string requiredActiveTaskId;
+
+        [Tooltip("Optional exact active stage required on Required Active Task Id.")]
+        [SerializeField] private string requiredStageId;
+
+        [Tooltip("Optional story flag that prevents this state from being selected when true.")]
+        [SerializeField] private string blockingStoryFlagId;
+
         [Tooltip("Optional additional story/session flags. Every configured flag must be true.")]
         [SerializeField] private List<string> requiredSessionStateFlagIds =
             new List<string>();
@@ -29,6 +38,9 @@ public sealed class StoryConversationSelector : MonoBehaviour
 
         public string RequiredStoryFlagId => requiredStoryFlagId;
         public string RequiredCompletedTaskId => requiredCompletedTaskId;
+        public string RequiredActiveTaskId => requiredActiveTaskId;
+        public string RequiredStageId => requiredStageId;
+        public string BlockingStoryFlagId => blockingStoryFlagId;
         public List<string> RequiredSessionStateFlagIds => requiredSessionStateFlagIds;
         public NPCConversation Conversation => conversation;
         public int Priority => priority;
@@ -82,6 +94,26 @@ public sealed class StoryConversationSelector : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(state.RequiredCompletedTaskId) &&
             !IsTaskCompleted(state.RequiredCompletedTaskId))
             return false;
+
+        if (!string.IsNullOrWhiteSpace(state.BlockingStoryFlagId) &&
+            SessionStoryState.GetFlag(state.BlockingStoryFlagId.Trim()))
+            return false;
+
+        if (!string.IsNullOrWhiteSpace(state.RequiredActiveTaskId))
+        {
+            string taskId = state.RequiredActiveTaskId.Trim();
+            TaskManager manager = TaskManager.Instance;
+            if (manager == null || manager.GetTaskState(taskId) != TaskState.Active)
+                return false;
+
+            if (!string.IsNullOrWhiteSpace(state.RequiredStageId) &&
+                !manager.IsCurrentStage(taskId, state.RequiredStageId.Trim()))
+                return false;
+        }
+        else if (!string.IsNullOrWhiteSpace(state.RequiredStageId))
+        {
+            return false;
+        }
 
         List<string> requiredFlags = state.RequiredSessionStateFlagIds;
         if (requiredFlags == null)

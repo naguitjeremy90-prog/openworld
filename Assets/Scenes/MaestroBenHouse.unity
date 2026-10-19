@@ -7456,6 +7456,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619318234}
   m_CullTransparentMesh: 1
+--- !u!1 &630395973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 630395975}
+  - component: {fileID: 630395974}
+  m_Layer: 0
+  m_Name: ConversationEventInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &630395974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630395973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00abedce3cdbbba46bf2d86c9518c9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NodeEventHolder
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+  NodeID: 0
+  TMPFont: {fileID: 0}
+  Icon: {fileID: 0}
+  Audio: {fileID: 0}
+--- !u!4 &630395975
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630395973}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -56.850372, y: -3.45, z: -5.5407095}
+  m_LocalScale: {x: 0.117588095, y: 1, z: 0.11685218}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 634704786}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &634704781
 GameObject:
   m_ObjectHideFlags: 0
@@ -7471,6 +7522,8 @@ GameObject:
   - component: {fileID: 634704782}
   - component: {fileID: 634704787}
   - component: {fileID: 634704788}
+  - component: {fileID: 634704789}
+  - component: {fileID: 634704790}
   m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
@@ -7601,7 +7654,8 @@ Transform:
   m_LocalPosition: {x: -1.36, y: 3.1058924, z: 0.35}
   m_LocalScale: {x: 8.504261, y: 1, z: 8.55782}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 630395975}
   m_Father: {fileID: 1789340395}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &634704787
@@ -7616,7 +7670,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
-  conversationStates: []
+  conversationStates:
+  - stateName: Maestro Ben Part 2 page handoff
+    requiredStoryFlagId: 
+    requiredCompletedTaskId: 
+    requiredActiveTaskId: main_visit_maestro_ben
+    requiredStageId: receive_cecilia_ysagani_pages
+    blockingStoryFlagId: maestro_ben_part2_cecilia_ysagani_handoff_complete
+    requiredSessionStateFlagIds: []
+    conversation: {fileID: 634704789}
+    priority: 100
   enableDebugOverride: 0
   debugConversation: {fileID: 0}
 --- !u!114 &634704788
@@ -7638,6 +7701,71 @@ MonoBehaviour:
   pitchVariation: 0
   spatialBlend: 0
   transitionSafe: 0
+--- !u!114 &634704789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634704781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83189876d4d389f43b7dd2e925aa112e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEditor.NPCConversation
+  CurrentIDCounter: 1
+  json: '{"Options":[],"Parameters":[],"SpeechNodes":[{"Connections":[],"EditorInfo":{"isRoot":true,"xPos":146.200012,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Ito.","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Maestro
+    Ben","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
+  saveVersion: 110
+  DefaultName: Maestro Ben
+  DefaultSprite: {fileID: 0}
+  DefaultFont: {fileID: 0}
+  NodeSerializedDataList:
+  - {fileID: 630395974}
+  ContinueFont: {fileID: 0}
+  EndConversationFont: {fileID: 0}
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &634704790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634704781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa09e989bc44c64b9f9a18b7306a8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCQuestMarker
+  yellowAvailable: {fileID: 21300000, guid: d8439a2a993d1244da0c15d503aaf465, type: 3}
+  yellowTarget: {fileID: 21300000, guid: 05c2492ee4e8529458984e785eb706fa, type: 3}
+  blueAvailable: {fileID: 21300000, guid: 08c5914419a5ce24e9cf7431a5a55202, type: 3}
+  blueTarget: {fileID: 21300000, guid: 91bb44c9b218fbe4cb6b1f7a9c8986ee, type: 3}
+  grayAvailable: {fileID: 21300000, guid: 1dfc3b38c42dfa249b8581a72682f63e, type: 3}
+  grayTarget: {fileID: 21300000, guid: 0b9943dc668b03142abc0ebf7ece4ef2, type: 3}
+  markerLocalOffset: {x: 0, y: 6.3, z: 0}
+  markerWorldScale: 0.45
+  floatAmount: 0.1
+  floatSpeed: 0.55
+  maintainScreenSize: 0
+  independentVisualTransform: 1
+  faceGameplayCamera: 1
+  showMarker: 1
+  rules:
+  - taskId: main_visit_maestro_ben
+    requiredStageId: receive_cecilia_ysagani_pages
+    minimumStageId: 
+    taskState: 2
+    requiredStoryFlagId: 
+    expectedStoryFlagValue: 1
+    blockingStoryFlagId: maestro_ben_part2_cecilia_ysagani_handoff_complete
+    appearance: 1
+    hideWhenTaskCompleted: 1
+  enableSecondaryChannel: 0
+  secondaryRules: []
+  dualMarkerGap: 0.15
 --- !u!1 &635947493
 GameObject:
   m_ObjectHideFlags: 0
@@ -12654,6 +12782,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a31c50f8c7d744e39476c2bfc8f1d295, type: 2}
   - {fileID: 11400000, guid: 18f62c9148de483794229965c85b3c8f, type: 2}
   - {fileID: 11400000, guid: 40d50c907efe4c7499067e3ea9408ed4, type: 2}
+  - {fileID: 11400000, guid: bd4c9b5758344bd1ad6510a1ab625156, type: 2}
   listContent: {fileID: 1468232715}
   listButtonPrefab: {fileID: 6598735624607580097, guid: 34fb655f8b6952149932dcf4fdf3a90f, type: 3}
   emptyListText: {fileID: 1666513849}
@@ -12676,6 +12805,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ReconstructionPeople
   allPeople:
   - {fileID: 11400000, guid: 65a3ca317cde4994a8b0cb86b449194b, type: 2}
+  - {fileID: 11400000, guid: eb502a45eb5b487c8afc2f3f4e96e923, type: 2}
+  - {fileID: 11400000, guid: 245564537b2e4a8b9c88d3a168ff776d, type: 2}
+  - {fileID: 11400000, guid: 3f06aabd7c7257a469ba6001745b173e, type: 2}
+  - {fileID: 11400000, guid: 189ce10f6c01db84c9b8fecb67a68b1b, type: 2}
+  - {fileID: 11400000, guid: b85593b33f3adca46b13002175323769, type: 2}
+  - {fileID: 11400000, guid: bf882099c6926274f99bb98d9d89bf22, type: 2}
+  - {fileID: 11400000, guid: d8119e5b82a24d78a6d5342f9c0b7e13, type: 2}
+  - {fileID: 11400000, guid: dfc5a686c6efea04e9d2380aeeb839c2, type: 2}
+  - {fileID: 11400000, guid: e0fe2be33ff6ef546aa3843afe54774f, type: 2}
   listContent: {fileID: 974329360}
   listButtonPrefab: {fileID: 6598735624607580097, guid: 8b31cece87c544f428a536da0ac69c3c, type: 3}
   emptyListText: {fileID: 88317007}
@@ -12702,6 +12840,7 @@ MonoBehaviour:
   allFragments:
   - {fileID: 11400000, guid: dc8efb717638e814293b375fd68c2e20, type: 2}
   - {fileID: 11400000, guid: b7e1c4a92d3f4b6e8a0c1d5f7e9b2a34, type: 2}
+  - {fileID: 11400000, guid: 78bac1d4312a4a15b8501d839d62b7c2, type: 2}
   listContent: {fileID: 1625761341}
   listButtonPrefab: {fileID: 6598735624607580097, guid: eeb92d853011e934185adaf9cccc5f30, type: 3}
   emptyListText: {fileID: 1258177709}
@@ -12729,10 +12868,11 @@ MonoBehaviour:
   allReflections:
   - {fileID: 11400000, guid: 892ae0c3eef07ba44a6a4861ef47eea8, type: 2}
   - {fileID: 11400000, guid: 92ccf4afdd034bc880e629a23b5ca186, type: 2}
+  - {fileID: 11400000, guid: e99b3286fab7486ea6fe63619e03d325, type: 2}
   listContent: {fileID: 985045732}
   listButtonPrefab: {fileID: 6598735624607580097, guid: c99157fdfb1482b40bda112f7c0fd0a6, type: 3}
   emptyListText: {fileID: 1568611897}
-  detailTitleText: {fileID: 1992932040006884879, guid: b87eb44a150bafe4992beed8b4c36038, type: 3}
+  detailTitleText: {fileID: 2018320000}
   detailContextText: {fileID: 94173552}
   promptText: {fileID: 1789168291}
   suggestionsLabel: {fileID: 0}
@@ -14248,6 +14388,12 @@ MonoBehaviour:
   standingMaestroInteraction: {fileID: 634704781}
   miguelRoot: {fileID: 1336468826}
   returnConversation: {fileID: 1891095465}
+  handoffConversation: {fileID: 634704789}
+  finalFollowUpConversation: {fileID: 6330550569941503222, guid: c711836736912d54dbf53b3745ca46b8, type: 3}
+  handoffItem: {fileID: 11400000, guid: 92acaf383610cc9498e014d8ad6fad8f, type: 2}
+  finalConversationFocusManager: {fileID: 2077700001}
+  finalConversationFocusPoint: {fileID: 2077700002}
+  postPart2SulatinInstructionConversation: {fileID: 6330550569941503222, guid: 4a0675dec6c5456b8fe2ad8957e9a5f5, type: 3}
 --- !u!4 &1202805625
 Transform:
   m_ObjectHideFlags: 0
@@ -16819,6 +16965,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1336717812}
   m_CullTransparentMesh: 1
+--- !u!1 &1349962151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1349962152}
+  - component: {fileID: 2077700002}
+  - component: {fileID: 2077700005}
+  m_Layer: 0
+  m_Name: MaestroFocusCam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1349962152
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349962151}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.00057590264, y: 0.9998986, z: -0.011982378, w: -0.007669034}
+  m_LocalPosition: {x: 491.04, y: 6.39, z: 55.17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 1.374, y: 180.878, z: -0.055}
 --- !u!1001 &1362100813
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22714,6 +22893,17 @@ MonoBehaviour:
   playerObject: {fileID: 0}
   maestroBenDirector: {fileID: 0}
   displayPanel: 1
+--- !u!114 &2018320000 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1992932040006884879, guid: b87eb44a150bafe4992beed8b4c36038, type: 3}
+  m_PrefabInstance: {fileID: 7196721561129247164}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &2031429373
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24433,6 +24623,125 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062161151}
   m_CullTransparentMesh: 1
+--- !u!114 &2077700001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077700003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3bbc9a881829b14c93b4d5ea4be9048, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFocusManager
+  normalCinemachineCamera: {fileID: 0}
+  focusCinemachineCamera: {fileID: 0}
+  normalCamera: {fileID: 545803169}
+  player: {fileID: 1336468826}
+  playerMovementScript: {fileID: 1002975823}
+  playerAnimator: {fileID: 1002975822}
+  cinemachineReturnTimeout: 8
+--- !u!114 &2077700002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349962151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5c386afd64e68040bedbd5b576b3b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFocusPoint
+  focusDuration: 0
+  moveSpeed: 15
+  returnSpeed: 15
+  returnMode: 1
+  lockPlayer: 1
+--- !u!1 &2077700003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2077700004}
+  - component: {fileID: 2077700001}
+  m_Layer: 0
+  m_Name: CameraFocusManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2077700004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077700003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &2077700005
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349962151}
+  m_Enabled: 0
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &2094869933
 GameObject:
   m_ObjectHideFlags: 0
@@ -25076,6 +25385,7 @@ SceneRoots:
   - {fileID: 132999385}
   - {fileID: 1122497021}
   - {fileID: 1993364208}
+  - {fileID: 2077700004}
   - {fileID: 1157465601}
   - {fileID: 2144884225}
   - {fileID: 1199001481}
@@ -25092,3 +25402,4 @@ SceneRoots:
   - {fileID: 1213790611}
   - {fileID: 1272311890}
   - {fileID: 1202805625}
+  - {fileID: 1349962152}

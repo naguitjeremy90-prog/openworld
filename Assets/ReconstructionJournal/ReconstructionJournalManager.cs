@@ -12,6 +12,9 @@ public class ReconstructionJournalManager : MonoBehaviour
     private const string JournalAudioConfigResourcePath = "JournalAudioConfig";
 
     public static ReconstructionJournalManager Instance { get; private set; }
+    public static bool IsPagninilayResponseInputFocusedForGameplay =>
+        Instance != null && Instance.reflections != null &&
+        Instance.reflections.IsResponseInputFocusedForGameplay;
     public static event Action<JournalEntryUnlockedInfo> NewEntryUnlocked;
 
     [Header("Journal Window")]
@@ -279,6 +282,10 @@ public class ReconstructionJournalManager : MonoBehaviour
     {
         bool wasOpen = IsOpen;
         IsOpen = false;
+
+        if (wasOpen && reflections != null &&
+            reflections.IsResponseInputFocusedForGameplay)
+            reflections.SuppressGameplayInputThroughNextFrame();
 
         if (journalWindow != null)
             journalWindow.SetActive(false);

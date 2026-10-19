@@ -1,0 +1,102 @@
+﻿%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198ae66b3d9224645b06ef07a3127935, type: 3}
+  m_Name: Ang_Halaga_Ng_Hindi_Natapos
+  m_EditorClassIdentifier: Assembly-CSharp::ReflectionData
+  reflectionID: ang_halaga_ng_hindi_natapos
+  title: Ang Halaga ng Hindi Natapos
+  context: 1
+  prompt: Bakit mahalagang pangalagaan ang mga akdang tulad ng Makamisa, kahit hindi natapos ang mga ito?
+  suggestedResponses:
+  - Mahalagang pangalagaan ang Makamisa dahil...
+  - Kahit hindi natapos ang akda, maaari pa rin nating matutuhan...
+  - Para sa akin, mahalaga ang panitikang Pilipino sapagkat...
+  themeResponses: []
+  entryThemeMappings:
+  - themeId: preservation
+    keywords:
+    - pangalagaan
+    - pangangalaga
+    - ingatan
+    - pag-iingat
+    - mapreserba
+    - preserba
+    - preserve
+    - preserving
+    - preservation
+    - ma-preserve
+    - mapanatili
+    - maipasa
+    - susunod na henerasyon
+    - future generations
+    - future generation
+    response: Mahalaga ang iyong pananaw. Sa pangangalaga ng mga akdang tulad ng Makamisa, naipapasa natin ang ating panitikan sa susunod na henerasyon.
+    priority: 5
+  - themeId: history_and_culture
+    keywords:
+    - kasaysayan
+    - history
+    - historical
+    - kultura
+    - culture
+    - cultural
+    - kaugalian
+    - tradisyon
+    - tradition
+    - pamumuhay
+    - heritage
+    - pamana
+    - pagkakakilanlan
+    - identity
+    response: Ang panitikan ay nagbibigay ng pag-unawa sa kultura, kaugalian, at pamumuhay ng mga Pilipino noong nakaraan. Mahalaga itong bahagi ng ating kasaysayan.
+    priority: 4
+  - themeId: unfinished_literature
+    keywords:
+    - hindi natapos
+    - di natapos
+    - hindi tapos
+    - unfinished
+    - incomplete
+    - walang wakas
+    - hindi alam ang wakas
+    - bitin
+    - naiwang pahina
+    - natitirang pahina
+    - pahinang naiwan
+    - fragments
+    - fragment
+    - nawawalang bahagi
+    - missing pages
+    response: May halaga pa rin ang isang akda kahit hindi ito natapos. Ang mga pahinang naiwan ay maaari pa ring pagkunan ng kaalaman at pag-unawa.
+    priority: 3
+  - themeId: cecilia_and_ysagani
+    keywords:
+    - cecilia
+    - ysagani
+    - kanilang dalawa
+    - kuwento nina cecilia at ysagani
+    - story of cecilia and ysagani
+    response: Mahalagang kilalanin ang kuwento nina Cecilia at Ysagani nang hindi nagdaragdag ng mga pangyayaring hindi matitiyak mula sa mga natitirang bahagi ng akda.
+    priority: 6
+  - themeId: rizal_legacy
+    keywords:
+    - rizal
+    - jose rizal
+    - "jos\u00E9 rizal"
+    - dakilang manunulat
+    - literary legacy
+    - ambag ni rizal
+    - mga isinulat ni rizal
+    - nobela ni rizal
+    response: "Ang Makamisa ay bahagi rin ng ambag ni Jos\u00E9 Rizal sa panitikang Pilipino. Kahit hindi ito natapos, mahalaga pa rin itong pag-aralan at kilalanin."
+    priority: 2
+  entryThemeFallback: Mahalaga ang iyong pagninilay. Ang mga natitirang bahagi ng Makamisa ay nagbibigay sa atin ng pagkakataong higit na maunawaan at pahalagahan ang ating panitikan.

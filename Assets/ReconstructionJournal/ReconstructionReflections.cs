@@ -118,6 +118,17 @@ public class ReconstructionReflections : MonoBehaviour
     private GameObject suggestionPanel;
     private Coroutine pendingSuggestionHide;
     private bool suppressNextSuggestionOpen;
+    private int suppressGameplayInputThroughFrame = -1;
+
+    public bool IsResponseInputFocusedForGameplay =>
+        (responseInputField != null && responseInputField.isActiveAndEnabled &&
+         responseInputField.isFocused) ||
+        Time.frameCount <= suppressGameplayInputThroughFrame;
+
+    public void SuppressGameplayInputThroughNextFrame()
+    {
+        suppressGameplayInputThroughFrame = Time.frameCount + 1;
+    }
 
     public event Action<JournalEntryUnlockedInfo> EntryUnlocked;
 
@@ -161,6 +172,13 @@ public class ReconstructionReflections : MonoBehaviour
             responseInputField.onSelect.RemoveListener(HandleResponseInputSelected);
             responseInputField.onDeselect.RemoveListener(HandleResponseInputDeselected);
         }
+    }
+
+    private void OnDisable()
+    {
+        // Keep a just-released key from becoming a gameplay action when the
+        // Journal closes and deactivates the focused field.
+        suppressGameplayInputThroughFrame = Time.frameCount + 1;
     }
 
     public bool UnlockReflection(string reflectionID)
@@ -735,8 +753,41 @@ public class ReconstructionReflections : MonoBehaviour
         ReflectionData reflection,
         string response)
     {
-        if (reflection == null || reflection.themeResponses == null)
-            return "";
+        const string generalFallback =
+            "Kawili-wili ang iyong pananaw. Ano ang nagbigay sa iyo ng ganitong pagtingin?";
+
+        if (reflection == null)
+            return generalFallback;
+
+        if (reflection.entryThemeMappings != null &&
+            reflection.entryThemeMappings.Count > 0)
+        {
+            List<string> tokens = Tokenize(response);
+            ReflectionEntryThemeMapping bestEntryResponse = null;
+
+            foreach (ReflectionEntryThemeMapping mapping in reflection.entryThemeMappings)
+            {
+                if (mapping == null ||
+                    string.IsNullOrWhiteSpace(mapping.response) ||
+                    !EntryThemeMatches(mapping, tokens))
+                {
+                    continue;
+                }
+
+                // Strict greater-than preserves serialized order for ties.
+                if (bestEntryResponse == null || mapping.priority > bestEntryResponse.priority)
+                    bestEntryResponse = mapping;
+            }
+
+            return bestEntryResponse != null
+                ? bestEntryResponse.response
+                : string.IsNullOrWhiteSpace(reflection.entryThemeFallback)
+                    ? generalFallback
+                    : reflection.entryThemeFallback;
+        }
+
+        if (reflection.themeResponses == null)
+            return generalFallback;
 
         List<ReflectionTheme> detectedThemes = DetectThemes(response);
         ReflectionThemeResponse bestResponse = null;
@@ -754,7 +805,25 @@ public class ReconstructionReflections : MonoBehaviour
                 bestResponse = candidate;
         }
 
-        return bestResponse != null ? bestResponse.journalFollowUp : "";
+        return bestResponse != null
+            ? bestResponse.journalFollowUp
+            : generalFallback;
+    }
+
+    private bool EntryThemeMatches(
+        ReflectionEntryThemeMapping mapping,
+        List<string> responseTokens)
+    {
+        if (mapping.keywords == null)
+            return false;
+
+        foreach (string keyword in mapping.keywords)
+        {
+            if (ContainsTokenSequence(responseTokens, Tokenize(keyword)))
+                return true;
+        }
+
+        return false;
     }
 
     private void ShowReflectionFollowUp(string followUp)
@@ -1045,6 +1114,8 @@ public class ReconstructionReflections : MonoBehaviour
 
     private void HandleResponseInputDeselected(string unused)
     {
+        SuppressGameplayInputThroughNextFrame();
+
         if (pendingSuggestionHide != null)
             StopCoroutine(pendingSuggestionHide);
 

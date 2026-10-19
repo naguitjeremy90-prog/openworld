@@ -16,12 +16,14 @@ public sealed class InventoryItemData : ScriptableObject
     [SerializeField] private Sprite icon;
     [SerializeField, TextArea(3, 8)] private string description;
     [SerializeField] private ItemCategory category = ItemCategory.General;
+    [SerializeField] private Sprite[] storyPages = System.Array.Empty<Sprite>();
 
     public string ItemID => itemID;
     public string DisplayName => displayName;
     public Sprite Icon => icon;
     public string Description => description;
     public ItemCategory Category => category;
+    public Sprite[] StoryPages => storyPages ?? System.Array.Empty<Sprite>();
 
     private void OnValidate()
     {

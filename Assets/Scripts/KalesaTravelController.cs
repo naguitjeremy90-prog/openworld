@@ -201,6 +201,8 @@ public sealed class KalesaTravelController : MonoBehaviour
 
         if (playerInsideBoardingArea && CanBoard() &&
             !StorySequenceCoordinator.IsStorySequenceActive &&
+            !InventoryDocumentViewer.IsAnyOpen &&
+            !ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay &&
             Input.GetKeyDown(KeyCode.E))
         {
             BeginTravel();

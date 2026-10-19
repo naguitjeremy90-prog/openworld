@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3744170062784308339}
   - component: {fileID: 4539478978178648670}
+  - component: {fileID: 876500001}
   m_Layer: 0
   m_Name: TaskManager
   m_TagString: Untagged
@@ -121,6 +122,14 @@ MonoBehaviour:
       objectiveText: Puntahan si Maestro Ben.
       requiredCount: 0
       allowedProgressIds: []
+    - stageId: receive_cecilia_ysagani_pages
+      objectiveText: Kausapin si Maestro Ben.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: discuss_cecilia_ysagani_pages
+      objectiveText: Pakinggan ang paliwanag ni Maestro Ben.
+      requiredCount: 0
+      allowedProgressIds: []
   - taskId: side_kutsero_pasabi
     title: Pasabi ng Kutsero
     startingObjective: Ipaabot ang mensahe ng kutsero sa tindera.
@@ -134,3 +143,33 @@ MonoBehaviour:
       objectiveText: Bumalik sa kutsero.
       requiredCount: 0
       allowedProgressIds: []
+  - taskId: main_collect_remaining_sulatin
+    title: Hanapin ang mga natitirang sulatin
+    startingObjective: Hanapin ang mga natitirang sulatin.
+    taskType: 0
+    stages:
+    - stageId: collect_remaining_sulatin
+      objectiveText: Hanapin ang mga natitirang sulatin.
+      requiredCount: 5
+      allowedProgressIds:
+      - present_pili_archival_rizal_novel
+      - present_pili_tagalog_espanol_manuscripts
+      - present_pili_letter_sealed_envelope
+      - present_pili_filipino_archive_note
+      - church_lumang_sulatin
+    - stageId: return_to_maestro_ben
+      objectiveText: Bumalik kay Maestro Ben.
+      requiredCount: 0
+      allowedProgressIds: []
+--- !u!114 &876500001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6492435229044996695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a6f04d3b91d476981b73f6b6c2de7e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PostPart2SulatinTaskCoordinator

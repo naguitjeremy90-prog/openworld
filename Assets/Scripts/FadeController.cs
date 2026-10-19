@@ -83,6 +83,12 @@ public class FadeController : MonoBehaviour
 
     public IEnumerator FadeToBlack()
     {
+        return FadeToBlack(fadeDuration);
+    }
+
+    /// <summary>Fades the scene-local black overlay to opaque using a sequence-specific duration.</summary>
+    public IEnumerator FadeToBlack(float duration)
+    {
         int version = BeginObservedFade();
         bool completed = false;
         try
@@ -90,22 +96,24 @@ public class FadeController : MonoBehaviour
             if (fadeCanvasGroup == null)
                 yield break;
 
+            duration = Mathf.Max(0f, duration);
             float time = 0f;
 
-            while (time < fadeDuration)
+            while (time < duration)
             {
                 time += Time.deltaTime;
 
                 fadeCanvasGroup.alpha = Mathf.Lerp(
                     0f,
                     1f,
-                    time / fadeDuration
+                    duration <= 0f ? 1f : time / duration
                 );
 
                 yield return null;
             }
 
             fadeCanvasGroup.alpha = 1f;
+            completed = true;
         }
         finally
         {

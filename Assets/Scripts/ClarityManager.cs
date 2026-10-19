@@ -104,6 +104,8 @@ public class ClarityManager : MonoBehaviour
         bool wasActive = IsClarityActive;
         bool storySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
         if (storySequenceActive ||
+            InventoryDocumentViewer.IsAnyOpen ||
+            ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay ||
             !clarityUnlocked)
             IsClarityActive = false;
         else
@@ -117,7 +119,7 @@ public class ClarityManager : MonoBehaviour
             Activated?.Invoke(IsDocumentMode);
         }
         else if (wasActive && !IsClarityActive &&
-                 !storySequenceActive && clarityUnlocked &&
+                 !storySequenceActive && !InventoryDocumentViewer.IsAnyOpen && clarityUnlocked &&
                  !Input.GetKey(clarityKey))
         {
             PlayConfiguredSound(pagsusuriAudioConfig != null

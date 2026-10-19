@@ -13,6 +13,7 @@ using UnityEngine;
 public sealed class Part2PosadaCutsceneController : MonoBehaviour
 {
     public const string CompletionFlag = "posada_part2_intro_cutscene_complete";
+    private const string Part1ReturnPrerequisiteFlag = "makamisa_part1_return_transport_started";
     private const string PostCutsceneTaskId = "main_visit_maestro_ben";
 
     [Header("Player and trigger")]
@@ -86,6 +87,12 @@ public sealed class Part2PosadaCutsceneController : MonoBehaviour
             return;
 
         playerInside = true;
+        if (!SessionStoryState.GetFlag(Part1ReturnPrerequisiteFlag))
+        {
+            pendingStart = false;
+            return;
+        }
+
         if (!completed && !requireExitToRetry)
             pendingStart = true;
         TryBeginSequence();
@@ -123,6 +130,12 @@ public sealed class Part2PosadaCutsceneController : MonoBehaviour
 
     private void TryBeginSequence()
     {
+        if (!SessionStoryState.GetFlag(Part1ReturnPrerequisiteFlag))
+        {
+            pendingStart = false;
+            return;
+        }
+
         if (!pendingStart || !playerInside || running || completed ||
             !ReferencesAreValid() || StorySequenceCoordinator.IsStorySequenceActive ||
             (conversationManager != null && conversationManager.IsConversationActive))

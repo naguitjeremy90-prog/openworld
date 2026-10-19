@@ -14,6 +14,7 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
     [Header("Generic Clarity completion")]
     [SerializeField] private ClarityDocumentViewer documentViewer;
     [SerializeField] private string destinationSceneName = "TransportationScene";
+    [SerializeField] private InventoryItemData inventoryReward;
 
     [Header("Existing self-dialogue data")]
     [SerializeField] private SelfDialogueTrigger firstReaction;
@@ -104,6 +105,7 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
         if (SessionStoryState.GetFlag(InvestigatedFlag))
             return;
 
+        GrantInventoryReward();
         SessionStoryState.SetFlag(InvestigatedFlag, true);
         ReconstructionJournalManager.Instance?.UnlockFragment("ang_lumang_sulatin");
         PreserveMainTaskForTransport();
@@ -115,6 +117,29 @@ public sealed class ManuscriptTransportSequenceController : MonoBehaviour
         sequenceHandedOff = false;
         CaptureAndDisableGameplayBehaviours();
         sequenceRoutine = StartCoroutine(TransportRoutine());
+    }
+
+    private void GrantInventoryReward()
+    {
+        InventoryManager inventory = InventoryManager.Instance;
+        if (inventory == null)
+        {
+            Debug.LogError("Lumang Sulatin investigation completed, but no InventoryManager was available to grant the document.", this);
+            return;
+        }
+
+        if (inventoryReward == null ||
+            !string.Equals(inventoryReward.ItemID, "church_lumang_sulatin", StringComparison.Ordinal))
+        {
+            Debug.LogError("Lumang Sulatin investigation completed, but its configured Inventory reward is missing or has an unexpected item ID.", this);
+            return;
+        }
+
+        if (inventory.HasItem(inventoryReward.ItemID))
+            return;
+
+        if (!inventory.AddItem(inventoryReward) && !inventory.HasItem(inventoryReward.ItemID))
+            Debug.LogError("Lumang Sulatin investigation completed, but InventoryManager rejected the document reward.", this);
     }
 
     private void PreserveMainTaskForTransport()

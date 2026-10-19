@@ -386,6 +386,9 @@ MonoBehaviour:
   - stateName: Post-Part-1 - Mang Kardo
     requiredStoryFlagId: 
     requiredCompletedTaskId: main_investigate_pili
+    requiredActiveTaskId: 
+    requiredStageId: 
+    blockingStoryFlagId: 
     requiredSessionStateFlagIds:
     - task_progress:main_investigate_pili:gather_information:mang_kardo
     conversation: {fileID: 2008934584}
@@ -4894,6 +4897,9 @@ MonoBehaviour:
   - stateName: Post-Part-1 - Mang Nardo
     requiredStoryFlagId: 
     requiredCompletedTaskId: main_investigate_pili
+    requiredActiveTaskId: 
+    requiredStageId: 
+    blockingStoryFlagId: 
     requiredSessionStateFlagIds:
     - task_progress:main_investigate_pili:gather_information:mang_nardo
     conversation: {fileID: 504636230}
@@ -8319,6 +8325,9 @@ MonoBehaviour:
   - stateName: Post-Part-1 - Mang Iko
     requiredStoryFlagId: 
     requiredCompletedTaskId: main_investigate_pili
+    requiredActiveTaskId: 
+    requiredStageId: 
+    blockingStoryFlagId: 
     requiredSessionStateFlagIds:
     - task_progress:main_investigate_pili:gather_information:mang_iko
     conversation: {fileID: 2084972014}
@@ -16193,9 +16202,9 @@ MonoBehaviour:
   ensureInventoryForDirectTesting: 1
   inventoryManagerPrefab: {fileID: 8043043054039635776, guid: 10f261cac51f5f7429af34922e8bc746, type: 3}
   unlockInventoryForDirectTesting: 1
-  enableDirectJournalTesting: 0
-  suppressJournalTutorialForTesting: 0
-  ensureTaskManagerForTesting: 0
+  enableDirectJournalTesting: 1
+  suppressJournalTutorialForTesting: 1
+  ensureTaskManagerForTesting: 1
   taskManagerPrefab: {fileID: 0}
 --- !u!4 &707748101
 Transform:
@@ -17504,6 +17513,9 @@ MonoBehaviour:
   - stateName: Post-Part-1 - Aling Maria
     requiredStoryFlagId: 
     requiredCompletedTaskId: main_investigate_pili
+    requiredActiveTaskId: 
+    requiredStageId: 
+    blockingStoryFlagId: 
     requiredSessionStateFlagIds:
     - task_progress:main_investigate_pili:gather_information:questioned_maria_nene
     conversation: {fileID: 1736558650}
@@ -29679,10 +29691,11 @@ MonoBehaviour:
   allReflections:
   - {fileID: 11400000, guid: 892ae0c3eef07ba44a6a4861ef47eea8, type: 2}
   - {fileID: 11400000, guid: 92ccf4afdd034bc880e629a23b5ca186, type: 2}
+  - {fileID: 11400000, guid: e99b3286fab7486ea6fe63619e03d325, type: 2}
   listContent: {fileID: 181309971}
   listButtonPrefab: {fileID: 6598735624607580097, guid: c99157fdfb1482b40bda112f7c0fd0a6, type: 3}
   emptyListText: {fileID: 1090205095}
-  detailTitleText: {fileID: 1992932040006884879, guid: b87eb44a150bafe4992beed8b4c36038, type: 3}
+  detailTitleText: {fileID: 0}
   detailContextText: {fileID: 869981160}
   promptText: {fileID: 1672117263}
   suggestionsLabel: {fileID: 0}
@@ -29714,6 +29727,7 @@ MonoBehaviour:
   allFragments:
   - {fileID: 11400000, guid: dc8efb717638e814293b375fd68c2e20, type: 2}
   - {fileID: 11400000, guid: b7e1c4a92d3f4b6e8a0c1d5f7e9b2a34, type: 2}
+  - {fileID: 11400000, guid: 78bac1d4312a4a15b8501d839d62b7c2, type: 2}
   listContent: {fileID: 536746358}
   listButtonPrefab: {fileID: 6598735624607580097, guid: eeb92d853011e934185adaf9cccc5f30, type: 3}
   emptyListText: {fileID: 1239583471}
@@ -29740,6 +29754,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ReconstructionPeople
   allPeople:
   - {fileID: 11400000, guid: 65a3ca317cde4994a8b0cb86b449194b, type: 2}
+  - {fileID: 11400000, guid: eb502a45eb5b487c8afc2f3f4e96e923, type: 2}
+  - {fileID: 11400000, guid: 245564537b2e4a8b9c88d3a168ff776d, type: 2}
+  - {fileID: 11400000, guid: 3f06aabd7c7257a469ba6001745b173e, type: 2}
+  - {fileID: 11400000, guid: 189ce10f6c01db84c9b8fecb67a68b1b, type: 2}
+  - {fileID: 11400000, guid: b85593b33f3adca46b13002175323769, type: 2}
+  - {fileID: 11400000, guid: bf882099c6926274f99bb98d9d89bf22, type: 2}
+  - {fileID: 11400000, guid: d8119e5b82a24d78a6d5342f9c0b7e13, type: 2}
+  - {fileID: 11400000, guid: dfc5a686c6efea04e9d2380aeeb839c2, type: 2}
+  - {fileID: 11400000, guid: e0fe2be33ff6ef546aa3843afe54774f, type: 2}
   listContent: {fileID: 1391038562}
   listButtonPrefab: {fileID: 6598735624607580097, guid: 8b31cece87c544f428a536da0ac69c3c, type: 3}
   emptyListText: {fileID: 315377629}
@@ -29768,6 +29791,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a31c50f8c7d744e39476c2bfc8f1d295, type: 2}
   - {fileID: 11400000, guid: 18f62c9148de483794229965c85b3c8f, type: 2}
   - {fileID: 11400000, guid: 40d50c907efe4c7499067e3ea9408ed4, type: 2}
+  - {fileID: 11400000, guid: bd4c9b5758344bd1ad6510a1ab625156, type: 2}
   listContent: {fileID: 286792336}
   listButtonPrefab: {fileID: 6598735624607580097, guid: 34fb655f8b6952149932dcf4fdf3a90f, type: 3}
   emptyListText: {fileID: 597976260}
@@ -35179,6 +35203,9 @@ MonoBehaviour:
   - stateName: Post-Part-1 - Nena
     requiredStoryFlagId: 
     requiredCompletedTaskId: main_investigate_pili
+    requiredActiveTaskId: 
+    requiredStageId: 
+    blockingStoryFlagId: 
     requiredSessionStateFlagIds:
     - task_progress:main_investigate_pili:gather_information:nena
     conversation: {fileID: 1432518677}
@@ -46616,6 +46643,9 @@ MonoBehaviour:
   - stateName: Post-Part-1 - Toto
     requiredStoryFlagId: 
     requiredCompletedTaskId: main_investigate_pili
+    requiredActiveTaskId: 
+    requiredStageId: 
+    blockingStoryFlagId: 
     requiredSessionStateFlagIds:
     - task_progress:main_investigate_pili:gather_information:toto
     conversation: {fileID: 96264587}
@@ -46638,6 +46668,9 @@ MonoBehaviour:
   - stateName: Post-Part-1 - Mang Tibo
     requiredStoryFlagId: 
     requiredCompletedTaskId: main_investigate_pili
+    requiredActiveTaskId: 
+    requiredStageId: 
+    blockingStoryFlagId: 
     requiredSessionStateFlagIds:
     - task_progress:main_investigate_pili:gather_information:mang_tibo
     conversation: {fileID: 1038440541}
