@@ -376,9 +376,12 @@ public sealed class InventoryUI : MonoBehaviour
         nextPageButton?.onClick.RemoveListener(ShowNextPage);
     }
 
+    // Scene-local presentation owners can block I without disabling this UI or its backend.
+    public bool GameplayShortcutSuppressed { get; set; }
+
     private void Update()
     {
-        bool inventoryInputDetected = Input.GetKeyDown(KeyCode.I);
+        bool inventoryInputDetected = !GameplayShortcutSuppressed && Input.GetKeyDown(KeyCode.I);
 
         // A disabled/destroyed HUD root stops its own reveal coroutine without a completion event.
         if (ownsInventoryReveal && (inventoryReveal == null || !inventoryReveal.isActiveAndEnabled))

@@ -30,7 +30,7 @@ public sealed class IntroMakamisaCutsceneController : MonoBehaviour
         if (introDirector != null)
             introDirector.playOnAwake = false;
 
-        if (SessionStoryState.GetFlag(IntroSeenFlag))
+        if (SessionStoryState.GetFlag(IntroSeenFlag) || SpawnData.spawnPointName == "Part3Spawn")
         {
             DisableIntroCamera();
             enabled = false;

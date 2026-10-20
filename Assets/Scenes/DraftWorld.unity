@@ -46890,6 +46890,10 @@ MonoBehaviour:
   requiredStageId: maestro_ben_lead
   additionalTaskId: main_visit_maestro_ben
   additionalStageId: visit_maestro_ben
+  additionalStageMappings:
+  - taskId: main_collect_remaining_sulatin
+    requiredStageId: return_to_maestro_ben
+    blockingStoryFlagId: alaala_part3_sulatin_handoff_complete
   useStoryFlagEligibility: 0
   requiredStoryFlagId: 
   expectedStoryFlagValue: 1

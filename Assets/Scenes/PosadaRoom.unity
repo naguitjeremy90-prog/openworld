@@ -23539,6 +23539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PostPart1DevelopmentTesting
   enablePostPart1Testing: 1
   seedPriorNpcInteractions: 1
+  churchLumangSulatin: {fileID: 11400000, guid: 8d1f2c7a4b9e4d23a6f075cb3e9184a2, type: 2}
 --- !u!1 &2145518324
 GameObject:
   m_ObjectHideFlags: 0

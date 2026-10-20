@@ -7,12 +7,22 @@ using UnityEngine;
 [DefaultExecutionOrder(11000)] // Synchronize the asset after gameplay/Cinemachine camera movement.
 public sealed class ObjectiveNavigationAdapter : MonoBehaviour
 {
+    [System.Serializable]
+    private sealed class StageMapping
+    {
+        public string taskId;
+        public string requiredStageId;
+        public string blockingStoryFlagId;
+    }
+
     [Header("Objective condition")]
     [SerializeField] private string taskId;
     [SerializeField] private string requiredStageId;
     [Tooltip("Optional additional exact task/stage pair that can activate this same destination.")]
     [SerializeField] private string additionalTaskId = string.Empty;
     [SerializeField] private string additionalStageId = string.Empty;
+    [Tooltip("Optional exact task/stage mappings for this same destination, each with its own completion blocker.")]
+    [SerializeField] private StageMapping[] additionalStageMappings = System.Array.Empty<StageMapping>();
     [Tooltip("Opt in for stage-less objectives. Exact-stage matching remains the default.")]
     [SerializeField] private bool useStoryFlagEligibility = false;
     [SerializeField] private string requiredStoryFlagId = string.Empty;
@@ -129,7 +139,20 @@ public sealed class ObjectiveNavigationAdapter : MonoBehaviour
             boundTaskManager.GetTaskState(additionalTaskId) == TaskState.Active &&
             boundTaskManager.IsCurrentStage(additionalTaskId, additionalStageId);
 
-        return primaryMatch || additionalMatch;
+        if (primaryMatch || additionalMatch)
+            return true;
+
+        if (additionalStageMappings != null)
+            foreach (StageMapping mapping in additionalStageMappings)
+                if (mapping != null && !string.IsNullOrWhiteSpace(mapping.taskId) &&
+                    !string.IsNullOrWhiteSpace(mapping.requiredStageId) &&
+                    boundTaskManager.GetTaskState(mapping.taskId) == TaskState.Active &&
+                    boundTaskManager.IsCurrentStage(mapping.taskId, mapping.requiredStageId) &&
+                    (string.IsNullOrWhiteSpace(mapping.blockingStoryFlagId) ||
+                     !SessionStoryState.GetFlag(mapping.blockingStoryFlagId)))
+                    return true;
+
+        return false;
     }
 
     private void RefreshRegistration()

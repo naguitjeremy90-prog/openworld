@@ -64,6 +64,7 @@ public sealed class KalesaTravelController : MonoBehaviour
     private bool playerInsideBoardingArea;
     private bool traveling;
     private bool enteredFromAndayRecollectionReturn;
+    private bool enteredFromPart3Spawn;
     private bool fadeNeedsRecovery;
     private Vector3 miguelBodyRestingLocalPosition;
     private Quaternion miguelBodyRestingLocalRotation;
@@ -81,6 +82,8 @@ public sealed class KalesaTravelController : MonoBehaviour
             SpawnData.spawnPointName,
             AndayRecollectionReturnPointName,
             StringComparison.Ordinal);
+        enteredFromPart3Spawn = string.Equals(
+            SpawnData.spawnPointName, "Part3Spawn", StringComparison.Ordinal);
 
         CaptureMiguelBodyRestingLocalPose();
 
@@ -399,7 +402,7 @@ public sealed class KalesaTravelController : MonoBehaviour
             traveling || !HasDestinationTransforms(destination))
             yield break;
 
-        if (enteredFromAndayRecollectionReturn)
+        if (enteredFromAndayRecollectionReturn || enteredFromPart3Spawn)
         {
             kalesaRoot.SetPositionAndRotation(
                 destination.KalesaStop.position,

@@ -57,6 +57,8 @@ public class NPCConversationTrigger : MonoBehaviour
 
     private Quaternion originalRotation;
     private Coroutine turnCoroutine;
+    private bool storyFacingResetDeferred;
+    private bool facingResetPending;
     private StorySequenceToken storySequenceToken;
     private readonly UnityEvent storyFocusFinishedEvent = new UnityEvent();
 
@@ -96,6 +98,30 @@ public class NPCConversationTrigger : MonoBehaviour
         playerTransform = nextPlayerTransform;
     }
 
+    /// <summary>Opt-in hold across an authored continuation of this interaction.</summary>
+    public void DeferFacingResetForStorySequence()
+    {
+        storyFacingResetDeferred = true;
+    }
+
+    /// <summary>Resumes this trigger's existing smooth return after the continuation closes.</summary>
+    public void ReleaseFacingResetForStorySequence()
+    {
+        if (!storyFacingResetDeferred)
+            return;
+
+        storyFacingResetDeferred = false;
+        bool shouldReturn = facingResetPending;
+        facingResetPending = false;
+        if (!shouldReturn || !isActiveAndEnabled || isTalking ||
+            !facePlayerWhenTalking || !returnToOriginalDirection || npcTransform == null)
+            return;
+
+        if (turnCoroutine != null)
+            StopCoroutine(turnCoroutine);
+        turnCoroutine = StartCoroutine(ReturnToOriginalRotation());
+    }
+
     public bool OwnsCameraFocus(
         CameraFocusManager manager,
         CameraFocusPoint point)
@@ -121,6 +147,8 @@ public class NPCConversationTrigger : MonoBehaviour
     private void OnDisable()
     {
         ConversationManager.OnConversationEnded -= OnConversationEnded;
+        storyFacingResetDeferred = false;
+        facingResetPending = false;
 
         if (turnCoroutine != null)
         {
@@ -431,6 +459,14 @@ public class NPCConversationTrigger : MonoBehaviour
         }
         else
             ReleaseStorySequence();
+
+        if (storyFacingResetDeferred)
+        {
+            // Let the current facing turn finish; the continuation owns when to return.
+            facingResetPending = true;
+            FinishOwnedInteraction();
+            return;
+        }
 
         if (turnCoroutine != null)
         {

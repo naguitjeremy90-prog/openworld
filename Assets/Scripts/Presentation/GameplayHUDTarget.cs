@@ -12,6 +12,7 @@ public sealed class GameplayHUDTarget : MonoBehaviour
 
     private Coroutine fadeRoutine;
     private bool presentationHidden;
+    private bool presentationSuppressed;
     private float previousAlpha = 1f;
     private bool previousInteractable;
     private bool previousBlocksRaycasts;
@@ -43,6 +44,13 @@ public sealed class GameplayHUDTarget : MonoBehaviour
             group = root.AddComponent<CanvasGroup>();
         target.Configure(group, root);
         return target;
+    }
+
+    /// <summary>Hides this target independently of story ownership or gameplay input.</summary>
+    public void SetPresentationSuppressed(bool suppressed)
+    {
+        presentationSuppressed = suppressed;
+        ApplyPresentationState(StorySequenceCoordinator.IsStorySequenceActive, false);
     }
 
     private void Awake()
@@ -84,7 +92,7 @@ public sealed class GameplayHUDTarget : MonoBehaviour
         canvasGroup = group != null ? group : canvasGroup;
         visualRoot = root != null ? root : visualRoot;
         ResolveReferences();
-        if (StorySequenceCoordinator.IsStorySequenceActive)
+        if (presentationSuppressed || StorySequenceCoordinator.IsStorySequenceActive)
             ApplyPresentationState(true, false);
     }
 
@@ -107,6 +115,9 @@ public sealed class GameplayHUDTarget : MonoBehaviour
     internal void ApplyPresentationState(bool hidden, bool animate)
     {
         ResolveReferences();
+        hidden |= presentationSuppressed;
+        if (presentationSuppressed)
+            animate = false;
 
         if (hidden)
         {

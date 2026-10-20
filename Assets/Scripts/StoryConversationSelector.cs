@@ -47,6 +47,8 @@ public sealed class StoryConversationSelector : MonoBehaviour
     }
 
     [Header("Conversation States")]
+    [SerializeField] private MaestroBenSulatinLightEncounter sulatinLightEncounter;
+
     [Tooltip("Valid states are evaluated whenever the NPC is spoken to. The first state wins if priorities are tied.")]
     [SerializeField] private List<ConversationState> conversationStates =
         new List<ConversationState>();
@@ -62,6 +64,13 @@ public sealed class StoryConversationSelector : MonoBehaviour
     {
         if (enableDebugOverride)
             return debugConversation;
+
+        if (sulatinLightEncounter != null)
+        {
+            NPCConversation encounter = sulatinLightEncounter.PrepareInteractionConversation();
+            if (encounter != null)
+                return encounter;
+        }
 
         ConversationState selectedState = null;
 

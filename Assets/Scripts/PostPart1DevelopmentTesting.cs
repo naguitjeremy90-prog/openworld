@@ -18,26 +18,31 @@ public sealed class PostPart1DevelopmentTesting : MonoBehaviour
 
     [SerializeField] private bool enablePostPart1Testing;
     [SerializeField] private bool seedPriorNpcInteractions;
+    [SerializeField] private InventoryItemData churchLumangSulatin;
 
     private void Awake()
     {
 #if UNITY_EDITOR
-        if (!Application.isPlaying || !enablePostPart1Testing)
+        if (!IsTestingBootstrapEligible())
             return;
-
-        if (gameObject.scene.name != "PosadaRoom" ||
-            SceneManager.GetActiveScene() != gameObject.scene)
-        {
-            return;
-        }
 
         ApplyPostPart1Baseline(seedPriorNpcInteractions);
 #endif
     }
 
 #if UNITY_EDITOR
-    private static void ApplyPostPart1Baseline(bool seedNpcInteractions)
+    private bool IsTestingBootstrapEligible()
     {
+        return Application.isPlaying && isActiveAndEnabled && enablePostPart1Testing &&
+               gameObject.scene.name == "PosadaRoom" &&
+               SceneManager.GetActiveScene() == gameObject.scene;
+    }
+
+    private void ApplyPostPart1Baseline(bool seedNpcInteractions)
+    {
+        if (!IsTestingBootstrapEligible())
+            return;
+
         // Seed the task state before the development helper instantiates TaskManager.
         SessionStoryState.SetFlag("task_active:" + MainInvestigationTaskId, false);
         SessionStoryState.SetFlag("task_completed:" + MainInvestigationTaskId, true);
@@ -86,6 +91,44 @@ public sealed class PostPart1DevelopmentTesting : MonoBehaviour
 
         // Let DraftWorld's normal DayNightManager select its authored daytime setup.
         GameFlags.isMorning = true;
+
+        StartCoroutine(SeedChurchDocumentOwnership());
+    }
+
+    private System.Collections.IEnumerator SeedChurchDocumentOwnership()
+    {
+        const string itemId = "church_lumang_sulatin";
+        if (churchLumangSulatin == null || churchLumangSulatin.ItemID != itemId ||
+            churchLumangSulatin.Category != ItemCategory.Document)
+        {
+            Debug.LogError("Post-Part-1 testing requires the existing Lumang Sulatin document asset.", this);
+            yield break;
+        }
+
+        // The existing Pagsusuri testing helper initializes InventoryManager in Start,
+        // after this controller's early Awake has seeded the story baseline.
+        float deadline = Time.realtimeSinceStartup + 5f;
+        while (InventoryManager.Instance == null && Time.realtimeSinceStartup < deadline)
+        {
+            if (!IsTestingBootstrapEligible())
+                yield break;
+            yield return null;
+        }
+
+        if (!IsTestingBootstrapEligible())
+            yield break;
+
+        InventoryManager inventory = InventoryManager.Instance;
+        if (inventory == null)
+        {
+            Debug.LogError(
+                "Post-Part-1 testing could not seed Lumang Sulatin: InventoryManager did not initialize within five seconds. Check the existing testing inventory bootstrap.",
+                this);
+            yield break;
+        }
+
+        if (!inventory.HasItem(itemId) && !inventory.AddItem(churchLumangSulatin))
+            Debug.LogError("Post-Part-1 testing could not add Lumang Sulatin to the existing InventoryManager.", this);
     }
 
     private static void SeedPriorNpcInteractions()

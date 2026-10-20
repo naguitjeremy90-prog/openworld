@@ -45,6 +45,7 @@ public class ClarityManager : MonoBehaviour
 
     public bool IsClarityActive { get; private set; }
     public bool IsDocumentMode { get; private set; }
+    public bool GameplayShortcutSuppressed { get; set; }
     public static event Action<bool> Activated;
 
     private void Awake()
@@ -103,7 +104,7 @@ public class ClarityManager : MonoBehaviour
     {
         bool wasActive = IsClarityActive;
         bool storySequenceActive = StorySequenceCoordinator.IsStorySequenceActive;
-        if (storySequenceActive ||
+        if (GameplayShortcutSuppressed || storySequenceActive ||
             InventoryDocumentViewer.IsAnyOpen ||
             ReconstructionJournalManager.IsPagninilayResponseInputFocusedForGameplay ||
             !clarityUnlocked)
