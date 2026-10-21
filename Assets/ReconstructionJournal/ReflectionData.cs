@@ -59,6 +59,10 @@ public class ReflectionData : ScriptableObject
     [TextArea(2, 5)]
     public string entryThemeFallback;
 
+    [Header("Final Pagninilay only (no answer classification)")]
+    [TextArea(3, 6)] public string finalEducationalSummary;
+    [TextArea(8, 16)] public string finalEducationalNote;
+
     public string GetContextLabel()
     {
         switch (context)

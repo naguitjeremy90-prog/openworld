@@ -280,6 +280,9 @@ public class ReconstructionJournalManager : MonoBehaviour
 
     public void CloseJournal()
     {
+        // Only the final submitted-answer dots own this brief modal presentation.
+        // Its owner releases it before calling this same close API; other entries are unchanged.
+        if (reflections != null && reflections.IsFinalSubmissionPresentationActive) return;
         bool wasOpen = IsOpen;
         IsOpen = false;
 

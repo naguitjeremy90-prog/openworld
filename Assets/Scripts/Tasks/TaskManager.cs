@@ -31,6 +31,9 @@ public sealed class TaskManager : MonoBehaviour
     private string currentTaskId;
     private int presentationVersion;
 
+    public bool CanPresentNotifications => notificationUI != null && notificationUI.isActiveAndEnabled;
+    public bool HasPendingNotifications => notificationUI != null && notificationUI.HasPendingNotifications;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -275,6 +278,19 @@ public sealed class TaskManager : MonoBehaviour
 
     public bool AdvanceTaskStage(string taskId, string stageId)
     {
+        return AdvanceTaskStage(taskId, stageId, null);
+    }
+
+    /// <summary>
+    /// Opt-in sequence handoff: callback follows the real notification's final fade.
+    /// An already-current stage is presented again only through this callback overload,
+    /// allowing an interrupted scene-local presentation to resume without changing progress.
+    /// </summary>
+    public bool AdvanceTaskStage(string taskId, string stageId, Action onPresentationFinished)
+    {
+        if (onPresentationFinished != null && !CanPresentNotifications)
+            return false;
+
         if (!TryGetDefinition(taskId, out TaskData task) ||
             GetTaskState(taskId) != TaskState.Active ||
             string.IsNullOrWhiteSpace(stageId))
@@ -294,6 +310,10 @@ public sealed class TaskManager : MonoBehaviour
         if (currentStageByTaskId.TryGetValue(normalizedTaskId, out string currentStageId) &&
             string.Equals(currentStageId, normalizedStageId, StringComparison.Ordinal))
         {
+            if (onPresentationFinished != null)
+                ShowNotificationThenTracker(normalizedTaskId, objectivesById[normalizedTaskId],
+                    onFinished => notificationUI.ShowTaskUpdated(task.Type, onFinished),
+                    onPresentationFinished);
             return true;
         }
 
@@ -310,7 +330,8 @@ public sealed class TaskManager : MonoBehaviour
             updatedObjective,
             onFinished => notificationUI.ShowTaskUpdated(
                 task.Type,
-                onFinished));
+                onFinished),
+            onPresentationFinished);
         return true;
     }
 
@@ -463,7 +484,8 @@ public sealed class TaskManager : MonoBehaviour
     private void ShowNotificationThenTracker(
         string taskId,
         string objective,
-        Action<Action> showNotification)
+        Action<Action> showNotification,
+        Action onPresentationFinished = null)
     {
         int version = ++presentationVersion;
 
@@ -479,6 +501,7 @@ public sealed class TaskManager : MonoBehaviour
             }
 
             TaskChanged?.Invoke();
+            onPresentationFinished?.Invoke();
         }
 
         if (notificationUI != null)

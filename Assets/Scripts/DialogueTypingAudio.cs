@@ -16,6 +16,7 @@ public sealed class DialogueTypingAudio : MonoBehaviour
     private int eligibleCharactersSinceSound;
     private AudioClip lastPlayedClip;
     private float lastSoundTime;
+    private bool preventOverlappingSounds;
 
     private void Awake()
     {
@@ -102,6 +103,16 @@ public sealed class DialogueTypingAudio : MonoBehaviour
         lineIsRevealing = false;
     }
 
+    // Opt-in only on Chapter 13's dedicated instance; dialogue behavior is unchanged.
+    public void BeginNarrationLine(float volume)
+    {
+        typingVolume = Mathf.Clamp01(volume);
+        preventOverlappingSounds = true;
+        BeginLine();
+    }
+
+    public void EndNarrationLine() => StopAndReset();
+
     private void TryPlayTypingSound(char character)
     {
         DebugLog($"Sound opportunity | Character='{character}'");
@@ -119,6 +130,8 @@ public sealed class DialogueTypingAudio : MonoBehaviour
         }
 
         float now = Time.unscaledTime;
+        if (preventOverlappingSounds && typingAudioSource.isPlaying)
+            return;
         float interval = Mathf.Max(0f, minimumSoundInterval);
         if (hasPlayedSound && now - lastSoundTime < interval)
         {

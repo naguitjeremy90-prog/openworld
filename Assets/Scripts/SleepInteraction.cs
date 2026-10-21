@@ -131,6 +131,7 @@ public class SleepInteraction : MonoBehaviour
             }
 
             GameFlags.isMorning = true;
+            PosadaSleepLighting.RefreshAfterSleep(gameObject.scene);
 
             if (fadeController != null)
                 yield return StartCoroutine(fadeController.FadeFromBlack());

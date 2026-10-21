@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198ae66b3d9224645b06ef07a3127935, type: 3}
+  m_Name: Part3_Final_Pagninilay
+  m_EditorClassIdentifier: Assembly-CSharp::ReflectionData
+  reflectionID: part3_final_pagninilay
+  title: Ang Kuwentong Walang Wakas
+  context: 1
+  prompt: Ano sa palagay mo ang nangyari sa mundong iyong nasaksihan?
+  suggestedResponses: []
+  themeResponses: []
+  entryThemeMappings: []
+  entryThemeFallback: 
+  finalEducationalSummary: Ang Makamisa ay isang hindi natapos na akda ni José Rizal. Ang paglaho ng bayan ay sumisimbolo sa kuwentong walang ganap na wakas, ngunit nananatiling mahalaga ang mga pahinang naiwan.
+  finalEducationalNote: "Ang Makamisa ay isa sa mga akdang hindi natapos ni José Rizal. Dahil dito, may mga bahagi ng kuwento at kapalaran ng mga tauhan na nanatiling hindi tiyak. Ang paglaho ng bayang iyong nasaksihan ay isang malikhaing paglalarawan ng isang kuwentong naiwan nang walang ganap na wakas.\n\nGayunpaman, hindi nangangahulugang nawawala rin ang halaga ng isang akdang hindi natapos. Sa mga pahinang naiwan, makikita pa rin natin ang mga ideya, kaugalian, at larawan ng lipunang nais ilarawan ni Rizal. Sa pamamagitan ng pagsasaliksik at pangangalaga sa mga sulating ito, patuloy nating napahahalagahan ang ating panitikan."

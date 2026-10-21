@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093286084a3d1994a9c28281a1c38b1d, type: 3}
   m_Name: PlayFabSharedSettings
   m_EditorClassIdentifier: PlayFab::PlayFabSharedSettings
-  TitleId: 12FB92
+  TitleId: 1E4B63
   DeveloperSecretKey: 
   ProductionEnvironmentUrl: 
   RequestType: 0
-  DisableDeviceInfo: 0
+  DisableDeviceInfo: 1
   DisableFocusTimeCollection: 0
   RequestTimeout: 2000
   RequestKeepAlive: 1

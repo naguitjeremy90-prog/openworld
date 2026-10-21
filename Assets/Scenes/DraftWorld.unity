@@ -382,6 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  sulatinLightEncounter: {fileID: 0}
   conversationStates:
   - stateName: Post-Part-1 - Mang Kardo
     requiredStoryFlagId: 
@@ -1277,6 +1278,7 @@ MonoBehaviour:
   requiredStageId: 
   additionalTaskId: 
   additionalStageId: 
+  additionalStageMappings: []
   useStoryFlagEligibility: 1
   requiredStoryFlagId: aling_ika_payment_received
   expectedStoryFlagValue: 1
@@ -4893,6 +4895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  sulatinLightEncounter: {fileID: 0}
   conversationStates:
   - stateName: Post-Part-1 - Mang Nardo
     requiredStoryFlagId: 
@@ -8321,6 +8324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  sulatinLightEncounter: {fileID: 0}
   conversationStates:
   - stateName: Post-Part-1 - Mang Iko
     requiredStoryFlagId: 
@@ -17509,6 +17513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  sulatinLightEncounter: {fileID: 0}
   conversationStates:
   - stateName: Post-Part-1 - Aling Maria
     requiredStoryFlagId: 
@@ -29763,6 +29768,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d8119e5b82a24d78a6d5342f9c0b7e13, type: 2}
   - {fileID: 11400000, guid: dfc5a686c6efea04e9d2380aeeb839c2, type: 2}
   - {fileID: 11400000, guid: e0fe2be33ff6ef546aa3843afe54774f, type: 2}
+  - {fileID: 11400000, guid: d4a6e1273c8b4ea0b15f926e03c78a59, type: 2}
   listContent: {fileID: 1391038562}
   listButtonPrefab: {fileID: 6598735624607580097, guid: 8b31cece87c544f428a536da0ac69c3c, type: 3}
   emptyListText: {fileID: 315377629}
@@ -35199,6 +35205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  sulatinLightEncounter: {fileID: 0}
   conversationStates:
   - stateName: Post-Part-1 - Nena
     requiredStoryFlagId: 
@@ -42673,6 +42680,7 @@ MonoBehaviour:
   requiredStageId: 
   additionalTaskId: 
   additionalStageId: 
+  additionalStageMappings: []
   useStoryFlagEligibility: 1
   requiredStoryFlagId: aling_ika_payment_received
   expectedStoryFlagValue: 0
@@ -46639,6 +46647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  sulatinLightEncounter: {fileID: 0}
   conversationStates:
   - stateName: Post-Part-1 - Toto
     requiredStoryFlagId: 
@@ -46664,6 +46673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726b651b3159d544a89ae5d0dfbf2748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryConversationSelector
+  sulatinLightEncounter: {fileID: 0}
   conversationStates:
   - stateName: Post-Part-1 - Mang Tibo
     requiredStoryFlagId: 
@@ -46745,6 +46755,7 @@ MonoBehaviour:
   requiredStageId: find_knowledgeable_person
   additionalTaskId: 
   additionalStageId: 
+  additionalStageMappings: []
   useStoryFlagEligibility: 0
   requiredStoryFlagId: 
   expectedStoryFlagValue: 1
@@ -47039,6 +47050,7 @@ MonoBehaviour:
   requiredStageId: investigate_church_document
   additionalTaskId: 
   additionalStageId: 
+  additionalStageMappings: []
   useStoryFlagEligibility: 0
   requiredStoryFlagId: 
   expectedStoryFlagValue: 1

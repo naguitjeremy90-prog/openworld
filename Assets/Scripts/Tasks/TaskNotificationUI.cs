@@ -20,6 +20,9 @@ public sealed class TaskNotificationUI : MonoBehaviour
     private PresentationPhase phase;
     private float phaseElapsed;
 
+    /// <summary>Includes queued and interrupted requests until their final fade succeeds.</summary>
+    public bool HasPendingNotifications => requests.Count > 0;
+
     private enum PresentationPhase { FadeIn, Hold, FadeOut }
 
     private sealed class NotificationRequest

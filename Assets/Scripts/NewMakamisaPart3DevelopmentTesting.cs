@@ -8,6 +8,19 @@ public sealed class NewMakamisaPart3DevelopmentTesting : MonoBehaviour
 {
     [SerializeField] private bool enablePart3DirectTesting = false;
 
+    // Read-only proof of the sanctioned launch/readiness path, never an Inspector bypass.
+    internal bool HasVerifiedDirectArrival
+    {
+        get
+        {
+#if UNITY_EDITOR
+            return Application.isPlaying && isActiveAndEnabled && initialized && ownsArrivalFlag;
+#else
+            return false;
+#endif
+        }
+    }
+
     [Header("Existing scene arrival infrastructure")]
     [SerializeField] private NewMakamisaPart3PopulationPresentation presentation;
     [SerializeField] private Transform part3Spawn;

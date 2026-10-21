@@ -161,6 +161,18 @@ MonoBehaviour:
       objectiveText: Bumalik kay Maestro Ben.
       requiredCount: 0
       allowedProgressIds: []
+    - stageId: part3_find_anday
+      objectiveText: Hanapin si Anday.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: part3_investigate_quiet_town
+      objectiveText: Siyasatin ang tahimik na bayan.
+      requiredCount: 0
+      allowedProgressIds: []
+    - stageId: part3_run_to_church
+      objectiveText: Tumakbo!
+      requiredCount: 0
+      allowedProgressIds: []
 --- !u!114 &876500001
 MonoBehaviour:
   m_ObjectHideFlags: 0

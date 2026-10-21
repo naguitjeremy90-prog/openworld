@@ -9,6 +9,12 @@ using UnityEngine.UI;
 
 public class ReconstructionReflections : MonoBehaviour
 {
+    public const string FinalReflectionId = "part3_final_pagninilay";
+    private object finalPresentationOwner;
+    private ScrollRect finalDetailScroll;
+    private TMP_Text finalAnswer, finalNote, finalToggleLabel;
+    private bool finalNoteExpanded;
+    public bool IsFinalSubmissionPresentationActive => finalPresentationOwner != null;
     private const string UnlockFlagPrefix = "journal_reflection_unlocked:";
     private const string ResponseValuePrefix = "journal_reflection_response:";
     private const string FollowUpValuePrefix = "journal_reflection_follow_up:";
@@ -211,6 +217,7 @@ public class ReconstructionReflections : MonoBehaviour
 
     public bool SubmitSelectedReflection()
     {
+        if (finalPresentationOwner != null) return false;
         if (selectedReflection == null)
         {
             Debug.LogWarning(
@@ -241,7 +248,9 @@ public class ReconstructionReflections : MonoBehaviour
             validationText.gameObject.SetActive(false);
 
         selectedFollowUps[selectedReflection.reflectionID] =
-            GetBestThemeFollowUp(selectedReflection, response);
+            selectedReflection.reflectionID == FinalReflectionId
+                ? selectedReflection.finalEducationalNote
+                : GetBestThemeFollowUp(selectedReflection, response);
         submittedResponses[selectedReflection.reflectionID] = response;
         SessionStoryState.SetString(
             ResponseValuePrefix + selectedReflection.reflectionID,
@@ -875,7 +884,10 @@ public class ReconstructionReflections : MonoBehaviour
 
     private void ShowReflection(ReflectionData reflection)
     {
+        if (finalPresentationOwner != null) return;
         selectedReflection = reflection;
+        if (finalDetailScroll != null) finalDetailScroll.gameObject.SetActive(false);
+        if (promptText != null) promptText.gameObject.SetActive(true);
 
         if (detailTitleText != null)
             detailTitleText.text = reflection.title;
@@ -895,7 +907,7 @@ public class ReconstructionReflections : MonoBehaviour
             out submittedResponse);
 
         string storedFollowUp;
-        if (isCompleted &&
+        if (isCompleted && reflection.reflectionID != FinalReflectionId &&
             selectedFollowUps.TryGetValue(reflection.reflectionID, out storedFollowUp))
         {
             ShowReflectionFollowUp(storedFollowUp);
@@ -953,10 +965,139 @@ public class ReconstructionReflections : MonoBehaviour
             if (isCompleted)
                 completedResponseText.text = submittedResponse;
         }
+        if (isCompleted && reflection.reflectionID == FinalReflectionId &&
+            SessionStoryState.GetFlag("alaala_part3_ch12_complete"))
+            ShowFinalCompletedEntry(reflection, submittedResponse);
+    }
+
+    // This transient presentation never writes to submittedResponses or SessionStoryState.
+    public bool TryBeginFinalSubmissionPresentation(object owner, out string reason)
+    {
+        reason = "The final reflection must be selected and its original answer successfully stored.";
+        if (owner == null || finalPresentationOwner != null || selectedReflection == null ||
+            selectedReflection.reflectionID != FinalReflectionId || completedResponseText == null ||
+            !submittedResponses.TryGetValue(FinalReflectionId, out string answer) ||
+            string.IsNullOrWhiteSpace(answer) || SessionStoryState.GetString(ResponseValuePrefix + FinalReflectionId) != answer)
+            return false;
+        finalPresentationOwner = owner;
+        if (finalDetailScroll != null) finalDetailScroll.gameObject.SetActive(false);
+        HideReflectionFollowUp();
+        completedResponseText.gameObject.SetActive(true);
+        completedResponseText.text = answer;
+        reason = null;
+        return true;
+    }
+
+    public bool SetFinalSubmissionDots(object owner, int count)
+    {
+        if (!ReferenceEquals(finalPresentationOwner, owner) || count < 1 || count > 3 ||
+            completedResponseText == null || !completedResponseText.isActiveAndEnabled) return false;
+        completedResponseText.text = count == 1 ? "." : count == 2 ? ".." : "...";
+        return true;
+    }
+
+    public void EndFinalSubmissionPresentation(object owner)
+    {
+        if (!ReferenceEquals(finalPresentationOwner, owner)) return;
+        finalPresentationOwner = null;
+        if (selectedReflection != null) ShowReflection(selectedReflection);
+    }
+
+    private void ShowFinalCompletedEntry(ReflectionData data, string answer)
+    {
+        EnsureFinalDetailView();
+        if (finalDetailScroll == null) return;
+        if (promptText != null) promptText.gameObject.SetActive(false);
+        if (completedLabelText != null) completedLabelText.gameObject.SetActive(false);
+        completedResponseText.gameObject.SetActive(false);
+        // TMP rich text is disabled on the answer: user text is always rendered literally.
+        finalAnswer.richText = false;
+        finalAnswer.text = data.prompt + "\n\nAking Pagninilay:\n" + answer;
+        finalNoteExpanded = false;
+        finalDetailScroll.gameObject.SetActive(true);
+        RefreshFinalNote();
+        Canvas.ForceUpdateCanvases();
+        finalDetailScroll.verticalNormalizedPosition = 1f;
+    }
+
+    private void RefreshFinalNote()
+    {
+        if (selectedReflection == null || selectedReflection.reflectionID != FinalReflectionId) return;
+        finalToggleLabel.text = finalNoteExpanded ? "v  Karagdagang Tala" : ">  Karagdagang Tala";
+        finalNote.text = finalNoteExpanded ? selectedReflection.finalEducationalNote : selectedReflection.finalEducationalSummary;
+        LayoutRebuilder.MarkLayoutForRebuild(finalDetailScroll.content);
+    }
+
+    private void EnsureFinalDetailView()
+    {
+        if (finalDetailScroll != null || completedResponseText == null) return;
+        // A final-entry-only scroll area inside the existing page; existing entry rects are untouched.
+        var root = new GameObject("FinalPagninilayDetail", typeof(RectTransform), typeof(ScrollRect));
+        root.transform.SetParent(completedResponseText.transform.parent, false);
+        var rect = (RectTransform)root.transform;
+        rect.anchorMin = new Vector2(.05f, .04f); rect.anchorMax = new Vector2(.95f, .72f);
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+        var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image), typeof(RectMask2D));
+        viewport.transform.SetParent(root.transform, false);
+        var viewRect = (RectTransform)viewport.transform;
+        viewRect.anchorMin = Vector2.zero; viewRect.anchorMax = Vector2.one;
+        viewRect.offsetMin = Vector2.zero; viewRect.offsetMax = new Vector2(-14f, 0f);
+        viewport.GetComponent<Image>().color = Color.clear;
+        var content = new GameObject("Content", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+        content.transform.SetParent(viewport.transform, false);
+        var contentRect = (RectTransform)content.transform;
+        contentRect.anchorMin = new Vector2(0, 1); contentRect.anchorMax = Vector2.one;
+        contentRect.pivot = new Vector2(.5f, 1); contentRect.sizeDelta = Vector2.zero;
+        var layout = content.GetComponent<VerticalLayoutGroup>();
+        layout.childControlWidth = layout.childControlHeight = true;
+        layout.childForceExpandWidth = true; layout.childForceExpandHeight = false; layout.spacing = 14f;
+        content.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        finalAnswer = CreateFinalText("Original Answer", contentRect);
+        var toggleObject = new GameObject("Expand Educational Note", typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
+        toggleObject.transform.SetParent(contentRect, false);
+        toggleObject.GetComponent<Image>().color = new Color(0, 0, 0, .04f);
+        toggleObject.GetComponent<Button>().targetGraphic = toggleObject.GetComponent<Image>();
+        toggleObject.GetComponent<LayoutElement>().preferredHeight = Mathf.Max(36f, completedResponseText.fontSize * 1.6f);
+        finalToggleLabel = CreateFinalText("Chevron Label", (RectTransform)toggleObject.transform);
+        finalToggleLabel.rectTransform.anchorMin = Vector2.zero; finalToggleLabel.rectTransform.anchorMax = Vector2.one;
+        finalToggleLabel.rectTransform.offsetMin = finalToggleLabel.rectTransform.offsetMax = Vector2.zero;
+        toggleObject.GetComponent<Button>().onClick.AddListener(() => { finalNoteExpanded = !finalNoteExpanded; RefreshFinalNote(); });
+        finalNote = CreateFinalText("Educational Note", contentRect);
+        finalDetailScroll = root.GetComponent<ScrollRect>();
+        finalDetailScroll.viewport = viewRect; finalDetailScroll.content = contentRect;
+        finalDetailScroll.horizontal = false; finalDetailScroll.movementType = ScrollRect.MovementType.Clamped;
+        finalDetailScroll.scrollSensitivity = 25f;
+        var bar = new GameObject("Scrollbar", typeof(RectTransform), typeof(Image), typeof(Scrollbar));
+        bar.transform.SetParent(root.transform, false);
+        var barRect = (RectTransform)bar.transform;
+        barRect.anchorMin = new Vector2(1, 0); barRect.anchorMax = Vector2.one;
+        barRect.pivot = new Vector2(1, .5f); barRect.sizeDelta = new Vector2(10, 0);
+        bar.GetComponent<Image>().color = new Color(0, 0, 0, .08f);
+        var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+        handle.transform.SetParent(bar.transform, false);
+        handle.GetComponent<Image>().color = completedResponseText.color;
+        var scrollbar = bar.GetComponent<Scrollbar>(); scrollbar.direction = Scrollbar.Direction.BottomToTop;
+        scrollbar.handleRect = (RectTransform)handle.transform; scrollbar.targetGraphic = handle.GetComponent<Image>();
+        finalDetailScroll.verticalScrollbar = scrollbar;
+    }
+
+    private TMP_Text CreateFinalText(string label, RectTransform parent)
+    {
+        TMP_Text text = Instantiate(completedResponseText, parent, false);
+        text.name = label; text.gameObject.SetActive(true); text.text = "";
+        text.enableAutoSizing = false; text.textWrappingMode = TextWrappingModes.Normal;
+        text.overflowMode = TextOverflowModes.Overflow; text.raycastTarget = false;
+        text.alignment = TextAlignmentOptions.TopLeft; text.richText = false;
+        text.rectTransform.anchorMin = new Vector2(0, 1); text.rectTransform.anchorMax = Vector2.one;
+        text.rectTransform.pivot = new Vector2(.5f, 1); text.rectTransform.sizeDelta = Vector2.zero;
+        text.rectTransform.anchoredPosition = Vector2.zero;
+        return text;
     }
 
     private void ClearDetails()
     {
+        if (finalPresentationOwner != null) return;
+        if (finalDetailScroll != null) finalDetailScroll.gameObject.SetActive(false);
         selectedReflection = null;
 
         if (detailTitleText != null)
