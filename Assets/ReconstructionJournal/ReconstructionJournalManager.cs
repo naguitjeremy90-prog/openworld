@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ReconstructionJournalManager : MonoBehaviour
+public partial class ReconstructionJournalManager : MonoBehaviour
 {
     private const string FirstDreamObservationId = "ang_panaginip";
     private const int FullInterfaceSortingOrder = 300;

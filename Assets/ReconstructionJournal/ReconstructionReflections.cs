@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ReconstructionReflections : MonoBehaviour
+public partial class ReconstructionReflections : MonoBehaviour
 {
     public const string FinalReflectionId = "part3_final_pagninilay";
     private object finalPresentationOwner;

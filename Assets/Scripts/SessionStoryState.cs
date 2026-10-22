@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class SessionStoryState
+public static partial class SessionStoryState
 {
     public static event Action<string, bool> FlagChanged;
 
@@ -34,6 +34,7 @@ public static class SessionStoryState
             completedFlags.Remove(flagId);
 
         FlagChanged?.Invoke(flagId, completed);
+        NotifySaveValueChanged(flagId, Alaala.Saving.SaveValueKind.Boolean);
     }
 
     public static int GetInt(string valueId)
@@ -49,10 +50,13 @@ public static class SessionStoryState
         if (string.IsNullOrEmpty(valueId))
             return;
 
+        bool changed = GetInt(valueId) != value;
+
         if (value != 0)
             integerValues[valueId] = value;
         else
             integerValues.Remove(valueId);
+        if (changed) NotifySaveValueChanged(valueId, Alaala.Saving.SaveValueKind.Integer);
     }
 
     public static string GetString(string valueId, string defaultValue = "")
@@ -70,10 +74,13 @@ public static class SessionStoryState
         if (string.IsNullOrEmpty(valueId))
             return;
 
+        bool changed = GetString(valueId) != (value ?? "");
+
         if (!string.IsNullOrEmpty(value))
             stringValues[valueId] = value;
         else
             stringValues.Remove(valueId);
+        if (changed) NotifySaveValueChanged(valueId, Alaala.Saving.SaveValueKind.String);
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using DialogueEditor;
 
-public class SelfDialogueTrigger : MonoBehaviour
+public partial class SelfDialogueTrigger : MonoBehaviour
 {
     public event System.Action ConversationFinished;
     [Header("Conversation")]

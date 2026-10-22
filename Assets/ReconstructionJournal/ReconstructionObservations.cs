@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ReconstructionObservations : MonoBehaviour
+public partial class ReconstructionObservations : MonoBehaviour
 {
     private const string UnlockFlagPrefix = "journal_observation_unlocked:";
 

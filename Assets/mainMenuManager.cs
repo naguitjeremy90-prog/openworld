@@ -7,6 +7,7 @@ public class MainMenuManager : MonoBehaviour
     private const string MasterVolumeKey = "MasterVolume";
     private const string NewGameSceneName = "IntroScene";
     private bool newGameRequested;
+    private Alaala.Saving.AlaalaContinueMenu saveMenu;
 
     [Header("Settings UI")]
     [SerializeField] private GameObject mainMenuPanel;
@@ -39,6 +40,8 @@ public class MainMenuManager : MonoBehaviour
             backButton.onClick.AddListener(CloseSettings);
 
         ShowMainMenu();
+        saveMenu = Alaala.Saving.AlaalaContinueMenu.Attach(this);
+        Alaala.Saving.AlaalaAccountSwitchMenu.Attach(this);
     }
 
     private void OnDestroy()
@@ -55,6 +58,10 @@ public class MainMenuManager : MonoBehaviour
 
     public void NewGame()
     {
+        if (Alaala.Saving.AlaalaResumeCoordinator.IsBusy) return;
+        if (gameObject.scene.path == Alaala.Saving.AlaalaResumePolicy.MenuScene &&
+            Alaala.Saving.AlaalaContinueMenu.Production && !Alaala.Saving.AlaalaSaveOwner.TryGetAuthenticated(out _))
+        { saveMenu?.Message("Pumasok muna sa iyong account."); return; }
         if (newGameRequested)
         {
             Debug.LogWarning("New Game was already requested. Wait for the scene load or resolve the reported failure.", this);
@@ -100,6 +107,7 @@ public class MainMenuManager : MonoBehaviour
             SpawnData.spawnPointName = string.Empty;
             resetCompleted = true;
             operation = "IntroScene load";
+            Alaala.Saving.AlaalaLocalAutosave.NotifyNewGameStarting();
             SceneManager.LoadScene(NewGameSceneName);
         }
         catch (System.Exception exception)
@@ -168,7 +176,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void ContinueGame()
     {
-        SceneManager.LoadScene("Makamisa");
+        saveMenu?.Continue();
     }
 
     public void OpenSettings()
@@ -212,5 +220,10 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Game Closed");
+    }
+
+    public void RequestSwitchUser()
+    {
+        GetComponent<Alaala.Saving.AlaalaAccountSwitchMenu>()?.Show();
     }
 }

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ReconstructionFragments : MonoBehaviour
+public partial class ReconstructionFragments : MonoBehaviour
 {
     private const string UnlockFlagPrefix = "journal_fragment_unlocked:";
     private const string StageValuePrefix = "journal_fragment_stage:";

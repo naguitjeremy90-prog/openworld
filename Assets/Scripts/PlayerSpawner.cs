@@ -7,6 +7,7 @@ public class PlayerSpawner : MonoBehaviour
 
     [SerializeField] private Transform player;
     [SerializeField] private MonoBehaviour movementToHoldDuringReturn;
+    public Transform SaveRestorationPlayer => player;
 
     private void Start()
     {

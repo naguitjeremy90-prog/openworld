@@ -14,6 +14,7 @@ public class DialogueMovementLock : MonoBehaviour
     private bool capturedStoryHoldMovementState;
 
     public bool OwnsConversationLock => ownsConversationLock;
+    internal Transform SaveRestorationPlayer => playerMovementScript != null ? playerMovementScript.transform : null;
 
     private void OnEnable()
     {

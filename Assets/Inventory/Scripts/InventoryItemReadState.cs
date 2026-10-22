@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>Session-scoped unread metadata for currently owned Inventory items.</summary>
-public static class InventoryItemReadState
+public static partial class InventoryItemReadState
 {
     private const string KnownPrefix = "inventory.notification.known:";
     private const string ReadPrefix = "inventory.notification.read:";

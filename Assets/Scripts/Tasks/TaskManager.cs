@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class TaskManager : MonoBehaviour
+public sealed partial class TaskManager : MonoBehaviour
 {
     private const string GatherInformationStageId = "gather_information";
     private const string GatherInformationJournalObservationId = "mga_bulung_bulungan_sa_pili";

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class InventoryManager : MonoBehaviour
+public sealed partial class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
 
@@ -54,6 +54,8 @@ public sealed class InventoryManager : MonoBehaviour
             return false;
 
         ownedItems.Add(item);
+        saveCollectedIds.Add(item.ItemID);
+        saveConsumedIds.Remove(item.ItemID);
         InventoryItemReadState.RegisterAcquisition(item.ItemID);
         ItemAdded?.Invoke(item);
         OnInventoryChanged?.Invoke();
@@ -64,6 +66,8 @@ public sealed class InventoryManager : MonoBehaviour
     public void ClearOwnedItemsForNewGame()
     {
         ownedItems.Clear();
+        saveCollectedIds.Clear();
+        saveConsumedIds.Clear();
         InventoryItemReadState.ResetForNewGame();
     }
 
@@ -96,6 +100,8 @@ public sealed class InventoryManager : MonoBehaviour
             if (item != null && string.Equals(item.ItemID, normalizedID, StringComparison.Ordinal))
             {
                 ownedItems.RemoveAt(i);
+                saveCollectedIds.Add(normalizedID);
+                saveConsumedIds.Add(normalizedID);
                 InventoryItemReadState.HandleItemRemoved(item.ItemID);
                 OnInventoryChanged?.Invoke();
                 return true;
